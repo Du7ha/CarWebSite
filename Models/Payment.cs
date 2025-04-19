@@ -9,13 +9,12 @@ namespace CarWebSite.Models
 		public DateTime PaymentDate {get; private set;}
 		public PaymentMethod Method {get; private set;}
 		public PaymentStatus Status {get; private set;} = PaymentStatus.Pendeing;
-		public string TransactionReference { get; set; }
-    	public string Currency { get; set; } = "USD";
+    	public string Currency { get; set; } = "EGP";
 		public int OrderId {get; private set;}
 		public virtual Order Order {get; set;}
 
 
-		public Payment(decimal amount, PaymentMethod method, int orderId, string transactionReference = null)
+		public Payment(decimal amount, PaymentMethod method, int orderId)
 		{
 			if (amount <= 0)
 				throw new ArgumentException("Payment amount must be positive", nameof(amount));
@@ -27,7 +26,6 @@ namespace CarWebSite.Models
 			Method = method;
 			OrderId = orderId;
 			PaymentDate = DateTime.UtcNow;
-			TransactionReference = transactionReference;
 		}
 		public void MarkAsCompleted()
 		{
