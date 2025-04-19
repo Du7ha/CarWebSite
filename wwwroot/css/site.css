@@ -9,7 +9,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem #f0f0f0, 0 0 0 0.25rem #258cfb;
 }
 
 html {
@@ -18,5 +18,41 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    background-image: url('/Images/background.jpg'); /* Path to your image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-size: cover; /* Make the image cover the entire page */
+    background-position: center; /* Center the image */
+    margin-bottom: 60px;
+}
+
+/* =========================
+   Navbar Styles
+========================= */
+nav {
+  background-color: #FFE4D9; /* Dark gray background */
+  color: #45322a; /* Text color */
+  padding: 10px 20px; /* Add padding for spacing */
+}
+
+nav ul {
+  list-style: none; /* Remove bullet points */
+  display: flex; /* Align items horizontally */
+  justify-content: space-around; /* Space items evenly */
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  margin: 0 10px; /* Space between items */
+}
+
+nav a {
+  color: white; /* Link color */
+  text-decoration: none; /* Remove underline */
+  font-size: 1rem;
+}
+
+nav a:hover {
+  color: #45322a; /* Change link color on hover */
+  text-decoration: underline; /* Add underline on hover */
 }
