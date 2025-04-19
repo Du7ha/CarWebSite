@@ -18,41 +18,54 @@ html {
 }
 
 body {
-    background-image: url('/Images/background.jpg'); /* Path to your image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    background-size: cover; /* Make the image cover the entire page */
-    background-position: center; /* Center the image */
-    margin-bottom: 60px;
+  background-image: url('/Images/background.jpg'); /* Path to your image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-size: cover; /* Make the image cover the entire page */
+  background-position: center; /* Center the image */
+  margin-bottom: 0;
 }
 
-/* =========================
-   Navbar Styles
-========================= */
-nav {
-  background-color: #FFE4D9; /* Dark gray background */
-  color: #45322a; /* Text color */
-  padding: 10px 20px; /* Add padding for spacing */
+header nav.navbar{
+  width: 100%;
+  color: #45322a !important; /* Text color */
+  font-weight: bold;
+  background-color: #FFF0EA !important ; 
 }
 
 nav ul {
   list-style: none; /* Remove bullet points */
   display: flex; /* Align items horizontally */
-  justify-content: space-around; /* Space items evenly */
-  padding: 0;
-  margin: 0;
+  justify-content:center; /* Space items evenly */
 }
 
 nav li {
-  margin: 0 10px; /* Space between items */
+  margin: 0 20px; /* Space between items */
 }
 
 nav a {
-  color: white; /* Link color */
+  color: #45322a; /* Link color */
   text-decoration: none; /* Remove underline */
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 
 nav a:hover {
   color: #45322a; /* Change link color on hover */
   text-decoration: underline; /* Add underline on hover */
+  text-decoration-color: #994c2b;
+}
+/*the part of logo design*/
+.navbar-brand {
+  padding: 0;
+  margin-right: 2rem;
+}
+
+/* the part of right side on the bar (profile and setting) */
+.navbar-nav .icon-link {
+  color: #45322a !important;
+  font-size: 1.5rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.navbar-nav .icon-link:hover {
+  color: #994c2b !important;
 }
