@@ -1,8 +1,159 @@
-﻿@{
+﻿@model List<CarWebSite.Models.Photo>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="categories">Categories</h1>
 </div>
+
+<style>
+.categories {
+    font-size: 60px;
+    color: #45322a;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-shadow: 2px 2px 2px black;
+}
+</style>
+
+<div class="text-center">
+    <h1 class="categories">Brands</h1>
+</div>
+<style>
+.brand {
+    font-size: 60px;
+    color: #45322a;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-shadow: 2px 2px 2px black;
+}
+</style>
+
+<div class="scroll-container">
+    <button class="scroll-btn left-btn">◀</button>
+    <div class="scroll-content">
+        @foreach (var photo in Model)
+        {
+            <div class="photo-item">
+                <img src="@photo.Url" alt="@photo.Description" />
+                <p class="photo-text">@photo.Description</p>
+            </div>
+        }
+    </div>
+    <button class="scroll-btn right-btn">▶</button>
+</div>
+
+<style>
+.scroll-container {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.scroll-content {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    width: 100%;
+ 
+}
+/* Hide the visual scrollbar */
+.scroll-content::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-content {
+    -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.photo-item {
+    position: relative;
+    margin: 20px;
+    border-radius: 15px;
+    min-width: 300px; /* Adjust based on image size */
+    min-height: 300px;
+    text-align: center;
+    background-color: white;
+}
+
+img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    background-color: white;
+}
+
+.photo-text {
+    font-size: 18px;
+    color: #333;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Drop shadow */
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.scroll-btn {
+    cursor: pointer;
+    border: none;
+    background-color: #45322a;
+    color: #6d5246;
+    font-size: 20px;
+    padding: 10px;
+    margin: 0 10px;
+    border-radius: 20px;
+}
+
+.scroll-btn:hover {
+    background-color: #994c2b;
+}
+</style>
+
+<script>
+const scrollContent = document.querySelector('.scroll-content');
+const leftBtn = document.querySelector('.left-btn');
+const rightBtn = document.querySelector('.right-btn');
+
+// Scroll left
+leftBtn.addEventListener('click', () => {
+    scrollContent.scrollBy({
+        left: -300, // Adjust scroll amount
+        behavior: 'smooth'
+    });
+});
+
+// Scroll right
+rightBtn.addEventListener('click', () => {
+    scrollContent.scrollBy({
+        left: 300, // Adjust scroll amount
+        behavior: 'smooth'
+    });
+});
+</script>
+
+<div class="text-center">
+    <h1 class="news">News</h1>
+</div>
+
+<style>
+.news {
+    font-size: 60px;
+    color: #45322a;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-shadow: 2px 2px 2px black;
+}
+</style>

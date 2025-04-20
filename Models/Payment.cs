@@ -8,10 +8,10 @@ namespace CarWebSite.Models
 		public decimal Amount {get; private set;}
 		public DateTime PaymentDate {get; private set;}
 		public PaymentMethod Method {get; private set;}
-		public PaymentStatus Status {get; private set;} = PaymentStatus.Pendeing;
+		public PaymentStatus Status {get; private set;} = PaymentStatus.Pending;
     	public string Currency { get; set; } = "EGP";
 		public int OrderId {get; private set;}
-		public virtual Order Order {get; set;}
+		//public virtual Order Order {get; set;}
 
 
 		public Payment(decimal amount, PaymentMethod method, int orderId)
