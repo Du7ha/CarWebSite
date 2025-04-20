@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using CarWebSite.Models;
 using Microsoft.AspNetCore.Mvc;
 namespace CarWebSite.Controllers
@@ -17,14 +18,85 @@ namespace CarWebSite.Controllers
 {
     var photos = new List<Photo>
     {
-        new Photo { Url = "/Images/images.png" },
-        new Photo { Url = "/Images/image.jpg" },
-        new Photo { Url = "/Images/image(1).jpg" },
-        new Photo { Url = "/Images/Mercedes-Logo.svg.png" },
-        new Photo { Url = "/Images/emblem_001.jpg" }
+        new Photo { 
+            Url = "/Images/images.png", 
+            Description = "BMW" 
+        },
+        new Photo { 
+            Url = "/Images/image.jpg", 
+            Description = "Audi" 
+        },
+        new Photo { 
+            Url = "/Images/image(1).jpg", 
+            Description = "Toyota" 
+        },
+        new Photo { 
+            Url = "/Images/Mercedes-Logo.svg.png", 
+            Description = "Mercedes" 
+        },
+        new Photo { 
+            Url = "/Images/emblem_001.jpg", 
+            Description = "Ferrari" 
+        }
     };
-    // Pass the photos to the view
-    return View(photos);
+
+    var categories = new List<Category>
+    {
+        new Category { 
+            Name = "sedan", 
+            Description = "Sedan" 
+        },
+        new Category { 
+            Name = "suv", 
+            Description = "SUV" 
+        },
+        new Category { 
+            Name = "truck", 
+            Description = "Truck" 
+        },
+        new Category { 
+            Name = "electric", 
+            Description = "Electric" 
+        },
+        new Category { 
+            Name = "luxury", 
+            Description = "Luxury" 
+        },
+        new Category { 
+            Name = "Coupe", 
+            Description = "Coupe" 
+        },
+        new Category { 
+            Name = "crossover", 
+            Description = "crossover" 
+        },
+        new Category { 
+            Name = "Minivan", 
+            Description = "Minivan" 
+        },
+        new Category { 
+            Name = "convertible", 
+            Description = "convertible" 
+        },
+        new Category { 
+            Name = "hatchback", 
+            Description = "hatchback" 
+        },
+        new Category { 
+            Name = "Hybrid", 
+            Description = "Hybrid" 
+        }
+    };
+
+    // Combine both lists into a ViewModel
+    var viewModel = new HomeViewModel
+    {
+        Photos = photos,
+        Categories = categories
+    };
+
+    // Pass the ViewModel to the view
+    return View(viewModel);
 }
 
         public IActionResult Privacy()
@@ -44,6 +116,11 @@ namespace CarWebSite.Controllers
         {
             return View();
         }
+         public IActionResult Profile()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -1,14 +1,15 @@
-﻿@model List<CarWebSite.Models.Photo>
+﻿@model CarWebSite.Models.HomeViewModel
+
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="categories">Categories</h1>
+    <h1 class="categories-title">Categories</h1>
 </div>
 
 <style>
-.categories {
+.categories-title {
     font-size: 60px;
     color: #45322a;
     text-align: center;
@@ -19,42 +20,40 @@
 }
 </style>
 
-<div class="text-center">
-    <h1 class="categories">Brands</h1>
-</div>
-<style>
-.brand {
-    font-size: 60px;
-    color: #45322a;
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    text-shadow: 2px 2px 2px black;
-}
-</style>
-
-<div class="scroll-container">
-    <button class="scroll-btn left-btn">◀</button>
-    <div class="scroll-content">
-        @foreach (var photo in Model)
+<div class="categories-section scroll-container">
+    <button class="scroll-btn categories-left-btn">◀</button>
+    <div class="categories-scroll-content scroll-content">
+        @foreach (var category in Model.Categories)
         {
-            <div class="photo-item">
-                <img src="@photo.Url" alt="@photo.Description" />
-                <p class="photo-text">@photo.Description</p>
+            <div class="category-item">
+                <div class="category-text-container">
+                    <p class="category-text">@category.Description</p>
+                </div>
             </div>
         }
     </div>
-    <button class="scroll-btn right-btn">▶</button>
+    <button class="scroll-btn categories-right-btn">▶</button>
+</div>
+
+<div class="text-center">
+    <h1 class="brands-title">Brands</h1>
 </div>
 
 <style>
+.brands-title {
+    font-size: 60px;
+    color: #45322a;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-shadow: 2px 2px 2px black;
+}
 .scroll-container {
     display: flex;
     align-items: center;
     overflow: hidden;
     width: 100%;
-    margin: 20px 0;
 }
 
 .scroll-content {
@@ -62,8 +61,8 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     width: 100%;
- 
 }
+
 /* Hide the visual scrollbar */
 .scroll-content::-webkit-scrollbar {
     display: none;
@@ -74,73 +73,109 @@
     scrollbar-width: none; /* Hide scrollbar in Firefox */
 }
 
+.category-item {
+    position: relative;
+    margin: 20px;
+    border-radius: 15px;
+    min-width: 150px;
+    min-height: 70px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.category-item:hover {
+    transform: scale(1.05);
+}
+
+.category-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    border-radius: 15px;
+    background-color: #6E4331;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.category-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    padding: 12px;
+}
+
 .photo-item {
     position: relative;
     margin: 20px;
     border-radius: 15px;
-    min-width: 300px; /* Adjust based on image size */
-    min-height: 300px;
+    min-width: 200px;
+    min-height: 200px;
     text-align: center;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 img {
-    width: 100%;
+    width: 50%;
+    height: 50%;
     border-radius: 10px;
     object-fit: cover;
+    align-items: center;
     background-color: white;
 }
 
 .photo-text {
-    font-size: 18px;
+    font-size: 12px;
     color: #333;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Drop shadow */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     position: absolute;
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 5px;
     border-radius: 5px;
+    visibility: hidden;
 }
 
 .scroll-btn {
     cursor: pointer;
     border: none;
-    background-color: #45322a;
-    color: #6d5246;
+    background-color: #994c2b;
+    color: white;
     font-size: 20px;
     padding: 10px;
-    margin: 0 10px;
+    margin: 10px 10px;
     border-radius: 20px;
 }
 
 .scroll-btn:hover {
-    background-color: #994c2b;
+    background-color: #6E4331;
 }
 </style>
 
-<script>
-const scrollContent = document.querySelector('.scroll-content');
-const leftBtn = document.querySelector('.left-btn');
-const rightBtn = document.querySelector('.right-btn');
-
-// Scroll left
-leftBtn.addEventListener('click', () => {
-    scrollContent.scrollBy({
-        left: -300, // Adjust scroll amount
-        behavior: 'smooth'
-    });
-});
-
-// Scroll right
-rightBtn.addEventListener('click', () => {
-    scrollContent.scrollBy({
-        left: 300, // Adjust scroll amount
-        behavior: 'smooth'
-    });
-});
-</script>
+<div class="brands-section scroll-container">
+    <button class="scroll-btn brands-left-btn">◀</button>
+    <div class="brands-scroll-content scroll-content">
+        @foreach (var photo in Model.Photos)
+        {
+            <div class="photo-item">
+                <img src="@photo.Url" alt="@photo.Description" />
+                <p class="photo-text">@photo.Description</p>
+            </div>
+        }
+    </div>
+    <button class="scroll-btn brands-right-btn">▶</button>
+</div>
 
 <div class="text-center">
     <h1 class="news">News</h1>
@@ -157,3 +192,47 @@ rightBtn.addEventListener('click', () => {
     text-shadow: 2px 2px 2px black;
 }
 </style>
+
+<script>
+// Categories section
+const categoriesScrollContent = document.querySelector('.categories-scroll-content');
+const categoriesLeftBtn = document.querySelector('.categories-left-btn');
+const categoriesRightBtn = document.querySelector('.categories-right-btn');
+
+// Scroll left for categories
+categoriesLeftBtn.addEventListener('click', () => {
+    categoriesScrollContent.scrollBy({
+        left: -200, // Adjusted for smaller category boxes
+        behavior: 'smooth'
+    });
+});
+
+// Scroll right for categories
+categoriesRightBtn.addEventListener('click', () => {
+    categoriesScrollContent.scrollBy({
+        left: 200, // Adjusted for smaller category boxes
+        behavior: 'smooth'
+    });
+});
+
+// Brands section
+const brandsScrollContent = document.querySelector('.brands-scroll-content');
+const brandsLeftBtn = document.querySelector('.brands-left-btn');
+const brandsRightBtn = document.querySelector('.brands-right-btn');
+
+// Scroll left for brands
+brandsLeftBtn.addEventListener('click', () => {
+    brandsScrollContent.scrollBy({
+        left: -300,
+        behavior: 'smooth'
+    });
+});
+
+// Scroll right for brands
+brandsRightBtn.addEventListener('click', () => {
+    brandsScrollContent.scrollBy({
+        left: 300,
+        behavior: 'smooth'
+    });
+});
+</script>

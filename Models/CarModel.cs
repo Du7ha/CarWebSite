@@ -7,31 +7,31 @@ namespace CarWebSite.Models
     public class CarModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int carId { get; set; }
+        public int? carId { get; set; }
 
         [Required]
-        public string brand { get; set; }
+        public string? brand { get; set; }
 
         
-        public string model { get; set; }
+        public string? model { get; set; }
 
         [Required]
-        public int year { get; set; }
+        public int? year { get; set; }
 
         [Required]
-        public int mileAge { get; set; }
+        public int? mileAge { get; set; }
 
         [Required]
-        public int price { get; set; }
+        public int? price { get; set; }
 
-        public string color { get; set; }
-        public string bodyType { get; set; }
-        public string description { get; set; }
-        public bool isSold { get; set; }
+        public string? color { get; set; }
+        public string? bodyType { get; set; }
+        public string? description { get; set; }
+        public bool? isSold { get; set; }
 
         [Required]
 
-        public int userId { get; set; }// the user id that is selling this car 
+        public int? userId { get; set; }// the user id that is selling this car 
 
         public CarModel() { }
 
