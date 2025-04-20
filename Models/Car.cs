@@ -14,7 +14,6 @@ namespace CarWebSite.Models
     [StringLength(50)]
     public string Brand { get; set; }
 
-    [Required]
     [StringLength(50)]
     public string Model { get; set; }
 
