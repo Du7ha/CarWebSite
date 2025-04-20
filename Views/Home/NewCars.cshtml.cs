@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace CarWebsite.Views.Cars
+namespace CarWebsite.Views.Home
 {
-    public class UsedCars : PageModel
+    public class NewCars : PageModel
     {
-        private readonly ILogger<UsedCars> _logger;
+        private readonly ILogger<NewCars> _logger;
 
-        public UsedCars(ILogger<UsedCars> logger)
+        public NewCars(ILogger<NewCars> logger)
         {
             _logger = logger;
         }

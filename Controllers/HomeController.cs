@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using CarWebSite.Models;
 using Microsoft.AspNetCore.Mvc;
-
 namespace CarWebSite.Controllers
+
 {
     public class HomeController : Controller
     {
@@ -14,11 +14,33 @@ namespace CarWebSite.Controllers
         }
 
         public IActionResult Index()
+{
+    var photos = new List<Photo>
+    {
+        new Photo { Url = "/Images/images.png" },
+        new Photo { Url = "/Images/image.jpg" },
+        new Photo { Url = "/Images/image(1).jpg" },
+        new Photo { Url = "/Images/Mercedes-Logo.svg.png" },
+        new Photo { Url = "/Images/emblem_001.jpg" }
+    };
+    // Pass the photos to the view
+    return View(photos);
+}
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+         public IActionResult NewCars()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult UsedCars()
+        {
+            return View();
+        }
+        public IActionResult OfferYourCar()
         {
             return View();
         }
