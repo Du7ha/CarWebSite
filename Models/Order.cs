@@ -6,44 +6,48 @@ namespace CarWebSite.Models
 {
     public class Order
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OrderId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int OrderId { get; set; }
 
-        [Required]
-        public int UserId { get; set; }
+    [Required]
+    [ForeignKey("Buyer")]
+    public int BuyerId { get; set; }  // Changed from BuyerId to BuyerId to match ERD
 
-        [Required]
-        public int CarId { get; set; }
+    [Required]
+    [ForeignKey("Seller")]
+    public int SellerId { get; set; }  // Added to match ERD
+    [Required]
+    [ForeignKey("Car")]
+    public int CarId { get; set; }
 
-        public DateTime OrderDate { get; private set; }
+    [Required]
+    public DateTime OrderDate { get; private set; }
 
-        public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+    [Required]
+    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
 
-        public decimal TotalAmount { get; private set; }
+    [Required]
+    [Range(0.01, double.MaxValue, ErrorMessage = "Total amount must be positive")]
+    public decimal TotalAmount { get; private set; }
 
-        public string? ShippingAddress { get; set; }
+    public string? ShippingAddress { get; set; }
+    public string? ContactPhone { get; set; }
+    public string? Notes { get; set; }
 
-        public string? ContactPhone { get; set; }
-
-        public string? Notes { get; set; }
-
-        // Navigation properties
-        [ForeignKey("UserId")]
-        public virtual UserModel? User { get; set; }
-
-        [ForeignKey("CarId")]
-        public virtual CarModel? Car { get; set; }
-
-        public virtual ICollection<Payment>? Payments { get; set; }
+    // Navigation properties
+    public virtual User? Buyer { get; set; }
+    public virtual User? Seller { get; set; }
+    public virtual Car? Car { get; set; }
+    public virtual ICollection<Payment>? Payments { get; set; }
 
         // Default constructor for EF Core
         public Order() { }
 
-        public Order(int userId, int carId, decimal totalAmount, string? shippingAddress = null, string? contactPhone = null, string? notes = null)
+        public Order(int BuyerId, int carId, decimal totalAmount, string? shippingAddress = null, string? contactPhone = null, string? notes = null)
         {
-            if (userId <= 0)
-                throw new ArgumentException("Valid UserId must be provided", nameof(userId));
+            if (BuyerId <= 0)
+                throw new ArgumentException("Valid BuyerId must be provided", nameof(BuyerId));
 
             if (carId <= 0)
                 throw new ArgumentException("Valid CarId must be provided", nameof(carId));
@@ -51,7 +55,7 @@ namespace CarWebSite.Models
             if (totalAmount <= 0)
                 throw new ArgumentException("Total amount must be positive", nameof(totalAmount));
 
-            UserId = userId;
+            BuyerId = BuyerId;
             CarId = carId;
             TotalAmount = totalAmount;
             ShippingAddress = shippingAddress;
@@ -74,13 +78,13 @@ namespace CarWebSite.Models
             // If order is completed, mark the car as sold
             if (newStatus == OrderStatus.Completed && Car != null)
             {
-                Car.isSold = true;
+                Car.IsSold = true;
             }
         }
 
         public bool IsValid()
         {
-            return UserId > 0 &&
+            return BuyerId > 0 &&
                    CarId > 0 &&
                    TotalAmount > 0 &&
                    OrderDate <= DateTime.UtcNow;
