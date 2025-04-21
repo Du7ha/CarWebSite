@@ -1,6 +1,100 @@
-@{
-    ViewData["Title"] = "About";
+﻿@{
+    ViewData["Title"] = "About Us";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's rules.</p>
+<div class="about-container">
+    <div class="about-content">
+        <h1>About Us</h1>
+        <p class="lead">
+            Welcome to <strong>Flash</strong> — your go-to destination for buying new and used cars with ease and confidence.
+        </p>
+
+        <p>
+            We are an online platform specialized in showcasing a wide variety of cars, from brand-new models to well-maintained used vehicles.
+            Our goal is to simplify the car-buying journey from browsing to getting your keys.
+        </p>
+
+        <h3>🚗 What Makes Us Different?</h3>
+        <ul>
+            <li><strong>Wide Range of Cars:</strong> Whether you're looking for a brand-new vehicle or a high-quality used car, we've got options that fit every need and budget.</li>
+            <li><strong>Clear and Transparent Information:</strong> Each car listing comes with detailed descriptions and specs so you know exactly what you're getting.</li>
+            @* <li><strong>Easy Search and Comparison:</strong> Quickly browse, filter, and compare vehicles to find the perfect match in just a few clicks.</li> *@
+            <li><strong>Safe and Reliable Experience:</strong> All listed cars come from verified and trusted sellers, giving you peace of mind with every purchase.</li>
+        </ul>
+
+        <h3>🎯 Our Mission</h3>
+        <p>
+            To make car buying easier, faster, and safer for everyone — whether you're a seasoned buyer or purchasing your first vehicle.
+        </p>
+
+        <h3>🌟 Our Vision</h3>
+        <p>
+            To become the leading online car sales platform in the region, offering a smooth and professional experience that earns our customers' trust.
+        </p>
+
+        @* <h4>Need Help?</h4> *@
+        @* <p> *@
+        @*     Have a question or need assistance? Our team is always ready to support you. <a asp-controller="Home" asp-action="Contact">Contact us</a> *@
+        @* </p> *@
+
+        <!-- Video Section with Autoplay -->
+        <div class="video-container">
+            <video autoplay muted loop controls>
+                <source src="~/Videos/vid_about.MP4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* .about-container { */
+    /*     width: 100%; */
+    /*     padding: 20px 0; */
+    /*     background-color: #f8f9fa; */
+    /*     display: flex; */
+    /*     justify-content: center; */
+    /* } */
+
+    .about-content {
+        background-color: #f8f9fa;
+        padding: 40px 20px; 
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: none; 
+    }
+
+
+    .lead {
+        font-size: 1.25rem;
+        font-weight: 300;
+    }
+
+    h1, h3, h4 {
+        color: #45322a;
+        margin-top: 25px;
+    }
+
+    ul {
+        padding-left: 20px;
+        margin-bottom: 25px;
+    }
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    .video-container {
+        margin-top: 40px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+        max-height: 500px;
+        object-fit: cover;
+    }
+</style>
