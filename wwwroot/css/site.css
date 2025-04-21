@@ -1,238 +1,251 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem #f0f0f0, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem #f0f0f0, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  background-image: url('/Images/background.jpg'); /* Path to your image */
-  background-repeat: no-repeat; /* Prevent the image from repeating */
-  background-size: cover; /* Make the image cover the entire page */
-  background-position: center; /* Center the image */
-  margin-bottom: 0;
+    background-image: url('/Images/background.jpg'); /* Path to your image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-size: cover; /* Make the image cover the entire page */
+    background-position: center; /* Center the image */
+    margin-bottom: 0;
 }
 
-header nav.navbar{
-  width: 100%;
-  color: #45322a !important; /* Text color */
-  font-weight: bold;
-  background-color: #FFF0EA !important ; 
+header nav.navbar {
+    width: 100%;
+    color: #45322a !important; /* Text color */
+    font-weight: bold;
+    background-color: #FFF0EA !important;
 }
 
 nav ul {
-  list-style: none; /* Remove bullet points */
-  display: flex; /* Align items horizontally */
-  justify-content:center; /* Space items evenly */
+    list-style: none; /* Remove bullet points */
+    display: flex; /* Align items horizontally */
+    justify-content: center; /* Space items evenly */
 }
 
 nav li {
-  margin: 0 20px; /* Space between items */
+    margin: 0 20px; /* Space between items */
 }
 
 nav a {
-  color: #45322a; /* Link color */
-  text-decoration: none; /* Remove underline */
-  font-size: 1.3rem;
+    color: #45322a; /* Link color */
+    text-decoration: none; /* Remove underline */
+    font-size: 1.3rem;
 }
 
-nav a:hover {
-  color: #45322a; /* Change link color on hover */
-  text-decoration: underline; /* Add underline on hover */
-  text-decoration-color: #994c2b;
-}
+    nav a:hover {
+        color: #45322a; /* Change link color on hover */
+        text-decoration: underline; /* Add underline on hover */
+        text-decoration-color: #994c2b;
+    }
 /*the part of logo design*/
 .navbar-brand {
-  padding: 0;
-  margin-right: 2rem;
+    padding: 0;
+    margin-right: 2rem;
 }
 
 /* the part of right side on the bar (profile and setting) */
 .navbar-nav .icon-link {
-  color: #45322a !important;
-  font-size: 1.5rem;
-  padding: 0.5rem 0.8rem;
+    color: #45322a !important;
+    font-size: 1.5rem;
+    padding: 0.5rem 0.8rem;
 }
 
-.navbar-nav .icon-link:hover {
-  color: #994c2b !important;
-}
+    .navbar-nav .icon-link:hover {
+        color: #994c2b !important;
+    }
+
 .navbar-brand img {
-  height: 40px;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  vertical-align: middle;
-  display: block;
+    height: 40px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    vertical-align: middle;
+    display: block;
 }
 
 /* Hidden checkbox */
 .menu-checkbox {
-  display: none;
+    display: none;
 }
 
 /* Floating Menu Styling */
 .floating-menu {
-  position: absolute;
-  top: 50px; /* Adjust below navbar */
-  right: 10px; /* Align to the right */
-  background-color: #fff;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 200px;
-  height: 250px;
-  padding: 10px;
-  display: none; /* Hidden by default */
-  z-index: 1000;
+    position: absolute;
+    top: 50px; /* Adjust below navbar */
+    right: 10px; /* Align to the right */
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    height: 250px;
+    padding: 10px;
+    display: none; /* Hidden by default */
+    z-index: 1000;
 }
 
 /* Show menu when the checkbox is checked */
 .menu-checkbox:checked + #floatingMenu {
-  display: block;
-  animation: slide-down 0.3s ease-out;
+    display: block;
+    animation: slide-down 0.3s ease-out;
 }
 
 /* Slide down animation */
 @keyframes slide-down {
-  from {
-      transform: translateY(-20px);
-      opacity: 0;
-  }
-  to {
-      transform: translateY(0);
-      opacity: 1;
-  }
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Menu Items Styling */
 .floating-menu ul {
-  flex-direction: column;
-  list-style: none;
-  padding: 10px;
-  margin: 0;
+    flex-direction: column;
+    list-style: none;
+    padding: 10px;
+    margin: 0;
 }
 
-.floating-menu ul li {
-  margin-bottom: 20px;
-}
+    .floating-menu ul li {
+        margin-bottom: 20px;
+    }
 
-.floating-menu ul li a {
-  text-decoration: none;
-  color: #45322a;
-}
+        .floating-menu ul li a {
+            text-decoration: none;
+            color: #45322a;
+        }
 
-.floating-menu ul li a:hover {
-  color: #994c2b;
-}
+            .floating-menu ul li a:hover {
+                color: #994c2b;
+            }
 
 /* Hidden checkbox for toggling visibility */
 .frame-checkbox {
-  display: none;
+    display: none;
 }
 
 /* Background Overlay Styling */
 .background-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black color */
-  backdrop-filter: blur(10px); /* Adds blur effect */
-  display: none; /* Hidden by default */
-  z-index: 999; /* Behind the floating frame */
-  cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black color */
+    backdrop-filter: blur(10px); /* Adds blur effect */
+    display: none; /* Hidden by default */
+    z-index: 999; /* Behind the floating frame */
+    cursor: pointer;
 }
 
 /* Floating Frame Styling */
 .floating-frame {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  border-radius: 15px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 300px;
-  display: none; /* Hidden by default */
-  z-index: 1000; /* Above the overlay */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Above the overlay */
 }
 
 /* Show frame and overlay when checkbox is checked */
 .frame-checkbox:checked ~ .background-overlay {
-  display: block; /* Show the background blur overlay */
+    display: block; /* Show the background blur overlay */
 }
+
 .frame-checkbox:checked ~ .frame-wrapper {
-  display: block; /* Makes overlay and frame visible */
+    display: block; /* Makes overlay and frame visible */
 }
 
 .floating-frame h2 {
-  text-align: center;
-  margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .floating-frame form div {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .floating-frame label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .floating-frame input {
-  width: 100%;
-  padding: 8px;
-  border: 2px solid #45322a;
-  border-radius: 15px;
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #45322a;
+    border-radius: 15px;
 }
 
 .floating-frame button {
-  width: 100%;
-  padding: 10px;
-  background-color: #994c2b;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    width: 100%;
+    padding: 10px;
+    background-color: #994c2b;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.floating-frame button:hover {
-  background-color: #6E4331;
-}
+    .floating-frame button:hover {
+        background-color: #6E4331;
+    }
 
 .google-signin {
-  background-color: #db4437;
-  color: #fff;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
+    background-color: #db4437;
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
-.google-signin:hover {
-  background-color: #c33d2e;
-}
+    .google-signin:hover {
+        background-color: #c33d2e;
+    }
 
 /* Show frame when checkbox is checked */
 .frame-checkbox:checked ~ #signInFrame {
-  display: block;
+    display: block;
+}
+
+
+.navbar-brand img {
+    height: 40px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    vertical-align: middle;
+    display: block;
 }
