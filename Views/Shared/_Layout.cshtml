@@ -16,7 +16,6 @@
                 <!-- Logo instead of text -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/Images/Weblogo.png" alt="Car WebSite Logo" height="40px" />
-
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -39,17 +38,65 @@
                     </ul>
                     <!-- Icons on the right side -->
                     <ul class="navbar-nav">
+                        <!-- Sign In Link -->
                         <li class="nav-item">
-                            <a class="nav-link icon-link" href="#"><i class="fas fa-user"></i></a>
+                            <label for="signInToggle" class="nav-link text-dark" style="cursor: pointer;">Sign In</label>
                         </li>
+                        <!-- User Profile Icon -->
                         <li class="nav-item">
-                            <a class="nav-link icon-link" href="#"><i class="fas fa-bars"></i></a>
+                            <a class="nav-link icon-link" asp-area="" asp-controller="Home" asp-action="Profile">
+                                <i class="fas fa-user"></i>
+                            </a>
                         </li>
+                        <!-- Bar Icon -->
+                        <label for="menuToggle" class="nav-link icon-link">
+                            <i class="fas fa-bars"></i>
+                        </label>
+                        <!-- Hidden Checkbox for toggling -->
+                        <input type="checkbox" id="menuToggle" class="menu-checkbox" />
+                        <!-- Floating Sliding Menu -->
+                        <div id="floatingMenu" class="floating-menu">
+                            <ul>
+                                <li><a asp-controller="Home" asp-action="Profile">Profile</a></li>
+                                <li><a asp-controller="Home" asp-action="About">About</a></li>
+                                <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                            </ul>
+                        </div>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
+    <!-- Hidden Checkbox for Sign-In Frame -->
+    <input type="checkbox" id="signInToggle" class="frame-checkbox" />
+
+    <div class="background-overlay"></div>
+
+    <!-- Floating Sign-In Frame -->
+    <div id="signInFrame" class="floating-frame">
+        <h2>Sign In</h2>
+        <form action="/Account/SignIn" method="post">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required />
+            </div>
+            <div>
+                <button type="submit">Sign In</button>
+            </div>
+            <hr />
+            <div>
+                <button type="button" class="google-signin">
+                    <i class="fab fa-google"></i> Sign in with Google
+                </button>
+            </div>
+        </form>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
