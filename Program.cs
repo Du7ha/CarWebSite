@@ -1,3 +1,6 @@
+using CarWebSite.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace CarWebSite
 {
     public class Program
@@ -8,6 +11,8 @@ namespace CarWebSite
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<CarWebSiteContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
