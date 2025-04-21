@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CarWebSite.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- In the head section of _Layout.cshtml -->
 </head>
 <body>
     <header>
@@ -112,5 +113,18 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+    // Script to close the sign-in frame when clicking outside of it
+    document.addEventListener('DOMContentLoaded', function() {
+        const overlay = document.querySelector('.background-overlay');
+        const signInToggle = document.getElementById('signInToggle');
+        
+        if (overlay && signInToggle) {
+            overlay.addEventListener('click', function() {
+                signInToggle.checked = false;
+            });
+        }
+    });
+</script>
 </body>
 </html>
