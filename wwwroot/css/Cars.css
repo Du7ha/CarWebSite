@@ -1,0 +1,53 @@
+﻿/* Custom styles for the Cars page */
+body {
+    background-color: #f8f9fa;
+}
+
+.dropdown-toggle::after {
+    margin-left: 0.5em;
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+.bi-heart-fill {
+    color: #dc3545;
+}
+
+/* Style for the price */
+.card-text strong {
+    color: #8B4513;
+    font-size: 1.2rem;
+}
+
+/* Style for the deal rating */
+.deal-rating {
+    color: #28a745;
+}
+
+/* Background styling */
+.bg-light {
+    background-color: #f5e6d8;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .d-flex.justify-content-center.gap-3 {
+        flex-wrap: wrap;
+    }
+
+    .dropdown {
+        margin-bottom: 10px;
+    }
+}
