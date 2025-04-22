@@ -3,14 +3,10 @@
 }
 
 <div class="container-fluid p-0">
-    <!-- Background with car silhouette -->
     <div class="position-relative">
-        <div class="bg-light" style="background-color: #f5e6d8 !important; min-height: 200px; position: relative; overflow: hidden;">
-            <!-- Background car silhouette -->
-        </div>
+        <div class="bg-light" style="background-color: #f5e6d8 !important; min-height: 200px; position: relative; overflow: hidden;"></div>
 
         <div class="container position-relative" style="margin-top: -100px;">
-            <!-- Filter Section -->
             <div class="row justify-content-center mb-5">
                 <div class="col-md-8 text-center">
                     <div class="card border-light shadow-sm">
@@ -18,9 +14,7 @@
                             <h2 class="card-title text-center mb-4" style="color: #8B4513; font-weight: bold;">Choose your car</h2>
                             <div class="d-flex justify-content-center gap-3 flex-wrap">
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        Model
-                                    </button>
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Model</button>
                                     <ul class="dropdown-menu">
                                         @foreach (var bodyType in ViewBag.BodyTypes)
                                         {
@@ -29,9 +23,7 @@
                                     </ul>
                                 </div>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        Brand
-                                    </button>
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Brand</button>
                                     <ul class="dropdown-menu">
                                         @foreach (var brand in ViewBag.Brands)
                                         {
@@ -40,9 +32,7 @@
                                     </ul>
                                 </div>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        Price
-                                    </button>
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Price</button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">Under $30,000</a></li>
                                         <li><a class="dropdown-item" href="#">$30,000 - $50,000</a></li>
@@ -51,9 +41,7 @@
                                     </ul>
                                 </div>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        Color
-                                    </button>
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Color</button>
                                     <ul class="dropdown-menu">
                                         @foreach (var color in ViewBag.Colors)
                                         {
@@ -67,158 +55,39 @@
                 </div>
             </div>
 
-            <!-- Car Listings -->
             <div class="row justify-content-center">
                 <div class="col-md-10">
-                    <!-- Car 1 -->
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body p-0">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/images/images(3).jpg" class="img-fluid rounded-start" alt="Mahindra XUV700">
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="card-body position-relative p-4">
-                                        <!-- Favorite Button -->
-                                        <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-
-                                        <h5 class="card-title">2021 Mahindra XUV700</h5>
-                                        <p class="card-text mb-1">43,629 mi</p>
-                                        <p class="card-text mb-1"><strong>$61,999</strong></p>
-                                        <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                        <p class="card-text mb-1">The Autobarn Volkswagen of Countryside</p>
-                                        <p class="card-text mb-1">
-                                            <span class="me-2">4.9</span>
-                                            <span>(1,450 reviews)</span>
-                                        </p>
-                                        <p class="card-text">Countryside, IL</p>
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <a href="/Home/CarDetails?carId=@i" class="text-decoration-none text-dark">
+                            <div class="card mb-4 shadow-sm hover-shadow" style="cursor: pointer;">
+                                <div class="card-body p-0">
+                                    <div class="row g-0">
+                                        <div class="col-md-5">
+                                            <img src="/images/car@(i).jpg" class="img-fluid rounded-start" alt="Car @(i)">
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="card-body position-relative p-4">
+                                                <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                                <h5 class="card-title">2021 Car Model @(i)</h5>
+                                                <p class="card-text mb-1">43,629 mi</p>
+                                                <p class="card-text mb-1"><strong>$61,999</strong></p>
+                                                <p class="card-text mb-1 deal-rating">Fair Deal</p>
+                                                <p class="card-text mb-1">Autobarn of City</p>
+                                                <p class="card-text mb-1">
+                                                    <span class="me-2">4.9</span>
+                                                    <span>(1,450 reviews)</span>
+                                                </p>
+                                                <p class="card-text">City, IL</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Car 2 -->
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body p-0">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/images/e869d5ebe2e741119b15964925b077a6.jpg" class="img-fluid rounded-start" alt="Nissan Ariya">
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="card-body position-relative p-4">
-                                        <!-- Favorite Button -->
-                                        <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-
-                                        <h5 class="card-title">2021 Nissan Ariya</h5>
-                                        <p class="card-text mb-1">43,629 mi</p>
-                                        <p class="card-text mb-1"><strong>$61,999</strong></p>
-                                        <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                        <p class="card-text mb-1">The Autobarn Volkswagen of Countryside</p>
-                                        <p class="card-text mb-1">
-                                            <span class="me-2">4.9</span>
-                                            <span>(1,450 reviews)</span>
-                                        </p>
-                                        <p class="card-text">Countryside, IL</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Car 3 -->
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body p-0">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/images/images(2).jpg" class="img-fluid rounded-start" alt="Nissan Ariya Sport">
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="card-body position-relative p-4">
-                                        <!-- Favorite Button -->
-                                        <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-
-                                        <h5 class="card-title">2021 Nissan Ariya Sport</h5>
-                                        <p class="card-text mb-1">43,629 mi</p>
-                                        <p class="card-text mb-1"><strong>$61,999</strong></p>
-                                        <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                        <p class="card-text mb-1">The Autobarn Volkswagen of Countryside</p>
-                                        <p class="card-text mb-1">
-                                            <span class="me-2">4.9</span>
-                                            <span>(1,450 reviews)</span>
-                                        </p>
-                                        <p class="card-text">Countryside, IL</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Car 4 -->
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body p-0">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/images/41X0G5+nddL._AC_UF1000,1000_QL80_.jpg" class="img-fluid rounded-start" alt="Rolls-Royce Cullinan">
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="card-body position-relative p-4">
-                                        <!-- Favorite Button -->
-                                        <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-
-                                        <h5 class="card-title">2021 Rolls-Royce Cullinan</h5>
-                                        <p class="card-text mb-1">43,629 mi</p>
-                                        <p class="card-text mb-1"><strong>$61,999</strong></p>
-                                        <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                        <p class="card-text mb-1">The Autobarn Volkswagen of Countryside</p>
-                                        <p class="card-text mb-1">
-                                            <span class="me-2">4.9</span>
-                                            <span>(1,450 reviews)</span>
-                                        </p>
-                                        <p class="card-text">Countryside, IL</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Car 5 -->
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body p-0">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    <img src="/images/37716ecbb91240cfa348d8186273b3d9.jpg" class="img-fluid rounded-start" alt="Nissan Ariya Black">
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="card-body position-relative p-4">
-                                        <!-- Favorite Button -->
-                                        <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-
-                                        <h5 class="card-title">2021 Nissan Ariya Black</h5>
-                                        <p class="card-text mb-1">43,629 mi</p>
-                                        <p class="card-text mb-1"><strong>$61,999</strong></p>
-                                        <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                        <p class="card-text mb-1">The Autobarn Volkswagen of Countryside</p>
-                                        <p class="card-text mb-1">
-                                            <span class="me-2">4.9</span>
-                                            <span>(1,450 reviews)</span>
-                                        </p>
-                                        <p class="card-text">Countryside, IL</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </a>
+                    }
                 </div>
             </div>
         </div>
@@ -227,11 +96,19 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // Toggle favorite icon
-            $('.favorite-btn').click(function() {
+        $(document).ready(function () {
+            $('.favorite-btn').click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 $(this).find('i').toggleClass('bi-heart bi-heart-fill text-danger');
             });
         });
     </script>
+    <style>
+        .hover-shadow:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
 }

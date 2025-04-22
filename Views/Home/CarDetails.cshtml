@@ -1,8 +1,27 @@
 @{
-    ViewData["Title"] = "CarDetails";
+    ViewData["Title"] = "Car Details";
+    var carId = Context.Request.Query["carId"]; // You can use this to switch between static cars if needed
 }
 
-<h1>@ViewData["Title"]</h1>
-<div>
-    
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <img src="/images/images(3).jpg" class="img-fluid rounded-start" alt="Mahindra XUV700">
+            </div>
+            <div class="col-md-6 p-4">
+                <h2>2021 Mahindra XUV700</h2>
+                <p><strong>Mileage:</strong> 43,629 miles</p>
+                <p><strong>Price:</strong> $61,999</p>
+                <p><strong>Deal Rating:</strong> Fair Deal</p>
+                <p><strong>Dealer:</strong> The Autobarn Volkswagen of Countryside</p>
+                <p><strong>Location:</strong> Countryside, IL</p>
+                <p><strong>Rating:</strong> 4.9 (1,450 reviews)</p>
+                <p><strong>Features:</strong> AWD, Automatic Transmission, Sunroof, Leather Seats</p>
+                <p><strong>Description:</strong> This 2021 Mahindra XUV700 offers a smooth and powerful ride with luxurious features and excellent safety ratings.</p>
+                <button class="btn btn-primary mt-3">Contact Seller</button>
+                <button class="btn btn-success mt-3 ms-2">Add to Favorites</button>
+            </div>
+        </div>
+    </div>
 </div>

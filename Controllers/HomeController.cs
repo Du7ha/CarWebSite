@@ -68,7 +68,13 @@ namespace CarWebSite.Controllers
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
             return View();
         }
+        public IActionResult CarDetails()
+        {
 
+            ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
+            ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
+            return View();
+        }
         public IActionResult OfferYourCar()
         {
             return View();
