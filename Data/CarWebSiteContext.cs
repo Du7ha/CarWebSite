@@ -65,6 +65,30 @@ namespace CarWebSite.Data
                 .WithMany(u => u.CarsForSale)  // A User can have many Cars for sale
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete for cars
+
+
+            // Configure Photo -> Car relationship
+            modelBuilder.Entity<Photo>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<Photo>()
+                .HasOne(p => p.Car)
+                .WithMany(c => c.Photos) // You'll need to add `public ICollection<Photo> Photos` in Car
+                .HasForeignKey(p => p.CarId)
+                .OnDelete(DeleteBehavior.SetNull); // If car is deleted, keep photo with null CarId
+
+            // Configure Category
+            modelBuilder.Entity<Category>()
+                .HasKey(c => c.Name); // Name is primary key
+
+            modelBuilder.Entity<Category>()
+                .Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Category>()
+                .Property(c => c.Description)
+                .HasMaxLength(500);
         }
     }
 }
