@@ -12,6 +12,8 @@ namespace CarWebSite.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<SavedCar> SavedCars { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
