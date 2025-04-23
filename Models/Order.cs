@@ -6,44 +6,58 @@ namespace CarWebSite.Models
 {
     public class Order
     {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int OrderId { get; set; }
+        // Primary key for the order
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int OrderId { get; set; }
 
-    [Required]
-    [ForeignKey("Buyer")]
-    public int BuyerId { get; set; }  // Changed from BuyerId to BuyerId to match ERD
+        // Foreign key referencing the buyer (User)
+        [Required]
+        [ForeignKey("Buyer")]
+        public int BuyerId { get; set; }
 
-    [Required]
-    [ForeignKey("Seller")]
-    public int SellerId { get; set; }  // Added to match ERD
-    [Required]
-    [ForeignKey("Car")]
-    public int CarId { get; set; }
+        // Foreign key referencing the seller (User)
+        [Required]
+        [ForeignKey("Seller")]
+        public int SellerId { get; set; }
 
-    [Required]
-    public DateTime OrderDate { get; private set; }
+        // Foreign key referencing the car
+        [Required]
+        [ForeignKey("Car")]
+        public int CarId { get; set; }
 
-    [Required]
-    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+        // Automatically set to current time on order creation
+        [Required]
+        public DateTime OrderDate { get; private set; }
 
-    [Required]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Total amount must be positive")]
-    public decimal TotalAmount { get; private set; }
+        // Enum to track order status (default is Pending)
+        [Required]
+        public OrderStatus Status { get; private set; } = OrderStatus.Pending;
 
-    public string? ShippingAddress { get; set; }
-    public string? ContactPhone { get; set; }
-    public string? Notes { get; set; }
+        // Total price of the order
+        [Required]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Total amount must be positive")]
+        public decimal TotalAmount { get; private set; }
 
-    // Navigation properties
-    public virtual User? Buyer { get; set; }
-    public virtual User? Seller { get; set; }
-    public virtual Car? Car { get; set; }
-    public virtual ICollection<Payment>? Payments { get; set; }
+        // Optional shipping info
+        public string? ShippingAddress { get; set; }
 
-        // Default constructor for EF Core
+        // Optional contact phone
+        public string? ContactPhone { get; set; }
+
+        // Optional notes for the order
+        public string? Notes { get; set; }
+
+        // Navigation properties for EF Core relationships
+        public virtual User? Buyer { get; set; }
+        public virtual User? Seller { get; set; }
+        public virtual Car? Car { get; set; }
+        public virtual ICollection<Payment>? Payments { get; set; }
+
+        // Parameterless constructor required by EF Core
         public Order() { }
 
+        // Custom constructor for creating an order
         public Order(int BuyerId, int carId, decimal totalAmount, string? shippingAddress = null, string? contactPhone = null, string? notes = null)
         {
             if (BuyerId <= 0)
@@ -55,7 +69,12 @@ namespace CarWebSite.Models
             if (totalAmount <= 0)
                 throw new ArgumentException("Total amount must be positive", nameof(totalAmount));
 
+            // ❗ Issue: Shadowing the property name with the parameter name
+            // This line doesn't work as intended because it assigns the parameter to itself
             BuyerId = BuyerId;
+
+            // The correct way would be: this.BuyerId = BuyerId;
+
             CarId = carId;
             TotalAmount = totalAmount;
             ShippingAddress = shippingAddress;
@@ -64,9 +83,9 @@ namespace CarWebSite.Models
             OrderDate = DateTime.UtcNow;
         }
 
+        // Method to update the status of the order with rules
         public void UpdateStatus(OrderStatus newStatus)
         {
-            // Validate status transitions
             if (Status == OrderStatus.Cancelled && newStatus != OrderStatus.Cancelled)
                 throw new InvalidOperationException("Cannot change status of a cancelled order");
 
@@ -82,6 +101,7 @@ namespace CarWebSite.Models
             }
         }
 
+        // Check if the order is logically valid
         public bool IsValid()
         {
             return BuyerId > 0 &&
@@ -90,6 +110,7 @@ namespace CarWebSite.Models
                    OrderDate <= DateTime.UtcNow;
         }
 
+        // Check if contact info is present and valid
         public bool HasValidContactInfo()
         {
             return !string.IsNullOrEmpty(ShippingAddress) &&
@@ -99,6 +120,7 @@ namespace CarWebSite.Models
         }
     }
 
+    // Enum for order status
     public enum OrderStatus
     {
         Pending,
