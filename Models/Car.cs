@@ -51,12 +51,18 @@ namespace CarWebSite.Models
 
         [DataType(DataType.DateTime)]
         public DateTime? ListingDate { get; set; } = DateTime.UtcNow;
+        
+        [Required]
+        public int CategoryId { get; set; } // Foreign key
+
+        
 
         // Navigation properties
         public virtual User? Seller { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<SavedCar>? SavedByUsers { get; set; }
         public virtual ICollection<Photo>? Photos { get; set; }
+        public virtual Category? Category { get; set; } 
 
         public Car() { }
 

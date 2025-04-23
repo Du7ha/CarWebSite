@@ -6,10 +6,15 @@ namespace CarWebSite.Models
     public class Category
     {
         [Key]
-        [StringLength(100)]
+        public int CategoryId { get; set; } // Added primary key
+
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
 
-        [StringLength(500)]
+        [StringLength(255)]
         public string? Description { get; set; }
+
+        public virtual ICollection<Car>? Cars { get; set; } // Navigation property  
     }
 }

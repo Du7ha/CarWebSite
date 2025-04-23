@@ -81,7 +81,7 @@ namespace CarWebSite.Data
 
             // Configure Category
             modelBuilder.Entity<Category>()
-                .HasKey(c => c.Name); // Name is primary key
+                .HasKey(c => c.CategoryId); // CategoryId is primary key
 
             modelBuilder.Entity<Category>()
                 .Property(c => c.Name)
@@ -91,6 +91,14 @@ namespace CarWebSite.Data
             modelBuilder.Entity<Category>()
                 .Property(c => c.Description)
                 .HasMaxLength(500);
+            
+            
+            // Car - Category relationship
+            modelBuilder.Entity<Car>()
+                .HasOne(c => c.Category)
+                .WithMany(cat => cat.Cars)
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
