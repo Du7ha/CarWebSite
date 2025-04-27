@@ -71,12 +71,182 @@
 
                 <!-- Buttons at the Bottom -->
                 <div class="mt-4 text-center">
-                    <button class="btn btn-primary me-2 mb-2">Contact Seller</button>
+                    <button class="btn btn-primary me-2 mb-2" id="contactSellerBtn">Contact Seller</button>
                     <button class="btn btn-success me-2 mb-2">Add to Favorites</button>
-                    <button class="btn btn-warning mb-2">Purchase</button>
+                    <button class="btn btn-warning mb-2" id ="purchasebtn">Purchase</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal for Contact Form -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="contactModalLabel">Purchase Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <!-- Logo placeholder -->
+                    <div class="mb-3">
+                        <img src="/Images/Carlogol.png" alt="Website Logo" class="img-fluid" style="max-height: 140px;">
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Purchase request sent successfully!
+                    </div>
+                    
+                    <p>Thank you for your interest in the 2021 Mahindra XUV700.</p>
+                    <p>A representative will contact you shortly with more information.</p>
+                    <p><strong>Reference ID:</strong> XUV700-<span id="referenceId"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary px-4" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Generate a random reference ID when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const referenceId = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('referenceId').textContent = referenceId;
+            
+            // Set up event listeners
+            document.getElementById('purchasebtn').addEventListener('click', function() {
+                const contactModal = new bootstrap.Modal(document.getElementById('contactModal'));
+                contactModal.show();
+            });
+            
+            document.getElementById('okButton').addEventListener('click', function() {
+                // Hide the modal
+                const contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+                contactModal.hide();
+                
+                // Add a slight delay before redirecting to home page
+                setTimeout(function() {
+                    window.location.href = '/';  // Redirect to home page
+                }, 300);
+            });
+        });
+    </script>
+}
+
+<style>
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 20px;
+}
+
+/* Card styling */
+.card {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease;
+  border-radius: 20px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Image styling */
+.card img {
+  object-fit: cover;
+}
+
+/* Text content area */
+.card .col-md-6.p-4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Headings */
+.card h2 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: #6E4331;
+  border-color: #6E4331;
+}
+
+.btn-primary:hover {
+  background-color: #994C2B;
+  border-color: #994C2B;
+}
+
+.btn-success {
+  background-color: #FFC7AF;
+  border-color: #FFC7AF;
+  color: #333;
+}
+
+.btn-success:hover {
+  background-color: #994C2B;
+  border-color: #994C2B;
+  color: white;
+}
+
+.btn-warning {
+  background-color: #FF9A76;
+  border-color: #FF9A76;
+  color: #333;
+}
+
+.btn-warning:hover {
+  background-color: #FF7F50;
+  border-color: #FF7F50;
+  color: white;
+}
+
+/* Review styles */
+.bg-light {
+  background-color: #FFF0EA !important;
+}
+
+.border {
+  border-color: #FFC7AF !important;
+}
+
+/* Modal styling */
+.modal-header {
+  background-color: #6E4331 !important;
+  color: white;
+}
+
+.modal-body {
+  padding: 2rem;
+  background-color: #FFF0EA;
+}
+
+.modal-body img {
+  max-height: 140px;
+  width: auto;
+  margin-bottom: 1.5rem;
+}
+
+.alert-success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border-color: #badbcc;
+}
+
+/* Form control styling */
+.form-control:focus {
+  border-color: #6E4331;
+  box-shadow: 0 0 0 0.25rem rgba(110, 67, 49, 0.25);
+}
+
+</style>
