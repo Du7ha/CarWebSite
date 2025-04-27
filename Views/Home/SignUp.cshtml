@@ -41,8 +41,9 @@
 
             <div class="mb-3 form-check">
                 <input asp-for="IsSeller" class="form-check-input" type="checkbox" required />
-                <label asp-for="IsSeller" class="form-check-label"></label>
+                <label class="form-check-label" for="IsSeller">Seller</label>
             </div>
+
 
             <div class="mb-3">
                 <label asp-for="Role" class="form-label"></label>
@@ -111,3 +112,43 @@
     });
 </script>
 
+<style>
+/* Style for the sign-up button */
+.btn-primary {
+    background-color: #6E4331;
+    border-color: #6E4331;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #994C2B;
+    border-color: #994C2B;
+}
+
+/* Style for the text fields */
+.form-control {
+    border: 2px solid #45322A;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Style for the frame */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #FFF0EA;
+}
+</style>

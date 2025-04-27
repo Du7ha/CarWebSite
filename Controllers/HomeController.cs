@@ -18,10 +18,15 @@ namespace CarWebSite.Controllers
             var photos = new List<Photo>
             {
                 new Photo { Url = "/Images/images.png", Description = "Kia" },
-                new Photo { Url = "/Images/image.jpg", Description = "Audi" },
-                new Photo { Url = "/Images/image(1).jpg", Description = "Toyota" },
+                new Photo { Url = "/Images/image.jpg", Description = "BMW" },
+                new Photo { Url = "/Images/image(1).jpg", Description = "Audi" },
                 new Photo { Url = "/Images/Mercedes-Logo.svg.png", Description = "Mercedes" },
-                new Photo { Url = "/Images/emblem_001.jpg", Description = "Ferrari" }
+                new Photo { Url = "/Images/emblem_001.jpg", Description = "Toyota" },
+                new Photo { Url = "/Images/Nissan.png", Description = "Nissan" },
+                new Photo { Url = "/Images/Ford_Logo.png", Description = "Ford" },
+                new Photo { Url = "/Images/honda.png", Description = "Honda" },
+                new Photo { Url = "/Images/Mahindra.png", Description = "Mahindra" },
+                new Photo { Url = "/Images/porsche.jpg", Description = "Porsche" }
             };
 
             var categories = new List<Category>
