@@ -17,11 +17,11 @@ namespace CarWebSite.Controllers
         {
             var photos = new List<Photo>
             {
-                new Photo { Url = "/Images/images.png", Description = "BMW" },
-                new Photo { Url = "/Images/image.jpg", Description = "Audi" },
-                new Photo { Url = "/Images/image(1).jpg", Description = "Toyota" },
-                new Photo { Url = "/Images/Mercedes-Logo.svg.png", Description = "Mercedes" },
-                new Photo { Url = "/Images/emblem_001.jpg", Description = "Ferrari" }
+                new Photo { Url = "/Images/images.png"},
+                new Photo { Url = "/Images/image.jpg" },
+                new Photo { Url = "/Images/image(1).jpg"},
+                new Photo { Url = "/Images/Mercedes-Logo.svg.png" },
+                new Photo { Url = "/Images/emblem_001.jpg"}
             };
 
             var categories = new List<Category>
