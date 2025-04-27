@@ -17,6 +17,19 @@ namespace CarWebSite.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configure decimal precision for monetary fields
+            modelBuilder.Entity<Car>()
+                .Property(c => c.Price)
+                .HasPrecision(18, 2); // 18 digits total, 2 decimal places
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
+
             // Configure SavedCar -> User relationship
             modelBuilder.Entity<SavedCar>()
                 .HasKey(sc => new { sc.UserId, sc.CarId });
@@ -24,50 +37,49 @@ namespace CarWebSite.Data
             // Configure relationships for SavedCar
             modelBuilder.Entity<SavedCar>()
                 .HasOne(sc => sc.User)
-                .WithMany(u => u.SavedCars)  // Assuming a User can have many saved cars
+                .WithMany(u => u.SavedCars)
                 .HasForeignKey(sc => sc.UserId)
-                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete for saved cars
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<SavedCar>()
                 .HasOne(sc => sc.Car)
-                .WithMany(c => c.SavedByUsers)  // A Car can be saved by many users
+                .WithMany(c => c.SavedByUsers)
                 .HasForeignKey(sc => sc.CarId)
-                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete for saved cars
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configure Buyer relationship (User -> Orders)
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Buyer)  // Order has one Buyer (User)
-                .WithMany(u => u.OrdersAsBuyer)  // A User can have many Orders as Buyer
-                .HasForeignKey(o => o.BuyerId)  // Foreign Key in Order
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete (optional)
+                .HasOne(o => o.Buyer)
+                .WithMany(u => u.OrdersAsBuyer)
+                .HasForeignKey(o => o.BuyerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Seller relationship (User -> Orders)
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Seller)  // Order has one Seller (User)
-                .WithMany(u => u.OrdersAsSeller)  // A User can have many Orders as Seller
-                .HasForeignKey(o => o.SellerId)  // Foreign Key in Order
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete (optional)
+                .HasOne(o => o.Seller)
+                .WithMany(u => u.OrdersAsSeller)
+                .HasForeignKey(o => o.SellerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Car relationship (Order -> Car)
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Car)  // Order has one Car
-                .WithMany(c => c.Orders)  // A Car can have many Orders
-                .HasForeignKey(o => o.CarId);  // Foreign Key in Order
+                .HasOne(o => o.Car)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CarId);
 
             // Configure Payment -> Order relationship
             modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Order)  // Payment belongs to one Order
-                .WithMany(o => o.Payments)  // An Order can have many Payments
+                .HasOne(p => p.Order)
+                .WithMany(o => o.Payments)
                 .HasForeignKey(p => p.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete for payments
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure User -> Car relationship (User is the seller of the car)
+            // Configure User -> Car relationship
             modelBuilder.Entity<Car>()
-                .HasOne(c => c.Seller)  // Car belongs to one User (Seller)
-                .WithMany(u => u.CarsForSale)  // A User can have many Cars for sale
+                .HasOne(c => c.Seller)
+                .WithMany(u => u.CarsForSale)
                 .HasForeignKey(c => c.UserId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete for cars
-
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Photo -> Car relationship
             modelBuilder.Entity<Photo>()
@@ -75,13 +87,13 @@ namespace CarWebSite.Data
 
             modelBuilder.Entity<Photo>()
                 .HasOne(p => p.Car)
-                .WithMany(c => c.Photos) // You'll need to add `public ICollection<Photo> Photos` in Car
+                .WithMany(c => c.Photos)
                 .HasForeignKey(p => p.CarId)
-                .OnDelete(DeleteBehavior.SetNull); // If car is deleted, keep photo with null CarId
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Configure Category
             modelBuilder.Entity<Category>()
-                .HasKey(c => c.CategoryId); // CategoryId is primary key
+                .HasKey(c => c.CategoryId);
 
             modelBuilder.Entity<Category>()
                 .Property(c => c.Name)
@@ -91,14 +103,15 @@ namespace CarWebSite.Data
             modelBuilder.Entity<Category>()
                 .Property(c => c.Description)
                 .HasMaxLength(500);
-            
-            
+
             // Car - Category relationship
             modelBuilder.Entity<Car>()
                 .HasOne(c => c.Category)
                 .WithMany(cat => cat.Cars)
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

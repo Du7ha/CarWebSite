@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace CarWebSite.Models
 {
@@ -79,7 +81,22 @@ namespace CarWebSite.Models
     public bool IsValidPhoneNumber() => !string.IsNullOrEmpty(PhoneNumber) &&
                                       PhoneNumber.Length >= 10 &&
                                       PhoneNumber.All(char.IsDigit);
-}
+
+        public void HashPassword()
+        {
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(Password));
+            Password = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+        }
+
+        public bool VerifyPassword(string inputPassword)
+        {
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(inputPassword));
+            var hashedInput = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            return Password == hashedInput;
+        }
+    }
 
 public enum UserRole
 {

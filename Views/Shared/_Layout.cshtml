@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/Images/Weblogo.png" alt="Car WebSite Logo" height="40px" />
@@ -26,82 +26,94 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewCars">New Car</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewCars">New Cars</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UsedCars">Used Car</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UsedCars">Used Cars</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OfferYourCar">Offer Your Car</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
-                        <!-- Sign In Link -->
-                        <li class="nav-item">
-                            <label for="signInToggle" class="nav-link text-dark" style="cursor: pointer;">Log In</label>
-                        </li>
-						<!-- Sign Up Link -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="SignUp">Sign Up</a>
-                        </li>
-
-                        <!-- User Profile Icon -->
-                        <li class="nav-item">
-                            <a class="nav-link icon-link" asp-area="" asp-controller="Home" asp-action="Profile">
-                                <i class="fas fa-user"></i>
-                            </a>
-                        </li>
-                        <!-- Bar Icon -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- User is signed in -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Profile">
+                                    <i class="fas fa-user me-1"></i>@User.Identity.Name
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="SignOut" method="post">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Sign Out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- User is not signed in -->
+                            <li class="nav-item">
+                                <label for="signInToggle" class="nav-link text-dark" style="cursor: pointer;">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                                </label>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="SignUp">
+                                    <i class="fas fa-user-plus me-1"></i>Sign Up
+                                </a>
+                            </li>
+                        }
+                        <!-- Menu Toggle -->
                         <label for="menuToggle" class="nav-link icon-link">
                             <i class="fas fa-bars"></i>
                         </label>
-                        <!-- Hidden Checkbox for toggling -->
-                        <input type="checkbox" id="menuToggle" class="menu-checkbox" />
-                        <!-- Floating Sliding Menu -->
-                        <div id="floatingMenu" class="floating-menu">
-                            <ul>
-                                <li><a asp-controller="Home" asp-action="Profile">Profile</a></li>
-                                <li><a asp-controller="Home" asp-action="About">About</a></li>
-                                <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
-                            </ul>
-                        </div>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Hidden Checkboxes for Sign-In and Sign-Up Frames -->
+    <!-- Hidden Checkboxes for Sign-In and Menu Toggles -->
     <input type="checkbox" id="signInToggle" class="frame-checkbox" />
-    <input type="checkbox" id="signUpToggle" class="frame-checkbox" />
+    <input type="checkbox" id="menuToggle" class="menu-checkbox" />
 
-    <div class="background-overlay"></div>
-
-    <!-- Floating Sign-In Frame -->
+    <!-- Sign In Modal -->
     <div id="signInFrame" class="floating-frame">
         <h2>Sign In</h2>
-        <form action="/Account/SignIn" method="post">
-            <div>
+        <form asp-controller="Account" asp-action="SignIn" method="post">
+            <div class="mb-3">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" class="form-control" required />
             </div>
-            <div>
+            <div class="mb-3">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required />
+                <input type="password" id="password" name="password" class="form-control" required />
             </div>
-            <div>
-                <button type="submit">Sign In</button>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" />
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Sign In</button>
             </div>
             <hr />
-            <div>
-                <button type="button" class="google-signin">
+            <div class="d-grid">
+                <button type="button" class="btn btn-danger">
                     <i class="fab fa-google"></i> Sign in with Google
                 </button>
             </div>
         </form>
     </div>
 
-
+    <!-- Floating Menu -->
+    <div id="floatingMenu" class="floating-menu">
+        <ul>
+            <li><a asp-controller="Home" asp-action="Profile">Profile</a></li>
+            <li><a asp-controller="Home" asp-action="About">About</a></li>
+            <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+        </ul>
+    </div>
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -121,18 +133,23 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        // Script to close the sign-in and sign-up frames when clicking outside
+        // Close modals when clicking outside
         document.addEventListener('DOMContentLoaded', function () {
             const overlay = document.querySelector('.background-overlay');
             const signInToggle = document.getElementById('signInToggle');
-            const signUpToggle = document.getElementById('signUpToggle');
+            const menuToggle = document.getElementById('menuToggle');
 
             if (overlay) {
                 overlay.addEventListener('click', function () {
                     if (signInToggle) signInToggle.checked = false;
-                    if (signUpToggle) signUpToggle.checked = false;
+                    if (menuToggle) menuToggle.checked = false;
                 });
             }
+
+            // Toggle menu when clicking the hamburger icon
+            document.querySelector('label[for="menuToggle"]').addEventListener('click', function() {
+                menuToggle.checked = !menuToggle.checked;
+            });
         });
     </script>
 </body>

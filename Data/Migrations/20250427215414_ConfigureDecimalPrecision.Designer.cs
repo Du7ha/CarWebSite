@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CarWebSite.Migrations
+namespace CarWebSite.Data.Migrations
 {
     [DbContext(typeof(CarWebSiteContext))]
-    [Migration("20250423092452_ThirdMigration Car-Category relationship")]
-    partial class ThirdMigrationCarCategoryrelationship
+    [Migration("20250427215414_ConfigureDecimalPrecision")]
+    partial class ConfigureDecimalPrecision
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,6 +72,7 @@ namespace CarWebSite.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
@@ -144,6 +145,7 @@ namespace CarWebSite.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
@@ -166,6 +168,7 @@ namespace CarWebSite.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Currency")

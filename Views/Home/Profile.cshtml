@@ -10,7 +10,7 @@
             <img src="/images/Carlogod.png" alt="Profile Photo" />
             <div class="upload-photo">Upload Photo</div>
         </div>
-        
+
         <div class="user-details">
             <div class="info-header">
                 <i class="fas fa-info-circle"></i>
@@ -19,27 +19,29 @@
 
             <div class="user-info-item">
                 <i class="fas fa-user"></i>
-                <span>Mo'men Mohamed Aref</span>
+                <span>@Model.UserName</span>
             </div>
 
-<div class="user-info-item">
-    <i class="fas fa-map-marker-alt"></i>
-    <span>80 brooklyn golden street line New York, USA</span>
-</div>
+            @if (!string.IsNullOrEmpty(Model.Location))
+            {
+                <div class="user-info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>@Model.Location</span>
+                </div>
+            }
 
-<div class="user-info-item">
-    <i class="fas fa-phone"></i>
-    <span>+20 1009283347</span>
-</div>
+            <div class="user-info-item">
+                <i class="fas fa-phone"></i>
+                <span>@Model.PhoneNumber</span>
+            </div>
 
-<div class="user-info-item">
-    <i class="fas fa-envelope"></i>
-    <span>momenaref23@gmail.com</span>
-</div>
-            
+            <div class="user-info-item">
+                <i class="fas fa-envelope"></i>
+                <span>@Model.Email</span>
+            </div>
+
             <div class="edit-profile">
-                <a href="#">Edit Profile</a>
-                <!-- COMMENT: Later add proper link to edit profile page -->
+                <a asp-action="EditProfile" asp-controller="Account">Edit Profile</a>
             </div>
         </div>
     </div>

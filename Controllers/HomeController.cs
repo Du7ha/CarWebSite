@@ -1,16 +1,22 @@
 using System.Diagnostics;
+using System.Security.Claims;
+using CarWebSite.Data;
 using CarWebSite.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace CarWebSite.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly CarWebSiteContext _context;
+        public HomeController(ILogger<HomeController> logger, CarWebSiteContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -103,11 +109,25 @@ namespace CarWebSite.Controllers
             return View();
         }
 
-        public IActionResult Profile()
+        [Authorize]
+        public async Task<IActionResult> Profile()
         {
-            return View();
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = await _context.Users
+                .Include(u => u.OrdersAsBuyer)
+                    .ThenInclude(o => o.Car)
+                .Include(u => u.SavedCars)
+                    .ThenInclude(sc => sc.Car)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
-        
+
         public IActionResult About()
         {
             return View();

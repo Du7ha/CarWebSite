@@ -4,19 +4,16 @@ using CarWebSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CarWebSite.Migrations
+namespace CarWebSite.Data.Migrations
 {
     [DbContext(typeof(CarWebSiteContext))]
-    [Migration("20250422191909_Second Added Photo and Category")]
-    partial class SecondAddedPhotoandCategory
+    partial class CarWebSiteContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,6 +38,9 @@ namespace CarWebSite.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Color")
                         .HasMaxLength(30)
@@ -69,6 +69,7 @@ namespace CarWebSite.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
@@ -79,6 +80,8 @@ namespace CarWebSite.Migrations
 
                     b.HasKey("CarId");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Cars");
@@ -86,15 +89,22 @@ namespace CarWebSite.Migrations
 
             modelBuilder.Entity("CarWebSite.Models.Category", b =>
                 {
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Category");
                 });
@@ -132,6 +142,7 @@ namespace CarWebSite.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
@@ -154,6 +165,7 @@ namespace CarWebSite.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Currency")
@@ -203,7 +215,7 @@ namespace CarWebSite.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("CarWebSite.Models.SavedCar", b =>
@@ -275,11 +287,19 @@ namespace CarWebSite.Migrations
 
             modelBuilder.Entity("CarWebSite.Models.Car", b =>
                 {
+                    b.HasOne("CarWebSite.Models.Category", "Category")
+                        .WithMany("Cars")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CarWebSite.Models.User", "Seller")
                         .WithMany("CarsForSale")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Seller");
                 });
@@ -358,6 +378,11 @@ namespace CarWebSite.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("SavedByUsers");
+                });
+
+            modelBuilder.Entity("CarWebSite.Models.Category", b =>
+                {
+                    b.Navigation("Cars");
                 });
 
             modelBuilder.Entity("CarWebSite.Models.Order", b =>
