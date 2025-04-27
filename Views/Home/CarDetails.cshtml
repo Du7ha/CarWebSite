@@ -6,22 +6,77 @@
 <div class="container my-5">
     <div class="card shadow-lg">
         <div class="row g-0">
-            <div class="col-md-6">
-                <img src="/images/images(3).jpg" class="img-fluid rounded-start" alt="Mahindra XUV700">
+            <!-- Left Side: Car Image + Reviews + Add Review -->
+            <div class="col-md-6 p-3 d-flex flex-column">
+                <img src="/images/images(3).jpg" class="img-fluid rounded mb-4" alt="Mahindra XUV700">
+
+                <!-- Reviews Section -->
+                <div class="flex-grow-1 mb-4">
+                    <h5 class="fw-bold">User Reviews</h5>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <div class="border rounded p-2 mb-2 bg-light">
+                            <p class="mb-1"><strong>John D.</strong></p>
+                            <p class="mb-0 text-muted">"Amazing car, totally worth the price!"</p>
+                        </div>
+                        <div class="border rounded p-2 mb-2 bg-light">
+                            <p class="mb-1"><strong>Sarah K.</strong></p>
+                            <p class="mb-0 text-muted">"Very comfortable ride and excellent features."</p>
+                        </div>
+                        <div class="border rounded p-2 mb-2 bg-light">
+                            <p class="mb-1"><strong>Mike W.</strong></p>
+                            <p class="mb-0 text-muted">"Dealer was very professional and helpful."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Review Section -->
+                <div>
+                    <h5 class="fw-bold">Add Your Review</h5>
+                    <textarea class="form-control mb-2" rows="3" placeholder="Write your review here..."></textarea>
+                    <button class="btn btn-primary">Submit Review</button>
+                </div>
             </div>
-            <div class="col-md-6 p-4">
-                <h2>2021 Mahindra XUV700</h2>
-                <p><strong>Mileage:</strong> 43,629 miles</p>
-                <p><strong>Price:</strong> $61,999</p>
-                <p><strong>Deal Rating:</strong> Fair Deal</p>
-                <p><strong>Dealer:</strong> The Autobarn Volkswagen of Countryside</p>
-                <p><strong>Location:</strong> Countryside, IL</p>
-                <p><strong>Rating:</strong> 4.9 (1,450 reviews)</p>
-                <p><strong>Features:</strong> AWD, Automatic Transmission, Sunroof, Leather Seats</p>
-                <p><strong>Description:</strong> This 2021 Mahindra XUV700 offers a smooth and powerful ride with luxurious features and excellent safety ratings.</p>
-                <button class="btn btn-primary mt-3">Contact Seller</button>
-                <button class="btn btn-success mt-3 ms-2">Add to Favorites</button>
+
+            <!-- Right Side: Car Details (labels) -->
+            <div class="col-md-6 p-4 d-flex flex-column">
+                <h2 class="mb-4">2021 Mahindra XUV700</h2>
+
+                <!-- Car Info Labels (each in single line) -->
+                <div class="d-flex flex-column gap-2 flex-grow-1">
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Mileage:</strong> 43,629 miles
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Price:</strong> $61,999
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Deal Rating:</strong> Fair Deal
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Dealer:</strong> The Autobarn Volkswagen of Countryside
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Location:</strong> Countryside, IL
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Rating:</strong> 4.9 (1,450 reviews)
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Features:</strong> AWD, Automatic Transmission, Sunroof, Leather Seats
+                    </div>
+                    <div class="border rounded p-2 bg-light w-100">
+                        <strong>Description:</strong> This 2021 Mahindra XUV700 offers a smooth and powerful ride with luxurious features and excellent safety ratings.
+                    </div>
+                </div>
+
+                <!-- Buttons at the Bottom -->
+                <div class="mt-4 text-center">
+                    <button class="btn btn-primary me-2 mb-2">Contact Seller</button>
+                    <button class="btn btn-success me-2 mb-2">Add to Favorites</button>
+                    <button class="btn btn-warning mb-2">Purchase</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
