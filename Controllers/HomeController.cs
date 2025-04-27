@@ -26,16 +26,16 @@ namespace CarWebSite.Controllers
 
             var categories = new List<Category>
             {
-                new Category { Name = "sedan", Description = "Sedan" },
-                new Category { Name = "suv", Description = "SUV" },
-                new Category { Name = "truck", Description = "Truck" },
-                new Category { Name = "electric", Description = "Electric" },
-                new Category { Name = "luxury", Description = "Luxury" },
+                new Category { Name = "Sedan", Description = "Sedan" },
+                new Category { Name = "SUV", Description = "SUV" },
+                new Category { Name = "Truck", Description = "Truck" },
+                new Category { Name = "Electric", Description = "Electric" },
+                new Category { Name = "Luxury", Description = "Luxury" },
                 new Category { Name = "Coupe", Description = "Coupe" },
-                new Category { Name = "crossover", Description = "crossover" },
+                new Category { Name = "Crossover", Description = "Crossover" },
                 new Category { Name = "Minivan", Description = "Minivan" },
-                new Category { Name = "convertible", Description = "convertible" },
-                new Category { Name = "hatchback", Description = "hatchback" },
+                new Category { Name = "Convertible", Description = "Convertible" },
+                new Category { Name = "Hatchback", Description = "Hatchback" },
                 new Category { Name = "Hybrid", Description = "Hybrid" }
             };
 
@@ -53,29 +53,46 @@ namespace CarWebSite.Controllers
             return View();
         }
 
-        public IActionResult NewCars()
+        public IActionResult NewCars(string bodyType = null, string brand = null, string priceRange = null, string color = null)
         {
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
+            
+            // Store the filter values in ViewBag to pre-select them in the UI
+            ViewBag.SelectedBodyType = bodyType;
+            ViewBag.SelectedBrand = brand;
+            ViewBag.SelectedPriceRange = priceRange;
+            ViewBag.SelectedColor = color;
+            
+            // In a real app, these filters would be used to query the database
+            // For now, we'll just pass them to the view
+            
             return View();
         }
 
-        public IActionResult UsedCars()
+        public IActionResult UsedCars(string bodyType = null, string brand = null, string priceRange = null, string color = null)
         {
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
+            
+            // Store the filter values in ViewBag
+            ViewBag.SelectedBodyType = bodyType;
+            ViewBag.SelectedBrand = brand;
+            ViewBag.SelectedPriceRange = priceRange;
+            ViewBag.SelectedColor = color;
+            
             return View();
         }
-
+        
         public IActionResult CarDetails()
         {
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             return View();
         }
-
+        
         public IActionResult OfferYourCar()
         {
             return View();
@@ -85,7 +102,7 @@ namespace CarWebSite.Controllers
         {
             return View();
         }
-
+        
         public IActionResult About()
         {
             return View();
@@ -96,13 +113,6 @@ namespace CarWebSite.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        [HttpPost]
-        public IActionResult ToggleFavorite(int carId)
-        {
-            return Json(new { success = true, message = "Toggled favorite status" });
-        }
-
         // ----------------------- Added SignUp -----------------------
 
         [HttpGet]
@@ -129,6 +139,14 @@ namespace CarWebSite.Controllers
             }
 
             return View(user);
+        }
+
+        [HttpPost]
+
+        
+        public IActionResult ToggleFavorite(int carId)
+        {
+            return Json(new { success = true, message = "Toggled favorite status" });
         }
     }
 }

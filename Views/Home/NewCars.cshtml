@@ -12,44 +12,69 @@
                     <div class="card border-light shadow-sm">
                         <div class="card-body">
                             <h2 class="card-title text-center mb-4" style="color: #8B4513; font-weight: bold;">Choose your car</h2>
-                            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Model</button>
-                                    <ul class="dropdown-menu">
-                                        @foreach (var bodyType in ViewBag.BodyTypes)
-                                        {
-                                            <li><a class="dropdown-item" href="#">@bodyType</a></li>
-                                        }
-                                    </ul>
+                            <form id="filterForm" method="get" action="@Url.Action("NewCars", "Home")">
+                                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            @(string.IsNullOrEmpty(ViewBag.SelectedBodyType) ? "Body Type" : ViewBag.SelectedBodyType)
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item filter-item" data-filter="bodyType" data-value="">All Body Types</a></li>
+                                            @foreach (var bodyType in ViewBag.BodyTypes)
+                                            {
+                                                <li><a class="dropdown-item filter-item @(bodyType == ViewBag.SelectedBodyType ? "active" : "")" 
+                                                      data-filter="bodyType" data-value="@bodyType">@bodyType</a></li>
+                                            }
+                                        </ul>
+                                        <input type="hidden" name="bodyType" id="bodyTypeInput" value="@ViewBag.SelectedBodyType" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            @(string.IsNullOrEmpty(ViewBag.SelectedBrand) ? "Brand" : ViewBag.SelectedBrand)
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item filter-item" data-filter="brand" data-value="">All Brands</a></li>
+                                            @foreach (var brand in ViewBag.Brands)
+                                            {
+                                                <li><a class="dropdown-item filter-item @(brand == ViewBag.SelectedBrand ? "active" : "")" 
+                                                      data-filter="brand" data-value="@brand">@brand</a></li>
+                                            }
+                                        </ul>
+                                        <input type="hidden" name="brand" id="brandInput" value="@ViewBag.SelectedBrand" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            @(string.IsNullOrEmpty(ViewBag.SelectedPriceRange) ? "Price" : ViewBag.SelectedPriceRange)
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="">All Prices</a></li>
+                                            <li><a class="dropdown-item filter-item @("Under $30,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
+                                                  data-filter="priceRange" data-value="Under $30,000">Under $30,000</a></li>
+                                            <li><a class="dropdown-item filter-item @("$30,000 - $50,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
+                                                  data-filter="priceRange" data-value="$30,000 - $50,000">$30,000 - $50,000</a></li>
+                                            <li><a class="dropdown-item filter-item @("$50,000 - $100,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
+                                                  data-filter="priceRange" data-value="$50,000 - $100,000">$50,000 - $100,000</a></li>
+                                            <li><a class="dropdown-item filter-item @("Over $100,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
+                                                  data-filter="priceRange" data-value="Over $100,000">Over $100,000</a></li>
+                                        </ul>
+                                        <input type="hidden" name="priceRange" id="priceRangeInput" value="@ViewBag.SelectedPriceRange" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                            @(string.IsNullOrEmpty(ViewBag.SelectedColor) ? "Color" : ViewBag.SelectedColor)
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item filter-item" data-filter="color" data-value="">All Colors</a></li>
+                                            @foreach (var color in ViewBag.Colors)
+                                            {
+                                                <li><a class="dropdown-item filter-item @(color == ViewBag.SelectedColor ? "active" : "")" 
+                                                      data-filter="color" data-value="@color">@color</a></li>
+                                            }
+                                        </ul>
+                                        <input type="hidden" name="color" id="colorInput" value="@ViewBag.SelectedColor" />
+                                    </div>
                                 </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Brand</button>
-                                    <ul class="dropdown-menu">
-                                        @foreach (var brand in ViewBag.Brands)
-                                        {
-                                            <li><a class="dropdown-item" href="#">@brand</a></li>
-                                        }
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Price</button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Under $30,000</a></li>
-                                        <li><a class="dropdown-item" href="#">$30,000 - $50,000</a></li>
-                                        <li><a class="dropdown-item" href="#">$50,000 - $100,000</a></li>
-                                        <li><a class="dropdown-item" href="#">Over $100,000</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Color</button>
-                                    <ul class="dropdown-menu">
-                                        @foreach (var color in ViewBag.Colors)
-                                        {
-                                            <li><a class="dropdown-item" href="#">@color</a></li>
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -59,34 +84,81 @@
                 <div class="col-md-10">
                     @for (int i = 1; i <= 5; i++)
                     {
-                        <a href="/Home/CarDetails?carId=@i" class="text-decoration-none text-dark">
-                            <div class="card mb-4 shadow-sm hover-shadow" style="cursor: pointer;">
-                                <div class="card-body p-0">
-                                    <div class="row g-0">
-                                        <div class="col-md-5">
-                                            <img src="/images/car@(i).jpg" class="img-fluid rounded-start" alt="Car @(i)">
-                                        </div>
-                                        <div class="col-md-7">
-                                            <div class="card-body position-relative p-4">
-                                                <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                                    <i class="bi bi-heart"></i>
-                                                </button>
-                                                <h5 class="card-title">2021 Car Model @(i)</h5>
-                                                <p class="card-text mb-1">43,629 mi</p>
-                                                <p class="card-text mb-1"><strong>$61,999</strong></p>
-                                                <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                                <p class="card-text mb-1">Autobarn of City</p>
-                                                <p class="card-text mb-1">
-                                                    <span class="me-2">4.9</span>
-                                                    <span>(1,450 reviews)</span>
-                                                </p>
-                                                <p class="card-text">City, IL</p>
+                        // For demo purposes, we'll create some random attributes for each car
+                        string carBrand = i switch {
+                            1 => "BMW",
+                            2 => "Mercedes",
+                            3 => "Toyota",
+                            4 => "Audi",
+                            _ => "Ferrari"
+                        };
+                        
+                        string bodyType = i switch {
+                            1 => "Sedan",
+                            2 => "SUV",
+                            3 => "Truck",
+                            4 => "Coupe",
+                            _ => "Convertible"
+                        };
+                        
+                        string color = i switch {
+                            1 => "Black",
+                            2 => "White",
+                            3 => "Silver",
+                            4 => "Red",
+                            _ => "Blue"
+                        };
+                        
+                        decimal price = i switch {
+                            1 => 29999,
+                            2 => 45999,
+                            3 => 61999,
+                            4 => 89999,
+                            _ => 129999
+                        };
+                        
+                        // Check if this car should be displayed based on current filters
+                        bool showCar = (string.IsNullOrEmpty(ViewBag.SelectedBrand) || carBrand == ViewBag.SelectedBrand) &&
+                                      (string.IsNullOrEmpty(ViewBag.SelectedBodyType) || bodyType == ViewBag.SelectedBodyType) &&
+                                      (string.IsNullOrEmpty(ViewBag.SelectedColor) || color == ViewBag.SelectedColor) &&
+                                      (string.IsNullOrEmpty(ViewBag.SelectedPriceRange) || 
+                                          (ViewBag.SelectedPriceRange == "Under $30,000" && price < 30000) ||
+                                          (ViewBag.SelectedPriceRange == "$30,000 - $50,000" && price >= 30000 && price <= 50000) ||
+                                          (ViewBag.SelectedPriceRange == "$50,000 - $100,000" && price > 50000 && price <= 100000) ||
+                                          (ViewBag.SelectedPriceRange == "Over $100,000" && price > 100000));
+                        
+                        if (showCar)
+                        {
+                            <a href="/Home/CarDetails?carId=@i" class="text-decoration-none text-dark">
+                                <div class="card mb-4 shadow-sm hover-shadow" style="cursor: pointer;">
+                                    <div class="card-body p-0">
+                                        <div class="row g-0">
+                                            <div class="col-md-5">
+                                                <img src="/images/car@(i).jpg" class="img-fluid rounded-start" alt="Car @(i)">
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body position-relative p-4">
+                                                    <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
+                                                        <i class="bi bi-heart"></i>
+                                                    </button>
+                                                    <h5 class="card-title">2021 @carBrand Model @(i)</h5>
+                                                    <p class="card-text mb-1">43,629 mi</p>
+                                                    <p class="card-text mb-1"><strong>$@price.ToString("#,##0")</strong></p>
+                                                    <p class="card-text mb-1 deal-rating">Fair Deal</p>
+                                                    <p class="card-text mb-1">Body Type: @bodyType</p>
+                                                    <p class="card-text mb-1">Color: @color</p>
+                                                    <p class="card-text mb-1">
+                                                        <span class="me-2">4.9</span>
+                                                        <span>(1,450 reviews)</span>
+                                                    </p>
+                                                    <p class="card-text">City, IL</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        }
                     }
                 </div>
             </div>
@@ -97,10 +169,33 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Handle favorite button clicks
             $('.favorite-btn').click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 $(this).find('i').toggleClass('bi-heart bi-heart-fill text-danger');
+            });
+            
+            // Handle filter selections
+            $('.filter-item').click(function (e) {
+                e.preventDefault();
+                const filter = $(this).data('filter');
+                const value = $(this).data('value');
+                
+                // Update the hidden input value
+                $(`#${filter}Input`).val(value);
+                
+                // Update the dropdown button text
+                const buttonText = value === '' ? 
+                    filter === 'bodyType' ? 'Body Type' : 
+                    filter === 'brand' ? 'Brand' : 
+                    filter === 'priceRange' ? 'Price' : 'Color' 
+                    : value;
+                
+                $(this).closest('.dropdown').find('button').text(buttonText);
+                
+                // Submit the form
+                $('#filterForm').submit();
             });
         });
     </script>
@@ -109,6 +204,11 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transform: translateY(-2px);
             transition: all 0.2s ease-in-out;
+        }
+        
+        .dropdown-item.active {
+            background-color: #8B4513;
+            color: white;
         }
     </style>
 }

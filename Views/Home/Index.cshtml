@@ -26,9 +26,11 @@
         @foreach (var category in Model.Categories)
         {
             <div class="category-item">
-                <div class="category-text-container">
-                    <p class="category-text">@category.Description</p>
-                </div>
+                <a href="@Url.Action("NewCars", "Home", new { bodyType = category.Name })" class="category-link">
+                    <div class="category-text-container">
+                        <p class="category-text">@category.Description</p>
+                    </div>
+                </a>
             </div>
         }
     </div>
@@ -91,6 +93,13 @@
     transform: scale(1.05);
 }
 
+.category-link {
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 .category-text-container {
     display: flex;
     justify-content: center;
@@ -100,6 +109,7 @@
     border-radius: 15px;
     background-color: #6E4331;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .category-text {
@@ -118,6 +128,22 @@
     min-height: 200px;
     text-align: center;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.photo-item:hover {
+    transform: scale(1.05);
+}
+
+.brand-link {
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -144,7 +170,6 @@ img {
     background-color: rgba(255, 255, 255, 0.7);
     padding: 5px;
     border-radius: 5px;
-    visibility: hidden;
 }
 
 .scroll-btn {
@@ -169,8 +194,10 @@ img {
         @foreach (var photo in Model.Photos)
         {
             <div class="photo-item">
-                <img src="@photo.Url" alt="@photo.Description" />
-                <p class="photo-text">@photo.Description</p>
+                <a href="@Url.Action("NewCars", "Home", new { brand = photo.Description })" class="brand-link">
+                    <img src="@photo.Url" alt="@photo.Description" />
+                    <p class="photo-text">@photo.Description</p>
+                </a>
             </div>
         }
     </div>
