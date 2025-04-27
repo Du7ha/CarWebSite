@@ -68,13 +68,14 @@ namespace CarWebSite.Controllers
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
             return View();
         }
+
         public IActionResult CarDetails()
         {
-
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             return View();
         }
+
         public IActionResult OfferYourCar()
         {
             return View();
@@ -84,6 +85,7 @@ namespace CarWebSite.Controllers
         {
             return View();
         }
+
         public IActionResult About()
         {
             return View();
@@ -99,6 +101,34 @@ namespace CarWebSite.Controllers
         public IActionResult ToggleFavorite(int carId)
         {
             return Json(new { success = true, message = "Toggled favorite status" });
+        }
+
+        // ----------------------- Added SignUp -----------------------
+
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SignUp(User user, string ConfirmPassword)
+        {
+            if (user.Password != ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "Passwords do not match.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Save the user in your database here (example)
+                // _dbContext.Users.Add(user);
+                // _dbContext.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(user);
         }
     }
 }

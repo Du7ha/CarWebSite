@@ -8,13 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CarWebSite.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- In the head section of _Layout.cshtml -->
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <!-- Logo instead of text -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/Images/Weblogo.png" alt="Car WebSite Logo" height="40px" />
                 </a>
@@ -37,12 +35,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OfferYourCar">Offer Your Car</a>
                         </li>
                     </ul>
-                    <!-- Icons on the right side -->
                     <ul class="navbar-nav">
                         <!-- Sign In Link -->
                         <li class="nav-item">
                             <label for="signInToggle" class="nav-link text-dark" style="cursor: pointer;">Sign In</label>
                         </li>
+						<!-- Sign Up Link -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="SignUp">Sign Up</a>
+                        </li>
+
                         <!-- User Profile Icon -->
                         <li class="nav-item">
                             <a class="nav-link icon-link" asp-area="" asp-controller="Home" asp-action="Profile">
@@ -69,8 +71,9 @@
         </nav>
     </header>
 
-    <!-- Hidden Checkbox for Sign-In Frame -->
+    <!-- Hidden Checkboxes for Sign-In and Sign-Up Frames -->
     <input type="checkbox" id="signInToggle" class="frame-checkbox" />
+    <input type="checkbox" id="signUpToggle" class="frame-checkbox" />
 
     <div class="background-overlay"></div>
 
@@ -98,6 +101,8 @@
         </form>
     </div>
 
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -109,22 +114,26 @@
             &copy; 2025 - CarWebSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
     <script>
-    // Script to close the sign-in frame when clicking outside of it
-    document.addEventListener('DOMContentLoaded', function() {
-        const overlay = document.querySelector('.background-overlay');
-        const signInToggle = document.getElementById('signInToggle');
-        
-        if (overlay && signInToggle) {
-            overlay.addEventListener('click', function() {
-                signInToggle.checked = false;
-            });
-        }
-    });
-</script>
+        // Script to close the sign-in and sign-up frames when clicking outside
+        document.addEventListener('DOMContentLoaded', function () {
+            const overlay = document.querySelector('.background-overlay');
+            const signInToggle = document.getElementById('signInToggle');
+            const signUpToggle = document.getElementById('signUpToggle');
+
+            if (overlay) {
+                overlay.addEventListener('click', function () {
+                    if (signInToggle) signInToggle.checked = false;
+                    if (signUpToggle) signUpToggle.checked = false;
+                });
+            }
+        });
+    </script>
 </body>
 </html>
