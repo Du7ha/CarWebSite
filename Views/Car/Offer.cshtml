@@ -1,96 +1,113 @@
+@model CarWebSite.Models.Car
+
 @{
-    ViewData["Title"] = "Offer";
+    ViewData["Title"] = "Offer a Car";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <div class="offer-form">
-    <!-- Upload Photos Section -->
-    <div class="upload-section">
-        <h3>Upload Photos</h3>
-        <div class="upload-box" id="uploadArea">
-            <div class="upload-content">
-                <span class="upload-icon"><i class="fas fa-camera"></i></span>
-                <p>Upload Photos</p>
-                <input type="file" id="mainImage" name="mainImage" class="form-input" accept="image/*">
-            </div>
-        </div>
-        <div id="previewContainer"></div>
-    </div>
+    
+    
 
     <!-- Form Fields Section -->
     <div class="form-fields-section">
-        <form method="post" enctype="multipart/form-data">
-            <div class="form-row">
-                <label for="priceRange">Price Range</label>
-                <input type="text" id="priceRange" name="priceRange" class="form-input small-input" value="@ViewBag.SelectedPriceRange" required pattern="^\d+(\.\d{1,2})?$" title="Please enter a valid price (numbers only)" />
+        <form  method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Upload Photos Section -->
+            <div class="upload-section">
+                <h3>Upload Photo</h3>
+                <div class="upload-box" id="uploadArea">
+                    <div class="upload-content">
+                        <span class="upload-icon"><i class="fas fa-camera"></i></span>
+                        <p>Upload Main Photo</p>
+                        <input type="file" id="mainImage" name="mainImage" class="form-input">
+                    </div>
+                </div>
+                <div id="previewContainer"></div>
             </div>
 
             <div class="form-row triple-fields">
                 <div class="form-field">
-                    <label for="color">Color</label>
-                    <select id="color" name="color" class="form-input small-input" required>
-                        <option value="">Select Color</option>
-                        @foreach (var color in ViewBag.Colors)
-                        {
-                            if (color == ViewBag.SelectedColor)
-                            {
-                                <option value="@color" selected>@color</option>
-                            }
-                            else
-                            {
-                                <option value="@color">@color</option>
-                            }
-                        }
-                    </select>
-                </div>
-
-                <div class="form-field">
-                    <label for="brand">Brand</label>
-                    <select id="brand" name="brand" class="form-input small-input" required>
+                    <label asp-for="Brand" class="control-label"></label>
+                    <select asp-for="Brand" class="form-input small-input" required>
                         <option value="">Select Brand</option>
                         @foreach (var brand in ViewBag.Brands)
                         {
-                            if (brand == ViewBag.SelectedBrand)
-                            {
-                                <option value="@brand" selected>@brand</option>
-                            }
-                            else
-                            {
-                                <option value="@brand">@brand</option>
-                            }
+                            <option value="@brand">@brand</option>
                         }
                     </select>
+                    <span asp-validation-for="Brand" class="text-danger"></span>
                 </div>
 
                 <div class="form-field">
-                    <label for="bodyType">Body Type</label>
-                    <select id="bodyType" name="bodyType" class="form-input small-input" required>
-                        <option value="">Select Body Type</option>
-                        @foreach (var type in ViewBag.BodyTypes)
+                    <label asp-for="Model" class="control-label"></label>
+                    <input asp-for="Model" class="form-input small-input" maxlength="50" />
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="form-row triple-fields">
+                <div class="form-field">
+                    <label asp-for="Year" class="control-label"></label>
+                    <input asp-for="Year" class="form-input small-input" required min="1900" max="2100" />
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Mileage" class="control-label"></label>
+                    <input asp-for="Mileage" class="form-input small-input" required min="0" />
+                    <span asp-validation-for="Mileage" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-input small-input" required min="0" step="0.01" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row triple-fields">
+                <div class="form-field">
+                    <label asp-for="Color" class="control-label"></label>
+                    <select asp-for="Color" class="form-input small-input">
+                        <option value="">Select Color</option>
+                        @foreach (var color in ViewBag.Colors)
                         {
-                            if (type == ViewBag.SelectedBodyType)
-                            {
-                                <option value="@type" selected>@type</option>
-                            }
-                            else
-                            {
-                                <option value="@type">@type</option>
-                            }
+                            <option value="@color">@color</option>
                         }
                     </select>
+                    <span asp-validation-for="Color" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="BodyType" class="control-label">Body Type</label>
+                    <select asp-for="BodyType" class="form-input small-input" required>
+                        <option value="">Select Body Type</option>
+                        @foreach (var bodyType in Enum.GetNames(typeof(CarWebSite.Models.BodyType)))
+                        {
+                            <option value="@bodyType">@bodyType</option>
+                        }
+                    </select>
+                    <span asp-validation-for="BodyType" class="text-danger"></span>
+                </div>
+
+                <div class="form-field">
+                    <!-- Removed the status dropdown since it will be set to Available by default -->
                 </div>
             </div>
 
             <div class="form-row">
-                <label for="year">Year</label>
-                <input type="text" id="year" name="year" class="form-input small-input" required pattern="^\d{4}$" title="Please enter a valid year (e.g., 2020)" />
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-input" maxlength="1000"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
-            <div class="form-row">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" class="form-input"></textarea>
-            </div>
+            <input type="hidden" asp-for="ListingDate" value="@DateTime.UtcNow" />
+            <!-- Set IsSold to false by default -->
+            <input type="hidden" asp-for="IsSold" value="false" />
 
             <div class="form-row">
                 <button type="submit" class="submit-btn">Submit</button>
@@ -220,6 +237,13 @@
         color: #45322A;
         margin-bottom: 15px;
     }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
 </style>
 
 @section Scripts {
@@ -231,25 +255,26 @@
 
             $('#mainImage').change(function () {
                 if (this.files && this.files.length) {
-                    displayPreview(this.files);
+                    displayPreview(this.files[0]); // Only display the first file
                 }
             });
 
-            function displayPreview(files) {
+            function displayPreview(file) {
                 $('#previewContainer').empty();
 
-                Array.from(files).forEach(file => {
-                    if (!file.type.startsWith('image/')) return;
+                if (!file.type.startsWith('image/')) return;
 
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        $('#previewContainer').append(
-                            $('<img>').attr('src', e.target.result)
-                        );
-                    };
-                    reader.readAsDataURL(file);
-                });
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewContainer').append(
+                        $('<img>').attr('src', e.target.result)
+                    );
+                };
+                reader.readAsDataURL(file);
             }
         });
     </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

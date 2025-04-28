@@ -112,7 +112,6 @@ namespace CarWebSite.Controllers
             var car = await _context.Cars
                 .Include(c => c.Photos)
                 .Include(c => c.Seller)
-                .Include(c => c.Category)
                 .FirstOrDefaultAsync(c => c.CarId == id);
 
             if (car == null)
@@ -203,23 +202,15 @@ namespace CarWebSite.Controllers
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
-            ViewBag.Categories = _context.Category.ToList();
             
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Offer(Car car, IFormFile mainImage, List<IFormFile> additionalImages)
+        public async Task<IActionResult> Offer(Car car, IFormFile mainImage)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
-                ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
-                ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
-                ViewBag.Categories = _context.Category.ToList();
-                return View(car);
-            }
+            
 
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             car.UserId = userId;
@@ -233,28 +224,19 @@ namespace CarWebSite.Controllers
                 car.ImagePath = uniqueFileName;
             }
 
+            if (!ModelState.IsValid)
+            {
+                ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
+                ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
+                ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
+                return View(car);
+            }
+
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
 
-            // Process additional images
-            if (additionalImages != null && additionalImages.Count > 0)
-            {
-                foreach (var image in additionalImages)
-                {
-                    if (image.Length > 0)
-                    {
-                        string uniqueFileName = await SaveImage(image);
-                        var photo = new Photo
-                        {
-                            Url = uniqueFileName,
-                            CarId = car.CarId,
-                            Description = $"{car.Brand} {car.Model}"
-                        };
-                        _context.Photos.Add(photo);
-                    }
-                }
-                await _context.SaveChangesAsync();
-            }
+            
+            
 
             return RedirectToAction("Details", new { id = car.CarId });
         }

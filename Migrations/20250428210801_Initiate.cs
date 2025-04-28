@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarWebSite.Migrations
 {
     /// <inheritdoc />
-    public partial class fourthmigration : Migration
+    public partial class Initiate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Category",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Category", x => x.CategoryId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -68,12 +54,6 @@ namespace CarWebSite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cars", x => x.CarId);
-                    table.ForeignKey(
-                        name: "FK_Cars_Category_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Category",
-                        principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Cars_Users_UserId",
                         column: x => x.UserId,
@@ -192,11 +172,6 @@ namespace CarWebSite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cars_CategoryId",
-                table: "Cars",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Cars_UserId",
                 table: "Cars",
                 column: "UserId");
@@ -249,9 +224,6 @@ namespace CarWebSite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cars");
-
-            migrationBuilder.DropTable(
-                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Users");

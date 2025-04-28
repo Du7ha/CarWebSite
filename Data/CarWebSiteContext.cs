@@ -13,7 +13,6 @@ namespace CarWebSite.Data
         public DbSet<SavedCar> SavedCars { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
-        public DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,25 +90,7 @@ namespace CarWebSite.Data
                 .HasForeignKey(p => p.CarId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Configure Category
-            modelBuilder.Entity<Category>()
-                .HasKey(c => c.CategoryId);
-
-            modelBuilder.Entity<Category>()
-                .Property(c => c.Name)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<Category>()
-                .Property(c => c.Description)
-                .HasMaxLength(500);
-
-            // Car - Category relationship
-            modelBuilder.Entity<Car>()
-                .HasOne(c => c.Category)
-                .WithMany(cat => cat.Cars)
-                .HasForeignKey(c => c.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+            
 
             base.OnModelCreating(modelBuilder);
         }

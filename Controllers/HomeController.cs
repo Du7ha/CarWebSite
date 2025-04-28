@@ -35,25 +35,10 @@ namespace CarWebSite.Controllers
                 new Photo { Url = "/Images/porsche.jpg", Description = "Porsche" }
             };
 
-            var categories = new List<Category>
-            {
-                new Category { Name = "Sedan", Description = "Sedan" },
-                new Category { Name = "SUV", Description = "SUV" },
-                new Category { Name = "Truck", Description = "Truck" },
-                new Category { Name = "Electric", Description = "Electric" },
-                new Category { Name = "Luxury", Description = "Luxury" },
-                new Category { Name = "Coupe", Description = "Coupe" },
-                new Category { Name = "Crossover", Description = "Crossover" },
-                new Category { Name = "Minivan", Description = "Minivan" },
-                new Category { Name = "Convertible", Description = "Convertible" },
-                new Category { Name = "Hatchback", Description = "Hatchback" },
-                new Category { Name = "Hybrid", Description = "Hybrid" }
-            };
 
             var viewModel = new HomeViewModel
             {
                 Photos = photos,
-                Categories = categories
             };
 
             return View(viewModel);

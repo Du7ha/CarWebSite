@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarWebSite.Migrations
 {
     [DbContext(typeof(CarWebSiteContext))]
-    [Migration("20250428104613_fourthmigration")]
-    partial class fourthmigration
+    [Migration("20250428210801_Initiate")]
+    partial class Initiate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,33 +83,9 @@ namespace CarWebSite.Migrations
 
                     b.HasKey("CarId");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Cars");
-                });
-
-            modelBuilder.Entity("CarWebSite.Models.Category", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("CategoryId");
-
-                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("CarWebSite.Models.Order", b =>
@@ -290,19 +266,11 @@ namespace CarWebSite.Migrations
 
             modelBuilder.Entity("CarWebSite.Models.Car", b =>
                 {
-                    b.HasOne("CarWebSite.Models.Category", "Category")
-                        .WithMany("Cars")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("CarWebSite.Models.User", "Seller")
                         .WithMany("CarsForSale")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("Seller");
                 });
@@ -381,11 +349,6 @@ namespace CarWebSite.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("SavedByUsers");
-                });
-
-            modelBuilder.Entity("CarWebSite.Models.Category", b =>
-                {
-                    b.Navigation("Cars");
                 });
 
             modelBuilder.Entity("CarWebSite.Models.Order", b =>

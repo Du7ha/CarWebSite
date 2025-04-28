@@ -20,22 +20,7 @@
 }
 </style>
 
-<div class="categories-section scroll-container">
-    <button class="scroll-btn categories-left-btn">◀</button>
-    <div class="categories-scroll-content scroll-content">
-        @foreach (var category in Model.Categories)
-        {
-            <div class="category-item">
-                <a href="@Url.Action("NewCars", "Home", new { bodyType = category.Name })" class="category-link">
-                    <div class="category-text-container">
-                        <p class="category-text">@category.Description</p>
-                    </div>
-                </a>
-            </div>
-        }
-    </div>
-    <button class="scroll-btn categories-right-btn">▶</button>
-</div>
+
 
 <div class="text-center">
     <h1 class="brands-title">Brands</h1>

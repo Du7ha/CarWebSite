@@ -47,7 +47,7 @@ namespace CarWebSite.Models
 
         [Required]
         [ForeignKey("Seller")]
-        public int UserId { get; set; }  // The seller's UserId
+        public int UserId { get; set; } = 0;  // The seller's UserId
 
         [DataType(DataType.DateTime)]
         public DateTime? ListingDate { get; set; } = DateTime.UtcNow;
@@ -62,7 +62,6 @@ namespace CarWebSite.Models
         public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<SavedCar>? SavedByUsers { get; set; }
         public virtual ICollection<Photo>? Photos { get; set; }
-        public virtual Category? Category { get; set; } 
 
         public Car() { }
 
