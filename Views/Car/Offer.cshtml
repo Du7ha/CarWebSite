@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Offer";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <!-- Body Type Dropdown -->
+    <div>
+        <label for="bodyType">Body Type</label>
+        <select name="bodyType" id="bodyType">
+            @foreach (var type in ViewBag.BodyTypes)
+            {
+                if (type == ViewBag.SelectedBodyType)
+                {
+                    <option value="@type" selected>@type</option>
+                }
+                else
+                {
+                    <option value="@type">@type</option>
+                }
+            }
+        </select>
+    </div>
+
+    <!-- Brand Dropdown -->
+    <div>
+        <label for="brand">Brand</label>
+        <select name="brand" id="brand">
+            @foreach (var brand in ViewBag.Brands)
+            {
+                if (brand == ViewBag.SelectedBrand)
+                {
+                    <option value="@brand" selected>@brand</option>
+                }
+                else
+                {
+                    <option value="@brand">@brand</option>
+                }
+            }
+        </select>
+    </div>
+
+    <!-- Color Dropdown -->
+    <div>
+        <label for="color">Color</label>
+        <select name="color" id="color">
+            @foreach (var color in ViewBag.Colors)
+            {
+                if (color == ViewBag.SelectedColor)
+                {
+                    <option value="@color" selected>@color</option>
+                }
+                else
+                {
+                    <option value="@color">@color</option>
+                }
+            }
+        </select>
+    </div>
+
+    <!-- Price Range Input -->
+    <div>
+        <label for="priceRange">Price Range</label>
+        <input type="text" name="priceRange" id="priceRange" value="@ViewBag.SelectedPriceRange" />
+    </div>
+
+    <!-- Main Image Input -->
+    <div>
+        <label for="mainImage">Main Image</label>
+        <input type="file" name="mainImage" id="mainImage" />
+    </div>
+
+    <!-- Additional Images Input -->
+    <div>
+        <label for="additionalImages">Additional Images</label>
+        <input type="file" name="additionalImages" id="additionalImages" multiple />
+    </div>
+
+    <!-- Category Dropdown -->
+    <div>
+        <label for="category">Category</label>
+        <select name="category" id="category">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
+        </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Submit</button>
+</form>

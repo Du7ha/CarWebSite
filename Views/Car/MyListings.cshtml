@@ -1,0 +1,19 @@
+@model IEnumerable<Car>
+
+@{
+    ViewBag.Title = "My Listings";
+}
+
+<h1>My Listings</h1>
+
+<div class="cars-list">
+    @foreach (var car in Model)
+    {
+        <div class="car-item">
+            <img src="@car.ImagePath" alt="@car.Brand @car.Model" />
+            <h3>@car.Brand @car.Model</h3>
+            <p>@car.Price.ToString("C")</p>
+            <a href="@Url.Action("Details", "Car", new { id = car.CarId })">View Details</a>
+        </div>
+    }
+</div>

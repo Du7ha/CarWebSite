@@ -1,0 +1,229 @@
+@model CarWebSite.Models.Car
+@{
+    ViewData["Title"] = $"{Model.Year} {Model.Brand} {Model.Model}";
+    bool isFavorite = ViewBag.IsFavorite ?? false;
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Car")">Cars</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Brand @Model.Model</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Image Gallery -->
+        <div class="col-lg-8 mb-4">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Main Image"></button>
+                        
+                        @if (Model.Photos != null)
+                        {
+                            @for (int i = 0; i < Model.Photos.Count; i++)
+                            {
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@(i + 1)" aria-label="Image @(i + 1)"></button>
+                            }
+                        }
+                    }
+                    else if (Model.Photos != null && Model.Photos.Any())
+                    {
+                        @for (int i = 0; i < Model.Photos.Count; i++)
+                        {
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Image @(i + 1)"></button>
+                        }
+                    }
+                </div>
+                <div class="carousel-inner rounded">
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <div class="carousel-item active">
+                            <img src="@Model.ImagePath" class="d-block w-100" alt="@Model.Brand @Model.Model" style="height: 500px; object-fit: cover;">
+                        </div>
+                        
+                        @if (Model.Photos != null)
+                        {
+                            @foreach (var photo in Model.Photos)
+                            {
+                                <div class="carousel-item">
+                                    <img src="@photo.Url" class="d-block w-100" alt="@photo.Description" style="height: 500px; object-fit: cover;">
+                                </div>
+                            }
+                        }
+                    }
+                    else if (Model.Photos != null && Model.Photos.Any())
+                    {
+                        bool isFirst = true;
+                        @foreach (var photo in Model.Photos)
+                        {
+                            <div class="carousel-item @(isFirst ? "active" : "")">
+                                <img src="@photo.Url" class="d-block w-100" alt="@photo.Description" style="height: 500px; object-fit: cover;">
+                            </div>
+                            isFirst = false;
+                        }
+                    }
+                    else
+                    {
+                        <div class="carousel-item active">
+                            <img src="/images/car-placeholder.jpg" class="d-block w-100" alt="No image available" style="height: 500px; object-fit: cover;">
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Car Details -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">$@Model.Price.ToString("N0")</h3>
+                    <button id="favoriteBtn" class="btn @(isFavorite ? "btn-danger" : "btn-outline-danger") favorite-btn" data-car-id="@Model.CarId">
+                        <i class="bi @(isFavorite ? "bi-heart-fill" : "bi-heart")"></i>
+                        @(isFavorite ? "Remove from Favorites" : "Add to Favorites")
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title">@Model.Year @Model.Brand @Model.Model</h2>
+                    
+                    <div class="specification-group mt-4">
+                        <h5>Specifications</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th>Brand:</th>
+                                    <td>@Model.Brand</td>
+                                </tr>
+                                <tr>
+                                    <th>Model:</th>
+                                    <td>@Model.Model</td>
+                                </tr>
+                                <tr>
+                                    <th>Year:</th>
+                                    <td>@Model.Year</td>
+                                </tr>
+                                <tr>
+                                    <th>Body Type:</th>
+                                    <td>@Model.BodyType</td>
+                                </tr>
+                                <tr>
+                                    <th>Color:</th>
+                                    <td>@(Model.Color ?? "Not specified")</td>
+                                </tr>
+                                <tr>
+                                    <th>Mileage:</th>
+                                    <td>@Model.Mileage.ToString("N0") miles</td>
+                                </tr>
+                                @if (Model.Category != null)
+                                {
+                                    <tr>
+                                        <th>Category:</th>
+                                        <td>@Model.Category.Name</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="seller-info mt-4">
+                        <h5>Seller Information</h5>
+                        @if (Model.Seller != null)
+                        {
+                            <p><i class="bi bi-person-circle me-2"></i>@Model.Seller.UserName</p>
+                            <p><i class="bi bi-geo-alt me-2"></i>@(Model.Seller.Location ?? "Location not specified")</p>
+                            <p><i class="bi bi-calendar3 me-2"></i>Listed on @Model.ListingDate?.ToString("MMMM dd, yyyy")</p>
+                        }
+                        else
+                        {
+                            <p>Seller information not available</p>
+                        }
+                    </div>
+
+                    <div class="contact-seller mt-4">
+                        <a href="#" class="btn btn-primary w-100 mb-2">Contact Seller</a>
+                        <a href="#" class="btn btn-outline-primary w-100">Request Test Drive</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Description</h4>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <p>@Model.Description</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No description provided.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle favorite button click
+            $('#favoriteBtn').click(function() {
+                var btn = $(this);
+                var carId = btn.data('car-id');
+                
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <text>
+                    $.ajax({
+                        url: '@Url.Action("AddToFavorite", "Car")',
+                        type: 'POST',
+                        data: { carId: carId },
+                        success: function(response) {
+                            if (response.success) {
+                                if (response.isFavorite) {
+                                    btn.removeClass('btn-outline-danger').addClass('btn-danger');
+                                    btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                                    btn.find('span').text('Remove from Favorites');
+                                    toastr.success('Added to favorites');
+                                } else {
+                                    btn.removeClass('btn-danger').addClass('btn-outline-danger');
+                                    btn.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                                    btn.find('span').text('Add to Favorites');
+                                    toastr.info('Removed from favorites');
+                                }
+                            }
+                        },
+                        error: function() {
+                            toastr.error('Error updating favorites');
+                        }
+                    });
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    window.location.href = '@Url.Action("SignIn", "Account", new { returnUrl = Context.Request.Path })';
+                    </text>
+                }
+            });
+        });
+    </script>
+}

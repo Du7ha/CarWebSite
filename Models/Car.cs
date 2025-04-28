@@ -84,6 +84,12 @@ namespace CarWebSite.Models
             ListingDate = DateTime.UtcNow;
         }
 
+        
+        public string GetMainImageUrl()
+        {
+            return string.IsNullOrEmpty(ImagePath) ? "/images/default-car-image.jpg" : ImagePath;
+        }
+
         public bool IsValidYear()// check if the year is not empty and non negative
         {
             return Year >= 0;

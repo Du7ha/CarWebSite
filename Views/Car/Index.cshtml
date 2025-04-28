@@ -1,0 +1,201 @@
+@model IEnumerable<CarWebSite.Models.Car>
+@{
+ViewData["Title"] = "Car Listings";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Car Listings</h2>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filter Options</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" id="filterForm">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Body Type</label>
+                        <select name="bodyType" class="form-select">
+                            <option value="">All Types</option>
+                            @foreach (var type in ViewBag.BodyTypes)
+                            {
+                            <option value="@type" selected="@((type == ViewBag.SelectedBodyType) ? "selected" : "")">@type</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Brand</label>
+                        <select name="brand" class="form-select">
+                            <option value="">All Brands</option>
+                            @foreach (var brand in ViewBag.Brands)
+                            {
+                            <option value="@brand" selected="@((brand == ViewBag.SelectedBrand) ? "selected" : "")">@brand</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Color</label>
+                        <select name="color" class="form-select">
+                            <option value="">All Colors</option>
+                            @foreach (var color in ViewBag.Colors)
+                            {
+                            <option value="@color" selected="@((color == ViewBag.SelectedColor) ? "selected" : "")">@color</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Price Range</label>
+                        <select name="priceRange" class="form-select">
+                            <option value="">Any Price</option>
+                            <option value="0-10000" selected="@((ViewBag.SelectedPriceRange == "0-10000") ? "selected" : "")">Under $10,000</option>
+                            <option value="10000-25000" selected="@((ViewBag.SelectedPriceRange == "10000-25000") ? "selected" : "")">$10,000 - $25,000</option>
+                            <option value="25000-50000" selected="@((ViewBag.SelectedPriceRange == "25000-50000") ? "selected" : "")">$25,000 - $50,000</option>
+                            <option value="50000-100000" selected="@((ViewBag.SelectedPriceRange == "50000-100000") ? "selected" : "")">$50,000 - $100,000</option>
+                            <option value="100000-999999999" selected="@((ViewBag.SelectedPriceRange == "100000-999999999") ? "selected" : "")">$100,000+</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Clear All</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Car Listings -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var car in Model)
+        {
+        <div class="col">
+            <div class="card h-100 car-card">
+                @if (!string.IsNullOrEmpty(car.ImagePath))
+                {
+                <img src="@car.ImagePath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                }
+                else if (car.Photos != null && car.Photos.Any())
+                {
+                <img src="@car.Photos.First().Url" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                }
+                else
+                {
+                <img src="/images/car-placeholder.jpg" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@car.Year @car.Brand @car.Model</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">$@car.Price.ToString("N0")</h6>
+                    <p class="card-text">
+                        <span class="badge bg-light text-dark">@car.BodyType</span>
+                        <span class="badge bg-light text-dark">@car.Mileage miles</span>
+                        @if (!string.IsNullOrEmpty(car.Color))
+                        {
+                        <span class="badge bg-light text-dark">@car.Color</span>
+                        }
+                    </p>
+                    <p class="card-text small">
+                        @(car.Description != null
+                        ? (car.Description.Length > 100 ? car.Description.Substring(0, 100) + "..." : car.Description)
+                        : "No description available.")
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <a href="@Url.Action("Details", new { id = car.CarId })" class="btn btn-sm btn-primary">View Details</a>
+                        <button class="btn btn-sm btn-outline-danger favorite-btn"
+                                data-car-id="@car.CarId"
+                                data-is-favorite="@(car.SavedByUsers != null && car.SavedByUsers.Any(s => s.UserId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))">
+                            <i class="bi @(car.SavedByUsers != null && car.SavedByUsers.Any(s => s.UserId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value) ? "bi-heart-fill" : "bi-heart")"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Listed on @car.ListingDate?.ToString("MMM dd, yyyy")</small>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+    <div class="alert alert-info mt-4">
+        No cars match your selected filters. Please try different criteria.
+    </div>
+    }
+
+    <!-- Pagination -->
+    <div class="pagination">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+        <a href="@Url.Action("Index", new { page = i })" class="page-link">@i</a>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        // Favorite button click handler
+        $('.favorite-btn').click(function() {
+            var btn = $(this);
+            var carId = btn.data('car-id');
+
+            @if (User.Identity.IsAuthenticated)
+            {
+            <text>
+            $.ajax({
+                url: '@Url.Action("AddToFavorite", "Car")',
+                type: 'POST',
+                data: { carId: carId },
+                success: function(response) {
+                    if (response.success) {
+                        if (response.isFavorite) {
+                            btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                            toastr.success('Added to favorites');
+                        } else {
+                            btn.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                            toastr.info('Removed from favorites');
+                        }
+                        btn.data('is-favorite', response.isFavorite);
+                    }
+                },
+                error: function() {
+                    toastr.error('Error updating favorites');
+                }
+            });
+            </text>
+            }
+            else
+            {
+            <text>
+            window.location.href = '@Url.Action("SignIn", "Account")';
+            </text>
+            }
+        });
+    });
+</script>
+}
+
+<style>
+    .car-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .car-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .favorite-btn {
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .favorite-btn i {
+        font-size: 1.2rem;
+    }
+</style>

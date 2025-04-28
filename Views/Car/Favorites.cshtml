@@ -1,0 +1,121 @@
+@model IEnumerable<CarWebSite.Models.SavedCar>
+@{
+    ViewData["Title"] = "My Favorites";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">My Favorite Cars</h2>
+
+    @if (Model.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var savedCar in Model)
+            {
+                var car = savedCar.Car;
+                if (car == null) continue;
+
+                <div class="col">
+                    <div class="card h-100 car-card">
+                        @if (!string.IsNullOrEmpty(car.ImagePath))
+                        {
+                            <img src="@car.ImagePath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                        }
+                        else if (car.Photos != null && car.Photos.Any())
+                        {
+                            <img src="@car.Photos.First().Url" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <img src="/images/car-placeholder.jpg" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@car.Year @car.Brand @car.Model</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">$@car.Price.ToString("N0")</h6>
+                            <p class="card-text">
+                                <span class="badge bg-light text-dark">@car.BodyType</span>
+                                <span class="badge bg-light text-dark">@car.Mileage miles</span>
+                                @if (!string.IsNullOrEmpty(car.Color))
+                                {
+                                    <span class="badge bg-light text-dark">@car.Color</span>
+                                }
+                            </p>
+                            <p class="card-text small">
+                                @(car.Description != null 
+                                    ? (car.Description.Length > 100 ? car.Description.Substring(0, 100) + "..." : car.Description)
+                                    : "No description available.")
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <a href="@Url.Action("Details", "Car", new { id = car.CarId })" class="btn btn-sm btn-primary">View Details</a>
+                                <button class="btn btn-sm btn-outline-danger unfavorite-btn" data-car-id="@car.CarId">
+                                    <i class="bi bi-heart-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Listed on @car.ListingDate?.ToString("MMM dd, yyyy")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info mt-4">
+            You have no favorite cars yet. Start adding some!
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.unfavorite-btn').click(function () {
+                var btn = $(this);
+                var carId = btn.data('car-id');
+
+                $.ajax({
+                    url: '@Url.Action("RemoveFromFavorite", "Car")',
+                    type: 'POST',
+                    data: { carId: carId },
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.info('Removed from favorites');
+                            btn.closest('.col').fadeOut(500, function() { $(this).remove(); });
+                        } else {
+                            toastr.error('Error removing from favorites');
+                        }
+                    },
+                    error: function () {
+                        toastr.error('Error removing from favorites');
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    .car-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .car-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .unfavorite-btn {
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .unfavorite-btn i {
+        font-size: 1.2rem;
+    }
+</style>

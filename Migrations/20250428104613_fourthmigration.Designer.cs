@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CarWebSite.Data.Migrations
+namespace CarWebSite.Migrations
 {
     [DbContext(typeof(CarWebSiteContext))]
-    [Migration("20250427215414_ConfigureDecimalPrecision")]
-    partial class ConfigureDecimalPrecision
+    [Migration("20250428104613_fourthmigration")]
+    partial class fourthmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
