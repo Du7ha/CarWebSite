@@ -4,90 +4,252 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form method="post" enctype="multipart/form-data">
-    <!-- Body Type Dropdown -->
-    <div>
-        <label for="bodyType">Body Type</label>
-        <select name="bodyType" id="bodyType">
-            @foreach (var type in ViewBag.BodyTypes)
-            {
-                if (type == ViewBag.SelectedBodyType)
-                {
-                    <option value="@type" selected>@type</option>
+<div class="offer-form">
+    <!-- Upload Photos Section -->
+    <div class="upload-section">
+        <h3>Upload Photos</h3>
+        <div class="upload-box" id="uploadArea">
+            <div class="upload-content">
+                <span class="upload-icon"><i class="fas fa-camera"></i></span>
+                <p>Upload Photos</p>
+                <input type="file" id="mainImage" name="mainImage" class="form-input" accept="image/*">
+            </div>
+        </div>
+        <div id="previewContainer"></div>
+    </div>
+
+    <!-- Form Fields Section -->
+    <div class="form-fields-section">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <label for="priceRange">Price Range</label>
+                <input type="text" id="priceRange" name="priceRange" class="form-input small-input" value="@ViewBag.SelectedPriceRange" required pattern="^\d+(\.\d{1,2})?$" title="Please enter a valid price (numbers only)" />
+            </div>
+
+            <div class="form-row triple-fields">
+                <div class="form-field">
+                    <label for="color">Color</label>
+                    <select id="color" name="color" class="form-input small-input" required>
+                        <option value="">Select Color</option>
+                        @foreach (var color in ViewBag.Colors)
+                        {
+                            if (color == ViewBag.SelectedColor)
+                            {
+                                <option value="@color" selected>@color</option>
+                            }
+                            else
+                            {
+                                <option value="@color">@color</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="brand">Brand</label>
+                    <select id="brand" name="brand" class="form-input small-input" required>
+                        <option value="">Select Brand</option>
+                        @foreach (var brand in ViewBag.Brands)
+                        {
+                            if (brand == ViewBag.SelectedBrand)
+                            {
+                                <option value="@brand" selected>@brand</option>
+                            }
+                            else
+                            {
+                                <option value="@brand">@brand</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="bodyType">Body Type</label>
+                    <select id="bodyType" name="bodyType" class="form-input small-input" required>
+                        <option value="">Select Body Type</option>
+                        @foreach (var type in ViewBag.BodyTypes)
+                        {
+                            if (type == ViewBag.SelectedBodyType)
+                            {
+                                <option value="@type" selected>@type</option>
+                            }
+                            else
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="year">Year</label>
+                <input type="text" id="year" name="year" class="form-input small-input" required pattern="^\d{4}$" title="Please enter a valid year (e.g., 2020)" />
+            </div>
+
+            <div class="form-row">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-input"></textarea>
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .offer-form {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .upload-section {
+        margin-bottom: 30px;
+    }
+
+    .upload-box {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 30px;
+        background-color: white;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 15px;
+        width: 100%;
+        height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-icon {
+        font-size: 40px;
+        color: #994c2b;
+    }
+
+    .form-fields-section {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .form-row {
+        margin-bottom: 20px;
+    }
+
+    .triple-fields {
+        display: flex;
+        gap: 15px;
+    }
+
+    .form-field {
+        flex: 1;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #45322A;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #6E4331;
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .small-input {
+        height: 40px;
+        padding: 8px 12px;
+    }
+
+    textarea.form-input {
+        height: 100px;
+        resize: vertical;
+    }
+
+    #previewContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+        #previewContainer img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+    .submit-btn {
+        background-color: #6E4331;
+        color: white;
+        border: none;
+        padding: 5px 65px;
+        border-radius: 50px;
+        cursor: pointer;
+        width: auto;
+        margin: 0 auto;
+        display: block;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+        .submit-btn:hover {
+            background-color: #45322A;
+        }
+
+    h3 {
+        color: #45322A;
+        margin-bottom: 15px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#uploadArea').click(function () {
+                $('#mainImage').click();
+            });
+
+            $('#mainImage').change(function () {
+                if (this.files && this.files.length) {
+                    displayPreview(this.files);
                 }
-                else
-                {
-                    <option value="@type">@type</option>
-                }
+            });
+
+            function displayPreview(files) {
+                $('#previewContainer').empty();
+
+                Array.from(files).forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#previewContainer').append(
+                            $('<img>').attr('src', e.target.result)
+                        );
+                    };
+                    reader.readAsDataURL(file);
+                });
             }
-        </select>
-    </div>
-
-    <!-- Brand Dropdown -->
-    <div>
-        <label for="brand">Brand</label>
-        <select name="brand" id="brand">
-            @foreach (var brand in ViewBag.Brands)
-            {
-                if (brand == ViewBag.SelectedBrand)
-                {
-                    <option value="@brand" selected>@brand</option>
-                }
-                else
-                {
-                    <option value="@brand">@brand</option>
-                }
-            }
-        </select>
-    </div>
-
-    <!-- Color Dropdown -->
-    <div>
-        <label for="color">Color</label>
-        <select name="color" id="color">
-            @foreach (var color in ViewBag.Colors)
-            {
-                if (color == ViewBag.SelectedColor)
-                {
-                    <option value="@color" selected>@color</option>
-                }
-                else
-                {
-                    <option value="@color">@color</option>
-                }
-            }
-        </select>
-    </div>
-
-    <!-- Price Range Input -->
-    <div>
-        <label for="priceRange">Price Range</label>
-        <input type="text" name="priceRange" id="priceRange" value="@ViewBag.SelectedPriceRange" />
-    </div>
-
-    <!-- Main Image Input -->
-    <div>
-        <label for="mainImage">Main Image</label>
-        <input type="file" name="mainImage" id="mainImage" />
-    </div>
-
-    <!-- Additional Images Input -->
-    <div>
-        <label for="additionalImages">Additional Images</label>
-        <input type="file" name="additionalImages" id="additionalImages" multiple />
-    </div>
-
-    <!-- Category Dropdown -->
-    <div>
-        <label for="category">Category</label>
-        <select name="category" id="category">
-            @foreach (var category in ViewBag.Categories)
-            {
-                <option value="@category.CategoryId">@category.Name</option>
-            }
-        </select>
-    </div>
-
-    <!-- Submit Button -->
-    <button type="submit">Submit</button>
-</form>
+        });
+    </script>
+}

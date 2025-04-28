@@ -1,252 +1,268 @@
-@{
-    ViewData["Title"] = "Car Details";
-    var carId = Context.Request.Query["carId"]; // You can use this to switch between static cars if needed
+﻿@{
+    ViewData["Title"] = "Offer Your Car";
 }
 
-<div class="container my-5">
-    <div class="card shadow-lg">
-        <div class="row g-0">
-            <!-- Left Side: Car Image + Reviews + Add Review -->
-            <div class="col-md-6 p-3 d-flex flex-column">
-                <img src="/images/images(3).jpg" class="img-fluid rounded mb-4" alt="Mahindra XUV700">
+<h1>@ViewData["Title"]</h1>
 
-                <!-- Reviews Section -->
-                <div class="flex-grow-1 mb-4">
-                    <h5 class="fw-bold">User Reviews</h5>
-                    <div style="max-height: 200px; overflow-y: auto;">
-                        <div class="border rounded p-2 mb-2 bg-light">
-                            <p class="mb-1"><strong>John D.</strong></p>
-                            <p class="mb-0 text-muted">"Amazing car, totally worth the price!"</p>
-                        </div>
-                        <div class="border rounded p-2 mb-2 bg-light">
-                            <p class="mb-1"><strong>Sarah K.</strong></p>
-                            <p class="mb-0 text-muted">"Very comfortable ride and excellent features."</p>
-                        </div>
-                        <div class="border rounded p-2 mb-2 bg-light">
-                            <p class="mb-1"><strong>Mike W.</strong></p>
-                            <p class="mb-0 text-muted">"Dealer was very professional and helpful."</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add Review Section -->
-                <div>
-                    <h5 class="fw-bold">Add Your Review</h5>
-                    <textarea class="form-control mb-2" rows="3" placeholder="Write your review here..."></textarea>
-                    <button class="btn btn-primary">Submit Review</button>
-                </div>
-            </div>
-
-            <!-- Right Side: Car Details (labels) -->
-            <div class="col-md-6 p-4 d-flex flex-column">
-                <h2 class="mb-4">2021 Mahindra XUV700</h2>
-
-                <!-- Car Info Labels (each in single line) -->
-                <div class="d-flex flex-column gap-2 flex-grow-1">
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Mileage:</strong> 43,629 miles
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Price:</strong> $61,999
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Deal Rating:</strong> Fair Deal
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Dealer:</strong> The Autobarn Volkswagen of Countryside
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Location:</strong> Countryside, IL
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Rating:</strong> 4.9 (1,450 reviews)
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Features:</strong> AWD, Automatic Transmission, Sunroof, Leather Seats
-                    </div>
-                    <div class="border rounded p-2 bg-light w-100">
-                        <strong>Description:</strong> This 2021 Mahindra XUV700 offers a smooth and powerful ride with luxurious features and excellent safety ratings.
-                    </div>
-                </div>
-
-                <!-- Buttons at the Bottom -->
-                <div class="mt-4 text-center">
-                    <button class="btn btn-primary me-2 mb-2" id="contactSellerBtn">Contact Seller</button>
-                    <button class="btn btn-success me-2 mb-2">Add to Favorites</button>
-                    <button class="btn btn-warning mb-2" id ="purchasebtn">Purchase</button>
-                </div>
+<div class="offer-form">
+    <!-- Upload Photos Section -->
+    <div class="upload-section">
+        <h3>Upload Photos</h3>
+        <div class="upload-box" id="uploadArea">
+            <div class="upload-content">
+                <span class="upload-icon"><i class="fas fa-camera"></i></span>
+                <p>Upload Photos</p>
+                <input type="file" id="carPhotos" name="mainImage" accept="image/*" style="display: none;">
+                <input type="file" id="additionalPhotos" name="additionalImages" accept="image/*" multiple style="display: none;">
             </div>
         </div>
+        <div id="previewContainer"></div>
+    </div>
+
+    <!-- Form Fields Section -->
+    <div class="form-fields-section">
+        @using (Html.BeginForm("Offer", "Car", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <!-- Body Type Dropdown -->
+            <div class="form-row">
+                <label for="bodyType">Body Type</label>
+                <select id="bodyType" name="bodyType" class="form-input" required>
+                    <option value="">▼</option>
+                    @foreach (var type in ViewBag.BodyTypes)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-row triple-fields">
+                <!-- Brand Dropdown -->
+                <div class="form-field">
+                    <label for="brand">Brand</label>
+                    <select id="brand" name="brand" class="form-input small-input" required>
+                        <option value="">▼</option>
+                        @foreach (var brand in ViewBag.Brands)
+                        {
+                            <option value="@brand">@brand</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Color Dropdown -->
+                <div class="form-field">
+                    <label for="color">Color</label>
+                    <select id="color" name="color" class="form-input small-input" required>
+                        <option value="">▼</option>
+                        @foreach (var color in ViewBag.Colors)
+                        {
+                            <option value="@color">@color</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Year Input -->
+                <div class="form-field">
+                    <label for="year">Year</label>
+                    <input type="number" id="year" name="year" class="form-input small-input" required min="1900" max="@DateTime.Now.Year">
+                </div>
+            </div>
+
+            <!-- Price Range Input -->
+            <div class="form-row">
+                <label for="priceRange">Price</label>
+                <input type="number" id="priceRange" name="priceRange" class="form-input small-input" required min="0">
+            </div>
+
+            <!-- Category Dropdown -->
+            <div class="form-row">
+                <label for="category">Category</label>
+                <select id="category" name="category" class="form-input" required>
+                    <option value="">▼</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Description Textarea -->
+            <div class="form-row">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-input" required></textarea>
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+        }
     </div>
 </div>
 
-<!-- Modal for Contact Form -->
-<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="contactModalLabel">Purchase Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="text-center mb-4">
-                    <!-- Logo placeholder -->
-                    <div class="mb-3">
-                        <img src="/Images/Carlogol.png" alt="Website Logo" class="img-fluid" style="max-height: 140px;">
-                    </div>
-                    
-                    <div class="alert alert-success">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        Purchase request sent successfully!
-                    </div>
-                    
-                    <p>Thank you for your interest in the 2021 Mahindra XUV700.</p>
-                    <p>A representative will contact you shortly with more information.</p>
-                    <p><strong>Reference ID:</strong> XUV700-<span id="referenceId"></span></p>
-                </div>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary px-4" id="okButton">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+    /* Your existing CSS styles can remain the same */
+    .offer-form {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .upload-section {
+        margin-bottom: 30px;
+    }
+
+    .upload-box {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 30px;
+        background-color: white;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 15px;
+        width: 100%;
+        height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-icon {
+        font-size: 40px;
+        color: #994c2b;
+    }
+
+    .form-fields-section {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .form-row {
+        margin-bottom: 20px;
+    }
+
+    .triple-fields {
+        display: flex;
+        gap: 15px;
+    }
+
+    .form-field {
+        flex: 1;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #45322A;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #6E4331;
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .small-input {
+        height: 40px;
+        padding: 8px 12px;
+    }
+
+    textarea.form-input {
+        height: 100px;
+        resize: vertical;
+    }
+
+    #previewContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+        #previewContainer img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+    .submit-btn {
+        background-color: #6E4331;
+        color: white;
+        border: none;
+        padding: 5px 65px;
+        border-radius: 50px;
+        cursor: pointer;
+        width: auto;
+        margin: 0 auto;
+        display: block;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+        .submit-btn:hover {
+            background-color: #45322A;
+        }
+
+    h3 {
+        color: #45322A;
+        margin-bottom: 15px;
+    }
+</style>
 
 @section Scripts {
     <script>
-        // Generate a random reference ID when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            const referenceId = Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('referenceId').textContent = referenceId;
-            
-            // Set up event listeners
-            document.getElementById('purchasebtn').addEventListener('click', function() {
-                const contactModal = new bootstrap.Modal(document.getElementById('contactModal'));
-                contactModal.show();
+        $(document).ready(function() {
+            // File upload functionality
+            $('#uploadArea').click(function() {
+                $('#carPhotos').click();
             });
-            
-            document.getElementById('okButton').addEventListener('click', function() {
-                // Hide the modal
-                const contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
-                contactModal.hide();
-                
-                // Add a slight delay before redirecting to home page
-                setTimeout(function() {
-                    window.location.href = '/';  // Redirect to home page
-                }, 300);
+
+            $('#carPhotos').change(function() {
+                if (this.files && this.files.length) {
+                    displayPreview(this.files);
+                    // After selecting main image, prompt for additional images
+                    $('#additionalPhotos').click();
+                }
             });
+
+            $('#additionalPhotos').change(function() {
+                if (this.files && this.files.length) {
+                    displayPreview(this.files, true);
+                }
+            });
+
+            function displayPreview(files, append = false) {
+                if (!append) {
+                    $('#previewContainer').empty();
+                }
+
+                Array.from(files).forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#previewContainer').append(
+                            $('<img>').attr('src', e.target.result)
+                        );
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
         });
     </script>
 }
-
-<style>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  border-radius: 20px;
-}
-
-/* Card styling */
-.card {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.5s ease;
-  border-radius: 20px;
-}
-
-.card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Image styling */
-.card img {
-  object-fit: cover;
-}
-
-/* Text content area */
-.card .col-md-6.p-4 {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Headings */
-.card h2 {
-  color: #333;
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-/* Button styling */
-.btn-primary {
-  background-color: #6E4331;
-  border-color: #6E4331;
-}
-
-.btn-primary:hover {
-  background-color: #994C2B;
-  border-color: #994C2B;
-}
-
-.btn-success {
-  background-color: #FFC7AF;
-  border-color: #FFC7AF;
-  color: #333;
-}
-
-.btn-success:hover {
-  background-color: #994C2B;
-  border-color: #994C2B;
-  color: white;
-}
-
-.btn-warning {
-  background-color: #FF9A76;
-  border-color: #FF9A76;
-  color: #333;
-}
-
-.btn-warning:hover {
-  background-color: #FF7F50;
-  border-color: #FF7F50;
-  color: white;
-}
-
-/* Review styles */
-.bg-light {
-  background-color: #FFF0EA !important;
-}
-
-.border {
-  border-color: #FFC7AF !important;
-}
-
-/* Modal styling */
-.modal-header {
-  background-color: #6E4331 !important;
-  color: white;
-}
-
-.modal-body {
-  padding: 2rem;
-  background-color: #FFF0EA;
-}
-
-.modal-body img {
-  max-height: 140px;
-  width: auto;
-  margin-bottom: 1.5rem;
-}
-
-.alert-success {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  border-color: #badbcc;
-}
-
-/* Form control styling */
-.form-control:focus {
-  border-color: #6E4331;
-  box-shadow: 0 0 0 0.25rem rgba(110, 67, 49, 0.25);
-}
-
-</style>
