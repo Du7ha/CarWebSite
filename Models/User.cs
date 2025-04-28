@@ -28,7 +28,7 @@ namespace CarWebSite.Models
 
     [Required]
     [EnumDataType(typeof(UserRole))]
-    public string Role { get; set; } = UserRole.User.ToString();
+    public string Role { get; set; } = "User";
 
     [Required]
     [Phone]
@@ -101,7 +101,6 @@ namespace CarWebSite.Models
 public enum UserRole
 {
     Admin,
-    User,
-    Moderator
+    User
 }
 }

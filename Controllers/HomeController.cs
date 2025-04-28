@@ -49,37 +49,24 @@ namespace CarWebSite.Controllers
             return View();
         }
 
-        public IActionResult NewCars(string bodyType = null, string brand = null, string priceRange = null, string color = null)
+        public IActionResult NewCars()
         {
+
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
             
-            // Store the filter values in ViewBag to pre-select them in the UI
-            ViewBag.SelectedBodyType = bodyType;
-            ViewBag.SelectedBrand = brand;
-            ViewBag.SelectedPriceRange = priceRange;
-            ViewBag.SelectedColor = color;
             
-            // In a real app, these filters would be used to query the database
-            // For now, we'll just pass them to the view
-            
-            return View();
+            return View(_context.Cars.ToList());
         }
 
-        public IActionResult UsedCars(string bodyType = null, string brand = null, string priceRange = null, string color = null)
+        public IActionResult UsedCars()
         {
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
             
-            // Store the filter values in ViewBag
-            ViewBag.SelectedBodyType = bodyType;
-            ViewBag.SelectedBrand = brand;
-            ViewBag.SelectedPriceRange = priceRange;
-            ViewBag.SelectedColor = color;
-            
-            return View();
+            return View(_context.Cars.ToList());
         }
         
         public IActionResult CarDetails()

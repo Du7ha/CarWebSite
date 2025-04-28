@@ -288,5 +288,115 @@ namespace CarWebSite.Controllers
 
             return View(favorites);
         }
+
+
+        // Add this action to your CarController
+        [HttpGet]
+        public IActionResult FilterCars(string bodyType, string brand, string priceRange, string color)
+        {
+            // Start with all cars
+            var cars = _context.Cars.Where(c => !c.IsSold).AsQueryable();
+
+            // Apply body type filter
+            if (!string.IsNullOrEmpty(bodyType))
+            {
+                cars = cars.Where(c => c.BodyType == bodyType);
+            }
+
+            // Apply brand filter
+            if (!string.IsNullOrEmpty(brand))
+            {
+                cars = cars.Where(c => c.Brand == brand);
+            }
+
+            // Apply color filter
+            if (!string.IsNullOrEmpty(color))
+            {
+                cars = cars.Where(c => c.Color == color);
+            }
+
+            // Apply price range filter
+            if (!string.IsNullOrEmpty(priceRange))
+            {
+                switch (priceRange)
+                {
+                    case "Under $30,000":
+                        cars = cars.Where(c => c.Price < 30000);
+                        break;
+                    case "$30,000 - $50,000":
+                        cars = cars.Where(c => c.Price >= 30000 && c.Price <= 50000);
+                        break;
+                    case "$50,000 - $100,000":
+                        cars = cars.Where(c => c.Price > 50000 && c.Price <= 100000);
+                        break;
+                    case "Over $100,000":
+                        cars = cars.Where(c => c.Price > 100000);
+                        break;
+                }
+            }
+
+            // For AJAX partial view rendering
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_CarListings", cars.ToList());
+            }
+
+            return View(cars.ToList());
+        }
+
+
+        // Add this action to your CarController
+        [HttpGet]
+        public IActionResult FilterNewCars(string bodyType, string brand, string priceRange, string color)
+        {
+            // Start with all new cars (mileage = 0)
+            var cars = _context.Cars.Where(c => !c.IsSold && c.Mileage == 0).AsQueryable();
+
+            // Apply body type filter
+            if (!string.IsNullOrEmpty(bodyType))
+            {
+                cars = cars.Where(c => c.BodyType == bodyType);
+            }
+
+            // Apply brand filter
+            if (!string.IsNullOrEmpty(brand))
+            {
+                cars = cars.Where(c => c.Brand == brand);
+            }
+
+            // Apply color filter
+            if (!string.IsNullOrEmpty(color))
+            {
+                cars = cars.Where(c => c.Color == color);
+            }
+
+            // Apply price range filter
+            if (!string.IsNullOrEmpty(priceRange))
+            {
+                switch (priceRange)
+                {
+                    case "Under $30,000":
+                        cars = cars.Where(c => c.Price < 30000);
+                        break;
+                    case "$30,000 - $50,000":
+                        cars = cars.Where(c => c.Price >= 30000 && c.Price <= 50000);
+                        break;
+                    case "$50,000 - $100,000":
+                        cars = cars.Where(c => c.Price > 50000 && c.Price <= 100000);
+                        break;
+                    case "Over $100,000":
+                        cars = cars.Where(c => c.Price > 100000);
+                        break;
+                }
+            }
+
+            // For AJAX partial view rendering
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_NewCarListings", cars.ToList());
+            }
+
+            return View(cars.ToList());
+        }
     }
 }

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CarWebSite.Models.Car>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var car in Model)
+    {
+        // Only show cars with mileage = 0 (new cars)
+        if (car.Mileage == 0)
+        {
+            <a href="@Url.Action("Details", "Car", new { id = car.CarId })" class="text-decoration-none text-dark car-item"
+               data-brand="@car.Brand" data-body-type="@car.BodyType" data-color="@car.Color" data-price="@car.Price">
+                <div class="card mb-4 shadow-sm hover-shadow" style="cursor: pointer;">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-md-5 position-relative">
+                                <img src="@car.GetMainImageUrl()" class="img-fluid rounded-start" alt="@car.Brand @car.Model">
+                                <!-- New car badge -->
+                                <div class="position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-success">New</span>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body position-relative p-4">
+                                    <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn"
+                                            data-car-id="@car.CarId">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                    <h5 class="card-title">@car.Year @car.Brand @car.Model</h5>
+                                    <p class="card-text mb-1 text-success"><strong>Brand New</strong></p>
+                                    <p class="card-text mb-1"><strong>$@car.Price.ToString("#,##0")</strong></p>
+                                    <p class="card-text mb-1 deal-rating">Fair Deal</p>
+                                    <p class="card-text mb-1">Body Type: @car.BodyType</p>
+                                    <p class="card-text mb-1">Color: @(string.IsNullOrEmpty(car.Color) ? "Not specified" : car.Color)</p>
+                                    @if (!string.IsNullOrEmpty(car.Description) && car.Description.Length > 100)
+                                    {
+                                        <p class="card-text">@car.Description.Substring(0, 100)...</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="card-text">@car.Description</p>
+                                    }
+                                    <p class="card-text"><small class="text-muted">Listed on: @car.ListingDate?.ToString("MMM dd, yyyy")</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    }
+}
+else
+{
+    <div class="alert alert-info text-center" id="noCarsMessage">
+        <h4>No new cars found matching your criteria</h4>
+        <p>Try adjusting your filters or <a href="@Url.Action("Create", "Car")" class="alert-link">add a new car listing</a>.</p>
+    </div>
+}

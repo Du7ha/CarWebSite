@@ -84,6 +84,7 @@ namespace CarWebSite.Controllers
         {
             try
             {
+                user.Role = "User";
                 if (user.Password != confirmPassword)
                 {
                     ModelState.AddModelError("ConfirmPassword", "Passwords do not match");

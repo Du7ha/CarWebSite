@@ -1,13 +1,7 @@
+@model IEnumerable<CarWebSite.Models.Car>
+
 @{
-    ViewData["Title"] = "Used Cars";
-    var usedCars = new List<(int Id, string Title, string Image, string Brand, string BodyType, string Color, decimal Price)>
-    {
-        (1, "2021 Mahindra XUV700", "/images/images(3).jpg", "Mahindra", "SUV", "White", 29999),
-        (2, "2021 Nissan Ariya", "/images/e869d5ebe2e741119b15964925b077a6.jpg", "Nissan", "Electric", "Blue", 45999),
-        (3, "2021 Nissan Ariya Sport", "/images/images(2).jpg", "Nissan", "Electric", "Red", 61999),
-        (4, "2021 Rolls-Royce Cullinan", "/images/41X0G5+nddL._AC_UF1000,1000_QL80_.jpg", "Rolls-Royce", "Luxury", "Black", 129999),
-        (5, "2021 Nissan Ariya Black", "/images/37716ecbb91240cfa348d8186273b3d9.jpg", "Nissan", "Electric", "Black", 48999)
-    };
+    ViewData["Title"] = "Cars Listing";
 }
 
 <div class="container-fluid p-0">
@@ -20,69 +14,74 @@
                     <div class="card border-light shadow-sm">
                         <div class="card-body">
                             <h2 class="card-title text-center mb-4" style="color: #8B4513; font-weight: bold;">Choose your car</h2>
-                            <form id="filterForm" method="get" action="@Url.Action("UsedCars", "Home")">
-                                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            @(string.IsNullOrEmpty(ViewBag.SelectedBodyType) ? "Body Type" : ViewBag.SelectedBodyType)
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item filter-item" data-filter="bodyType" data-value="">All Body Types</a></li>
-                                            @foreach (var bodyType in ViewBag.BodyTypes)
-                                            {
-                                                <li><a class="dropdown-item filter-item @(bodyType == ViewBag.SelectedBodyType ? "active" : "")" 
-                                                      data-filter="bodyType" data-value="@bodyType">@bodyType</a></li>
-                                            }
-                                        </ul>
-                                        <input type="hidden" name="bodyType" id="bodyTypeInput" value="@ViewBag.SelectedBodyType" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            @(string.IsNullOrEmpty(ViewBag.SelectedBrand) ? "Brand" : ViewBag.SelectedBrand)
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item filter-item" data-filter="brand" data-value="">All Brands</a></li>
-                                            @foreach (var brand in ViewBag.Brands)
-                                            {
-                                                <li><a class="dropdown-item filter-item @(brand == ViewBag.SelectedBrand ? "active" : "")" 
-                                                      data-filter="brand" data-value="@brand">@brand</a></li>
-                                            }
-                                        </ul>
-                                        <input type="hidden" name="brand" id="brandInput" value="@ViewBag.SelectedBrand" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            @(string.IsNullOrEmpty(ViewBag.SelectedPriceRange) ? "Price" : ViewBag.SelectedPriceRange)
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="">All Prices</a></li>
-                                            <li><a class="dropdown-item filter-item @("Under $30,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
-                                                  data-filter="priceRange" data-value="Under $30,000">Under $30,000</a></li>
-                                            <li><a class="dropdown-item filter-item @("$30,000 - $50,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
-                                                  data-filter="priceRange" data-value="$30,000 - $50,000">$30,000 - $50,000</a></li>
-                                            <li><a class="dropdown-item filter-item @("$50,000 - $100,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
-                                                  data-filter="priceRange" data-value="$50,000 - $100,000">$50,000 - $100,000</a></li>
-                                            <li><a class="dropdown-item filter-item @("Over $100,000" == ViewBag.SelectedPriceRange ? "active" : "")" 
-                                                  data-filter="priceRange" data-value="Over $100,000">Over $100,000</a></li>
-                                        </ul>
-                                        <input type="hidden" name="priceRange" id="priceRangeInput" value="@ViewBag.SelectedPriceRange" />
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            @(string.IsNullOrEmpty(ViewBag.SelectedColor) ? "Color" : ViewBag.SelectedColor)
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item filter-item" data-filter="color" data-value="">All Colors</a></li>
-                                            @foreach (var color in ViewBag.Colors)
-                                            {
-                                                <li><a class="dropdown-item filter-item @(color == ViewBag.SelectedColor ? "active" : "")" 
-                                                      data-filter="color" data-value="@color">@color</a></li>
-                                            }
-                                        </ul>
-                                        <input type="hidden" name="color" id="colorInput" value="@ViewBag.SelectedColor" />
-                                    </div>
+
+                            <!-- Filter Form -->
+                            <div id="filterForm" class="d-flex justify-content-center gap-3 flex-wrap">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <span class="filter-text">Body Type</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item filter-item" data-filter="bodyType" data-value="">All Body Types</a></li>
+                                        @foreach (var bodyType in Enum.GetNames(typeof(CarWebSite.Models.BodyType)))
+                                        {
+                                            <li><a class="dropdown-item filter-item" data-filter="bodyType" data-value="@bodyType">@bodyType</a></li>
+                                        }
+                                    </ul>
+                                    <input type="hidden" id="bodyTypeInput" value="" />
                                 </div>
-                            </form>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <span class="filter-text">Brand</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item filter-item" data-filter="brand" data-value="">All Brands</a></li>
+                                        @{
+                                            var brands = Model.Select(c => c.Brand).Distinct().ToList();
+                                        }
+                                        @foreach (var brand in brands)
+                                        {
+                                            <li><a class="dropdown-item filter-item" data-filter="brand" data-value="@brand">@brand</a></li>
+                                        }
+                                    </ul>
+                                    <input type="hidden" id="brandInput" value="" />
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <span class="filter-text">Price</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="">All Prices</a></li>
+                                        <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="Under $30,000">Under $30,000</a></li>
+                                        <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="$30,000 - $50,000">$30,000 - $50,000</a></li>
+                                        <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="$50,000 - $100,000">$50,000 - $100,000</a></li>
+                                        <li><a class="dropdown-item filter-item" data-filter="priceRange" data-value="Over $100,000">Over $100,000</a></li>
+                                    </ul>
+                                    <input type="hidden" id="priceRangeInput" value="" />
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <span class="filter-text">Color</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item filter-item" data-filter="color" data-value="">All Colors</a></li>
+                                        @{
+                                            var colors = Model.Where(c => !string.IsNullOrEmpty(c.Color))
+                                            .Select(c => c.Color)
+                                            .Distinct()
+                                            .ToList();
+                                        }
+                                        @foreach (var color in colors)
+                                        {
+                                            <li><a class="dropdown-item filter-item" data-filter="color" data-value="@color">@color</a></li>
+                                        }
+                                    </ul>
+                                    <input type="hidden" id="colorInput" value="" />
+                                </div>
+                                <button id="resetFilters" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-1"></i>Reset
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -90,51 +89,61 @@
 
             <!-- Car Listings -->
             <div class="row justify-content-center">
-                <div class="col-md-10">
-                    @foreach (var car in usedCars)
+                <div class="col-md-10" id="carListingsContainer">
+                    @if (Model != null && Model.Any())
                     {
-                        // Check if this car should be displayed based on current filters
-                        bool showCar = (string.IsNullOrEmpty(ViewBag.SelectedBrand) || car.Brand == ViewBag.SelectedBrand) &&
-                                      (string.IsNullOrEmpty(ViewBag.SelectedBodyType) || car.BodyType == ViewBag.SelectedBodyType) &&
-                                      (string.IsNullOrEmpty(ViewBag.SelectedColor) || car.Color == ViewBag.SelectedColor) &&
-                                      (string.IsNullOrEmpty(ViewBag.SelectedPriceRange) || 
-                                          (ViewBag.SelectedPriceRange == "Under $30,000" && car.Price < 30000) ||
-                                          (ViewBag.SelectedPriceRange == "$30,000 - $50,000" && car.Price >= 30000 && car.Price <= 50000) ||
-                                          (ViewBag.SelectedPriceRange == "$50,000 - $100,000" && car.Price > 50000 && car.Price <= 100000) ||
-                                          (ViewBag.SelectedPriceRange == "Over $100,000" && car.Price > 100000));
-                        
-                        if (showCar)
+                        foreach (var car in Model)
                         {
-                            <a href="/Home/CarDetails?carId=@car.Id" class="text-decoration-none text-dark">
-                                <div class="card mb-4 shadow-sm hover-shadow" style="cursor: pointer;">
-                                    <div class="card-body p-0">
-                                        <div class="row g-0">
-                                            <div class="col-md-5">
-                                                <img src="@car.Image" class="img-fluid rounded-start" alt="@car.Title">
-                                            </div>
-                                            <div class="col-md-7">
-                                                <div class="card-body position-relative p-4">
-                                                    <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn">
-                                                        <i class="bi bi-heart"></i>
-                                                    </button>
-                                                    <h5 class="card-title">@car.Title</h5>
-                                                    <p class="card-text mb-1">43,629 mi</p>
-                                                    <p class="card-text mb-1"><strong>$@car.Price.ToString("#,##0")</strong></p>
-                                                    <p class="card-text mb-1 deal-rating">Fair Deal</p>
-                                                    <p class="card-text mb-1">Body Type: @car.BodyType</p>
-                                                    <p class="card-text mb-1">Color: @car.Color</p>
-                                                    <p class="card-text mb-1">
-                                                        <span class="me-2">4.9</span>
-                                                        <span>(1,450 reviews)</span>
-                                                    </p>
-                                                    <p class="card-text">Countryside, IL</p>
+                            if (car.Mileage != 0)
+                            {
+                                <a href="@Url.Action("Details", "Car", new { id = car.CarId })" class="text-decoration-none text-dark car-item"
+                                   data-brand="@car.Brand" data-body-type="@car.BodyType" data-color="@car.Color" data-price="@car.Price">
+                                    <div class="card mb-4 shadow-sm hover-shadow" style="cursor: pointer;">
+                                        <div class="card-body p-0">
+                                            <div class="row g-0">
+                                                <div class="col-md-5">
+                                                    <img src="@car.GetMainImageUrl()" class="img-fluid rounded-start" alt="@car.Brand @car.Model">
+                                                    <!-- New car badge -->
+                                                    <div class="position-absolute top-0 start-0 m-2">
+                                                        <span class="badge bg-success">New</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <div class="card-body position-relative p-4">
+                                                        <button class="btn btn-sm position-absolute top-0 end-0 mt-2 me-2 border-0 favorite-btn"
+                                                                data-car-id="@car.CarId">
+                                                            <i class="bi bi-heart"></i>
+                                                        </button>
+                                                        <h5 class="card-title">@car.Year @car.Brand @car.Model</h5>
+                                                        <p class="card-text mb-1 text-success"><strong>Brand New</strong></p>
+                                                        <p class="card-text mb-1"><strong>$@car.Price.ToString("#,##0")</strong></p>
+                                                        <p class="card-text mb-1 deal-rating">Fair Deal</p>
+                                                        <p class="card-text mb-1">Body Type: @car.BodyType</p>
+                                                        <p class="card-text mb-1">Color: @(string.IsNullOrEmpty(car.Color) ? "Not specified" : car.Color)</p>
+                                                        @if (!string.IsNullOrEmpty(car.Description) && car.Description.Length > 100)
+                                                        {
+                                                            <p class="card-text">@car.Description.Substring(0, 100)...</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="card-text">@car.Description</p>
+                                                        }
+                                                        <p class="card-text"><small class="text-muted">Listed on: @car.ListingDate?.ToString("MMM dd, yyyy")</small></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center" id="initialNoCarsMessage">
+                            <h4>No cars found matching your criteria</h4>
+                            <p>Try adjusting your filters.</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -142,37 +151,200 @@
     </div>
 </div>
 
+<!-- No Results Message Template (hidden by default) -->
+<div class="d-none" id="noResultsTemplate">
+    <div class="alert alert-info text-center">
+        <h4>No cars found matching your criteria</h4>
+        <p>Try adjusting your filters.</p>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Remove any existing "no cars found" message when starting to filter
+            function removeNoCarMessage() {
+                $('#noCarsMessage').remove();
+            }
+
             // Handle favorite button clicks
-            $('.favorite-btn').click(function (e) {
+            $(document).on('click', '.favorite-btn', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+
+                const carId = $(this).data('car-id');
+
+                // Toggle heart icon
                 $(this).find('i').toggleClass('bi-heart bi-heart-fill text-danger');
+
+                // AJAX call to save to favorites
+                $.ajax({
+                    url: '@Url.Action("ToggleFavorite", "Car")',
+                    type: 'POST',
+                    data: { carId: carId },
+                    success: function(response) {
+                        console.log('Favorite toggled', response);
+                    },
+                    error: function(error) {
+                        console.error('Error toggling favorite', error);
+                    }
+                });
             });
-            
+
             // Handle filter selections
             $('.filter-item').click(function (e) {
                 e.preventDefault();
                 const filter = $(this).data('filter');
                 const value = $(this).data('value');
-                
+
+                // Remove any existing "no cars found" message when starting to filter
+                removeNoCarMessage();
+
                 // Update the hidden input value
                 $(`#${filter}Input`).val(value);
-                
+
                 // Update the dropdown button text
-                const buttonText = value === '' ? 
-                    filter === 'bodyType' ? 'Body Type' : 
-                    filter === 'brand' ? 'Brand' : 
-                    filter === 'priceRange' ? 'Price' : 'Color' 
+                const buttonText = value === '' ?
+                    filter === 'bodyType' ? 'Body Type' :
+                    filter === 'brand' ? 'Brand' :
+                    filter === 'priceRange' ? 'Price' : 'Color'
                     : value;
-                
-                $(this).closest('.dropdown').find('button').text(buttonText);
-                
-                // Submit the form
-                $('#filterForm').submit();
+
+                $(this).closest('.dropdown').find('.filter-text').text(buttonText);
+
+                // Apply filters
+                applyFilters();
             });
+
+            // Reset filters
+            $('#resetFilters').click(function() {
+                // Remove any existing "no cars found" message
+                removeNoCarMessage();
+
+                // Reset all hidden inputs
+                $('#bodyTypeInput, #brandInput, #priceRangeInput, #colorInput').val('');
+
+                // Reset all dropdown texts
+                $('.dropdown').find('.filter-text').each(function() {
+                    const defaultText = $(this).closest('.dropdown').find('.dropdown-menu li:first-child a').data('filter') === 'bodyType' ? 'Body Type' :
+                                       $(this).closest('.dropdown').find('.dropdown-menu li:first-child a').data('filter') === 'brand' ? 'Brand' :
+                                       $(this).closest('.dropdown').find('.dropdown-menu li:first-child a').data('filter') === 'priceRange' ? 'Price' : 'Color';
+                    $(this).text(defaultText);
+                });
+
+                // Show all cars
+                $('.car-item').show();
+            });
+
+            // Function to apply filters
+            function applyFilters() {
+                const bodyType = $('#bodyTypeInput').val();
+                const brand = $('#brandInput').val();
+                const priceRange = $('#priceRangeInput').val();
+                const color = $('#colorInput').val();
+
+                // If no filters are selected, show all cars and return
+                if (!bodyType && !brand && !priceRange && !color) {
+                    $('.car-item').show();
+                    removeNoCarMessage();
+                    return;
+                }
+
+                // AJAX call to get filtered cars
+                $.ajax({
+                    url: '@Url.Action("FilterCars", "Car")',
+                    type: 'GET',
+                    data: {
+                        bodyType: bodyType,
+                        brand: brand,
+                        priceRange: priceRange,
+                        color: color
+                    },
+                    beforeSend: function() {
+                        // Remove any existing "no cars found" message
+                        removeNoCarMessage();
+
+                        // You could add a loading indicator here
+                        // $('#carListingsContainer').append('<div id="loadingIndicator">Loading...</div>');
+                    },
+                    success: function(response) {
+                        // If server-side filtering is implemented, replace the content
+                        // $('#carListingsContainer').html(response);
+
+                        // For client-side filtering:
+                        filterCarsClientSide(bodyType, brand, priceRange, color);
+                    },
+                    error: function(error) {
+                        console.error('Error filtering cars', error);
+                    },
+                    complete: function() {
+                        // Remove loading indicator if you added one
+                        // $('#loadingIndicator').remove();
+                    }
+                });
+            }
+
+            // Client-side filtering function (as a fallback or for faster filtering)
+            function filterCarsClientSide(bodyType, brand, priceRange, color) {
+                let visibleCount = 0;
+
+                $('.car-item').each(function() {
+                    const carBodyType = $(this).data('body-type');
+                    const carBrand = $(this).data('brand');
+                    const carColor = $(this).data('color');
+                    const carPrice = parseFloat($(this).data('price'));
+
+                    let showCar = true;
+
+                    // Apply body type filter
+                    if (bodyType && carBodyType !== bodyType) {
+                        showCar = false;
+                    }
+
+                    // Apply brand filter
+                    if (brand && carBrand !== brand) {
+                        showCar = false;
+                    }
+
+                    // Apply color filter
+                    if (color && carColor !== color) {
+                        showCar = false;
+                    }
+
+                    // Apply price range filter
+                    if (priceRange) {
+                        if (priceRange === 'Under $30,000' && carPrice >= 30000) {
+                            showCar = false;
+                        } else if (priceRange === '$30,000 - $50,000' && (carPrice < 30000 || carPrice > 50000)) {
+                            showCar = false;
+                        } else if (priceRange === '$50,000 - $100,000' && (carPrice < 50000 || carPrice > 100000)) {
+                            showCar = false;
+                        } else if (priceRange === 'Over $100,000' && carPrice <= 100000) {
+                            showCar = false;
+                        }
+                    }
+
+                    // Show or hide the car based on filters
+                    if (showCar) {
+                        $(this).show();
+                        visibleCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                // Show "no results" message if no cars are visible
+                if (visibleCount === 0) {
+                    // Only add the message if it doesn't already exist
+                    if ($('#noCarsMessage').length === 0) {
+                        $('#carListingsContainer').append(
+                            $('<div class="alert alert-info text-center" id="noCarsMessage">')
+                                .append('<h4>No cars found matching your criteria</h4>')
+                                .append('<p>Try adjusting your filters.</p>')
+                        );
+                    }
+                }
+            }
         });
     </script>
     <style>
@@ -181,10 +353,31 @@
             transform: translateY(-2px);
             transition: all 0.2s ease-in-out;
         }
-        
+
         .dropdown-item.active {
             background-color: #8B4513;
             color: white;
         }
+
+        .deal-rating {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .filter-badge {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            display: inline-block;
+            font-size: 0.875rem;
+        }
+
+            .filter-badge .close {
+                margin-left: 5px;
+                font-size: 0.875rem;
+                cursor: pointer;
+            }
     </style>
 }
