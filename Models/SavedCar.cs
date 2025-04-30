@@ -5,19 +5,16 @@ namespace CarWebSite.Models
 {
     public class SavedCar
     {
-        [Column(Order = 0)]
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        [ForeignKey("Client")]
+        public string ClientId { get; set; }
 
-        [Column(Order = 1)]
         [ForeignKey("Car")]
         public int CarId { get; set; }
 
         public DateTime SavedDate { get; set; } = DateTime.UtcNow;
 
-        // Navigation properties
-        public virtual User? User { get; set; }
-        public virtual Car? Car { get; set; }
+        public virtual Client Client { get; set; }
+        public virtual Car Car { get; set; }
     }
 
 }

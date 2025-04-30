@@ -21,7 +21,6 @@
                     @if (!string.IsNullOrEmpty(Model.ImagePath))
                     {
                         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Main Image"></button>
-                        
                         @if (Model.Photos != null)
                         {
                             @for (int i = 0; i < Model.Photos.Count; i++)
@@ -44,7 +43,6 @@
                         <div class="carousel-item active">
                             <img src="@Model.ImagePath" class="d-block w-100" alt="@Model.Brand @Model.Model" style="height: 500px; object-fit: cover;">
                         </div>
-                        
                         @if (Model.Photos != null)
                         {
                             @foreach (var photo in Model.Photos)
@@ -91,40 +89,21 @@
                     <h3 class="mb-0">$@Model.Price.ToString("N0")</h3>
                     <button id="favoriteBtn" class="btn @(isFavorite ? "btn-danger" : "btn-outline-danger") favorite-btn" data-car-id="@Model.CarId">
                         <i class="bi @(isFavorite ? "bi-heart-fill" : "bi-heart")"></i>
-                        @(isFavorite ? "Remove from Favorites" : "Add to Favorites")
+                        <span>@(isFavorite ? "Remove from Favorites" : "Add to Favorites")</span>
                     </button>
                 </div>
                 <div class="card-body">
                     <h2 class="card-title">@Model.Year @Model.Brand @Model.Model</h2>
-                    
                     <div class="specification-group mt-4">
                         <h5>Specifications</h5>
                         <table class="table table-sm">
                             <tbody>
-                                <tr>
-                                    <th>Brand:</th>
-                                    <td>@Model.Brand</td>
-                                </tr>
-                                <tr>
-                                    <th>Model:</th>
-                                    <td>@Model.Model</td>
-                                </tr>
-                                <tr>
-                                    <th>Year:</th>
-                                    <td>@Model.Year</td>
-                                </tr>
-                                <tr>
-                                    <th>Body Type:</th>
-                                    <td>@Model.BodyType</td>
-                                </tr>
-                                <tr>
-                                    <th>Color:</th>
-                                    <td>@(Model.Color ?? "Not specified")</td>
-                                </tr>
-                                <tr>
-                                    <th>Mileage:</th>
-                                    <td>@Model.Mileage.ToString("N0") miles</td>
-                                </tr>
+                                <tr><th>Brand:</th><td>@Model.Brand</td></tr>
+                                <tr><th>Model:</th><td>@Model.Model</td></tr>
+                                <tr><th>Year:</th><td>@Model.Year</td></tr>
+                                <tr><th>Body Type:</th><td>@Model.BodyType</td></tr>
+                                <tr><th>Color:</th><td>@(Model.Color ?? "Not specified")</td></tr>
+                                <tr><th>Mileage:</th><td>@Model.Mileage.ToString("N0") miles</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -133,8 +112,8 @@
                         <h5>Seller Information</h5>
                         @if (Model.Seller != null)
                         {
-                            <p><i class="bi bi-person-circle me-2"></i>@Model.Seller.UserName</p>
-                            <p><i class="bi bi-geo-alt me-2"></i>@(Model.Seller.Location ?? "Location not specified")</p>
+                            <p><i class="bi bi-person-circle me-2"></i>@Model.Seller.User.UserName</p>
+                            <p><i class="bi bi-geo-alt me-2"></i>@(Model.Seller.User.Location ?? "Location not specified")</p>
                             <p><i class="bi bi-calendar3 me-2"></i>Listed on @Model.ListingDate?.ToString("MMMM dd, yyyy")</p>
                         }
                         else
@@ -144,7 +123,7 @@
                     </div>
 
                     <div class="contact-seller mt-4">
-                        <a href="#" class="btn btn-primary w-100 mb-2">Contact Seller</a>
+                        <a asp-action="DeleteCar" asp-controller="Car" asp-route-id="@Model.CarId" class="btn btn-primary w-100 mb-2">Purchase</a>
                     </div>
                 </div>
             </div>
@@ -175,46 +154,45 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // Handle favorite button click
-            $('#favoriteBtn').click(function() {
+        $(document).ready(function () {
+            $('#favoriteBtn').click(function () {
                 var btn = $(this);
                 var carId = btn.data('car-id');
-                
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <text>
-                    $.ajax({
-                        url: '@Url.Action("AddToFavorite", "Car")',
-                        type: 'POST',
-                        data: { carId: carId },
-                        success: function(response) {
-                            if (response.success) {
-                                if (response.isFavorite) {
-                                    btn.removeClass('btn-outline-danger').addClass('btn-danger');
-                                    btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
-                                    btn.find('span').text('Remove from Favorites');
-                                    toastr.success('Added to favorites');
-                                } else {
-                                    btn.removeClass('btn-danger').addClass('btn-outline-danger');
-                                    btn.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
-                                    btn.find('span').text('Add to Favorites');
-                                    toastr.info('Removed from favorites');
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <text>
+                        $.ajax({
+                            url: '@Url.Action("AddToFavorite", "Car")',
+                            type: 'POST',
+                            data: { carId: carId },
+                            success: function (response) {
+                                if (response.success) {
+                                    if (response.isFavorite) {
+                                        btn.removeClass('btn-outline-danger').addClass('btn-danger');
+                                        btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                                        btn.find('span').text('Remove from Favorites');
+                                        toastr.success('Added to favorites');
+                                    } else {
+                                        btn.removeClass('btn-danger').addClass('btn-outline-danger');
+                                        btn.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                                        btn.find('span').text('Add to Favorites');
+                                        toastr.info('Removed from favorites');
+                                    }
                                 }
+                            },
+                            error: function () {
+                                toastr.error('Error updating favorites');
                             }
-                        },
-                        error: function() {
-                            toastr.error('Error updating favorites');
-                        }
-                    });
-                    </text>
-                }
-                else
-                {
-                    <text>
-                    window.location.href = '@Url.Action("SignIn", "Account", new { returnUrl = Context.Request.Path })';
-                    </text>
-                }
+                        });
+            </text>
+        }
+        else
+        {
+            <text>
+                        window.location.href = '@Url.Action("SignIn", "Account", new { returnUrl = Context.Request.Path })';
+            </text>
+        }
             });
         });
     </script>

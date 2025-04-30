@@ -105,13 +105,14 @@ namespace CarWebSite.Controllers
             return View(cars);
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var car = await _context.Cars
                 .Include(c => c.Photos)
                 .Include(c => c.Seller)
+                    .ThenInclude(s => s.User) // Ensure Seller and nested User are included
                 .FirstOrDefaultAsync(c => c.CarId == id);
 
             if (car == null)
@@ -120,16 +121,26 @@ namespace CarWebSite.Controllers
             }
 
             bool isFavorite = false;
-            if (User.Identity.IsAuthenticated)
+
+            if (User.Identity?.IsAuthenticated ?? false)
             {
-                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                isFavorite = await _context.SavedCars.AnyAsync(sc => sc.UserId == userId && sc.CarId == id);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Retrieve the Client Id from Clients table
+                var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+
+                if (client != null)
+                {
+                    isFavorite = await _context.SavedCars
+                        .AnyAsync(sc => sc.ClientId == client.Id && sc.CarId == id);
+                }
             }
 
             ViewBag.IsFavorite = isFavorite;
 
             return View(car);
         }
+
 
         [Authorize]
         [HttpPost]
@@ -140,8 +151,15 @@ namespace CarWebSite.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
 
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get the Client corresponding to the current user
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return Json(new { success = false, message = "Client profile not found." });
+            }
+
             // Check if car exists
             var car = await _context.Cars.FindAsync(carId);
             if (car == null)
@@ -151,7 +169,7 @@ namespace CarWebSite.Controllers
 
             // Check if already saved
             var existingSavedCar = await _context.SavedCars
-                .FirstOrDefaultAsync(sc => sc.UserId == userId && sc.CarId == carId);
+                .FirstOrDefaultAsync(sc => sc.ClientId == client.Id && sc.CarId == carId);
 
             if (existingSavedCar != null)
             {
@@ -165,7 +183,7 @@ namespace CarWebSite.Controllers
                 // Add to favorites
                 var savedCar = new SavedCar
                 {
-                    UserId = userId,
+                    ClientId = client.Id,
                     CarId = carId,
                     SavedDate = DateTime.UtcNow
                 };
@@ -175,13 +193,24 @@ namespace CarWebSite.Controllers
                 return Json(new { success = true, isFavorite = true, message = "Added to favorites" });
             }
         }
-        
+
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> RemoveFromFavorite(int carId)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var savedCar = await _context.SavedCars.FirstOrDefaultAsync(sc => sc.UserId == userId && sc.CarId == carId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get client ID from user ID
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return Json(new { success = false, message = "Client not found" });
+            }
+
+            // Remove the saved car
+            var savedCar = await _context.SavedCars
+                .FirstOrDefaultAsync(sc => sc.ClientId == client.Id && sc.CarId == carId);
 
             if (savedCar == null)
             {
@@ -193,6 +222,7 @@ namespace CarWebSite.Controllers
 
             return Json(new { success = true, message = "Removed from favorites" });
         }
+
 
 
         [Authorize]
@@ -210,20 +240,34 @@ namespace CarWebSite.Controllers
         [HttpPost]
         public async Task<IActionResult> Offer(Car car, IFormFile mainImage)
         {
-            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            car.UserId = userId;
+            // Get the Client ID for the current user
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return BadRequest("Client profile not found.");
+            }
+
+            // Assign the seller (Client) ID to the car
+            car.SellerId = client.Id;
             car.ListingDate = DateTime.UtcNow;
             car.IsSold = false;
 
-            // Process main image
-            if (mainImage != null)
-            {
-                string uniqueFileName = await SaveImage(mainImage);
-                car.ImagePath = uniqueFileName;
-            }
 
+            // Enforce mileage based on role
+            if (User.IsInRole("Admin"))
+            {
+                car.Mileage = 0;
+            }
+            else if (User.IsInRole("Client"))
+            {
+                
+                if (car.Mileage < 5000)
+                {
+                    ModelState.AddModelError("Mileage", "Clients can only offer cars with mileage more than or equal to 5000.");
+                }
+            }
             if (!ModelState.IsValid)
             {
                 ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
@@ -231,15 +275,18 @@ namespace CarWebSite.Controllers
                 ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
                 return View(car);
             }
-
+            // Process main image
+            if (mainImage != null)
+            {
+                string uniqueFileName = await SaveImage(mainImage);
+                car.ImagePath = uniqueFileName;
+            }
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
 
-            
-            
-
             return RedirectToAction("Details", new { id = car.CarId });
         }
+
 
         private async Task<string> SaveImage(IFormFile image)
         {
@@ -264,10 +311,10 @@ namespace CarWebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> MyListings()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var listings = await _context.Cars
                 .Include(c => c.Photos)
-                .Where(c => c.UserId == userId)
+                .Where(c => c.SellerId == userId)
                 .ToListAsync();
 
             return View(listings);
@@ -277,17 +324,28 @@ namespace CarWebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Favorites()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Fetch the client for the current user
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return View(new List<SavedCar>()); // or redirect with a message
+            }
+
+            // Get all saved cars for this client
             var favorites = await _context.SavedCars
+                .Where(sc => sc.ClientId == client.Id)
                 .Include(sc => sc.Car)
                     .ThenInclude(c => c.Photos)
                 .Include(sc => sc.Car)
                     .ThenInclude(c => c.Seller)
-                .Where(sc => sc.UserId == userId)
+                        .ThenInclude(s => s.User) // include user info of seller
                 .ToListAsync();
 
             return View(favorites);
         }
+
 
 
         // Add this action to your CarController
@@ -398,5 +456,53 @@ namespace CarWebSite.Controllers
 
             return View(cars.ToList());
         }
+        
+        [Authorize]
+        public async Task<IActionResult> DeleteCar(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Find the client ID from user
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return Forbid();
+            }
+
+            // Find the car owned by this client
+            var car = await _context.Cars
+                .Include(c => c.SavedByUsers)
+                .FirstOrDefaultAsync(c => c.CarId == id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            // Remove any saved favorites
+            if (car.SavedByUsers != null)
+            {
+                _context.SavedCars.RemoveRange(car.SavedByUsers);
+            }
+
+            // Optionally delete image file from disk
+            if (!string.IsNullOrEmpty(car.ImagePath))
+            {
+                var fullPath = Path.Combine(_webHostEnvironment.WebRootPath, car.ImagePath.TrimStart('/'));
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+            }
+
+            _context.Cars.Remove(car);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("index","Home");
+        }
+
+
+
+
     }
 }

@@ -84,21 +84,22 @@ namespace CarWebSite.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = await _context.Users
-                .Include(u => u.OrdersAsBuyer)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var client = await _context.Clients
+                .Include(c => c.OrdersAsBuyer)
                     .ThenInclude(o => o.Car)
-                .Include(u => u.SavedCars)
+                .Include(c => c.SavedCars)
                     .ThenInclude(sc => sc.Car)
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+                .FirstOrDefaultAsync(c => c.UserID == userId);
 
-            if (user == null)
+            if (client == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(client);
         }
+
 
         public IActionResult About()
         {
@@ -110,34 +111,7 @@ namespace CarWebSite.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        // ----------------------- Added SignUp -----------------------
-
-        [HttpGet]
-        public IActionResult SignUp()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult SignUp(User user, string ConfirmPassword)
-        {
-            if (user.Password != ConfirmPassword)
-            {
-                ModelState.AddModelError("ConfirmPassword", "Passwords do not match.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                // Save the user in your database here (example)
-                // _dbContext.Users.Add(user);
-                // _dbContext.SaveChanges();
-
-                return RedirectToAction("Index");
-            }
-
-            return View(user);
-        }
-
+       
         [HttpPost]
 
         

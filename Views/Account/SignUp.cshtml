@@ -1,4 +1,4 @@
-﻿@model CarWebSite.Models.User
+﻿@model CarWebSite.Models.SignUpVM
 
 @{
     ViewData["Title"] = "Sign Up";
@@ -12,43 +12,38 @@
             <div class="mb-3">
                 <label asp-for="UserName" class="form-label"></label>
                 <input asp-for="UserName" class="form-control" required />
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Email" class="form-label"></label>
                 <input asp-for="Email" class="form-control" type="email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Password" class="form-label"></label>
                 <input asp-for="Password" class="form-control" type="password" required />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label for="ConfirmPassword" class="form-label">Confirm Password</label>
-                <input name="ConfirmPassword" class="form-control" type="password" required />
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" required />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="PhoneNumber" class="form-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" type="tel" required />
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Location" class="form-label"></label>
-                <input asp-for="Location" class="form-control" required />
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
             </div>
-
-            <div class="mb-3 form-check">
-                <input asp-for="IsSeller" class="form-check-input" type="checkbox" required />
-                <label class="form-check-label" for="IsSeller">Seller</label>
-            </div>
-
-
-            
-            <input asp-for="Role" class="form-check-input" type="checkbox" hidden  value="User" />
-                
-            
 
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
@@ -57,93 +52,8 @@
     </div>
 </div>
 
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const passwordInput = document.querySelector('input[name="Password"]');
-        const confirmPasswordInput = document.querySelector('input[name="ConfirmPassword"]');
-        const passwordFeedback = document.createElement('div');
-        passwordFeedback.classList.add('password-feedback');
-        passwordInput.parentElement.appendChild(passwordFeedback);
-
-        passwordInput.addEventListener('input', function () {
-            const password = passwordInput.value;
-            let feedbackMessage = '';
-            let isValid = true;
-
-            if (password.length < 8) {
-                feedbackMessage = 'Password must be at least 8 characters.';
-                isValid = false;
-            } else if (!/[A-Z]/.test(password)) {
-                feedbackMessage = 'Password must contain at least one uppercase letter.';
-                isValid = false;
-            } else if (!/[a-z]/.test(password)) {
-                feedbackMessage = 'Password must contain at least one lowercase letter.';
-                isValid = false;
-            } else if (!/\d/.test(password)) {
-                feedbackMessage = 'Password must contain at least one digit.';
-                isValid = false;
-            } else {
-                feedbackMessage = 'Password is strong.';
-            }
-
-            passwordFeedback.textContent = feedbackMessage;
-            passwordFeedback.style.color = isValid ? 'green' : 'red';
-        });
-
-        // Check if Confirm Password matches
-        confirmPasswordInput.addEventListener('input', function () {
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            if (password !== confirmPassword) {
-                confirmPasswordInput.setCustomValidity('Passwords do not match.');
-            } else {
-                confirmPasswordInput.setCustomValidity('');
-            }
-        });
-    });
-</script>
-
-<style>
-/* Style for the sign-up button */
-.btn-primary {
-    background-color: #6E4331;
-    border-color: #6E4331;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-
-.btn-primary:hover {
-    background-color: #994C2B;
-    border-color: #994C2B;
-}
-
-/* Style for the text fields */
-.form-control {
-    border: 2px solid #45322A;
-    border-radius: 15px;
-    padding: 10px;
-    font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Style for the frame */
-.card {
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #FFF0EA;
-}
-</style>

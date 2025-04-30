@@ -10,30 +10,25 @@ namespace CarWebSite.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CarId { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required, StringLength(50)]
         public string Brand { get; set; }
 
         [StringLength(50)]
         public string Model { get; set; }
 
-        [Required]
-        [Range(1900, 2100)]
+        [Required, Range(1900, 2100)]
         public int Year { get; set; }
 
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int Mileage { get; set; }  // 0 if new
+        [Required, Range(0, int.MaxValue)]
+        public int Mileage { get; set; }
 
-        [Required]
-        [Range(0, double.MaxValue)]
-        public decimal Price { get; set; }  // Changed from int to decimal
+        [Required, Range(0, double.MaxValue)]
+        public decimal Price { get; set; }
 
         [StringLength(30)]
         public string? Color { get; set; }
 
         [Required]
-        [EnumDataType(typeof(BodyType))]
         public string BodyType { get; set; }
 
         [StringLength(1000)]
@@ -46,69 +41,29 @@ namespace CarWebSite.Models
         public bool IsSold { get; set; } = false;
 
         [Required]
-        [ForeignKey("Seller")]
-        public int UserId { get; set; } = 0;  // The seller's UserId
+        public int CategoryId { get; set; }
+
+        [Required, ForeignKey("Seller")]
+        public string? SellerId { get; set; } = "0";  // FK to Client
 
         [DataType(DataType.DateTime)]
         public DateTime? ListingDate { get; set; } = DateTime.UtcNow;
-        
-        [Required]
-        public int CategoryId { get; set; } // Foreign key
-
-        
 
         // Navigation properties
-        public virtual User? Seller { get; set; }
+        public virtual Client? Seller { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<SavedCar>? SavedByUsers { get; set; }
         public virtual ICollection<Photo>? Photos { get; set; }
 
-        public Car() { }
+        public string GetMainImageUrl() =>
+            string.IsNullOrEmpty(ImagePath) ? "/images/default-car-image.jpg" : ImagePath;
 
-        public Car(string brand, string model, int year, int mileage, decimal price,
-                  string bodyType, int userId, string? color = null,
-                  string? description = null, string? imagePath = null)
-        {
-            Brand = brand;
-            Model = model;
-            Year = year;
-            Mileage = mileage;
-            Price = price;
-            BodyType = bodyType;
-            UserId = userId;
-            Color = color;
-            Description = description;
-            ImagePath = imagePath;
-            IsSold = false;
-            ListingDate = DateTime.UtcNow;
-        }
-
-        
-        public string GetMainImageUrl()
-        {
-            return string.IsNullOrEmpty(ImagePath) ? "/images/default-car-image.jpg" : ImagePath;
-        }
-
-        public bool IsValidYear()// check if the year is not empty and non negative
-        {
-            return Year >= 0;
-        }
-        public bool IsValidPrice()// check if the price is not empty and non negative
-        {
-            return Price >= 0;
-        }
-
-        public bool IsValidMileage()// check if the mileage is not empty and non negative
-        {
-            return Mileage >= 0;
-        }
-
-        public bool IsValidNumeric(string s)// check if the price is a valid numeric value
-        {
-            return int.TryParse(s, out int parsedValue);
-        }
-
+        public bool IsValidYear() => Year >= 0;
+        public bool IsValidPrice() => Price >= 0;
+        public bool IsValidMileage() => Mileage >= 0;
+        public bool IsValidNumeric(string s) => int.TryParse(s, out _);
     }
+
     public enum BodyType
     {
         Sedan,

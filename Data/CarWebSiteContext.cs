@@ -1,9 +1,10 @@
 using CarWebSite.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarWebSite.Data
 {
-    public class CarWebSiteContext : DbContext
+    public class CarWebSiteContext : IdentityDbContext<User>
     {
         public CarWebSiteContext(DbContextOptions<CarWebSiteContext> options) : base(options) { }
 
@@ -13,31 +14,23 @@ namespace CarWebSite.Data
         public DbSet<SavedCar> SavedCars { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure decimal precision for monetary fields
-            modelBuilder.Entity<Car>()
-                .Property(c => c.Price)
-                .HasPrecision(18, 2); // 18 digits total, 2 decimal places
+            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Order>()
-                .Property(o => o.TotalAmount)
-                .HasPrecision(18, 2);
+            modelBuilder.Entity<Car>().Property(c => c.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<Order>().Property(o => o.TotalAmount).HasPrecision(18, 2);
+            modelBuilder.Entity<Payment>().Property(p => p.Amount).HasPrecision(18, 2);
 
-            modelBuilder.Entity<Payment>()
-                .Property(p => p.Amount)
-                .HasPrecision(18, 2);
-
-            // Configure SavedCar -> User relationship
             modelBuilder.Entity<SavedCar>()
-                .HasKey(sc => new { sc.UserId, sc.CarId });
+                .HasKey(sc => new { sc.ClientId, sc.CarId });
 
-            // Configure relationships for SavedCar
             modelBuilder.Entity<SavedCar>()
-                .HasOne(sc => sc.User)
-                .WithMany(u => u.SavedCars)
-                .HasForeignKey(sc => sc.UserId)
+                .HasOne(sc => sc.Client)
+                .WithMany(c => c.SavedCars)
+                .HasForeignKey(sc => sc.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<SavedCar>()
@@ -46,53 +39,41 @@ namespace CarWebSite.Data
                 .HasForeignKey(sc => sc.CarId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure Buyer relationship (User -> Orders)
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Buyer)
-                .WithMany(u => u.OrdersAsBuyer)
+                .WithMany(c => c.OrdersAsBuyer)
                 .HasForeignKey(o => o.BuyerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure Seller relationship (User -> Orders)
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Seller)
-                .WithMany(u => u.OrdersAsSeller)
+                .WithMany(c => c.OrdersAsSeller)
                 .HasForeignKey(o => o.SellerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure Car relationship (Order -> Car)
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Car)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CarId);
 
-            // Configure Payment -> Order relationship
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Order)
                 .WithMany(o => o.Payments)
                 .HasForeignKey(p => p.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure User -> Car relationship
             modelBuilder.Entity<Car>()
                 .HasOne(c => c.Seller)
-                .WithMany(u => u.CarsForSale)
-                .HasForeignKey(c => c.UserId)
+                .WithMany(client => client.CarsForSale)
+                .HasForeignKey(c => c.SellerId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Configure Photo -> Car relationship
-            modelBuilder.Entity<Photo>()
-                .HasKey(p => p.Id);
 
             modelBuilder.Entity<Photo>()
                 .HasOne(p => p.Car)
                 .WithMany(c => c.Photos)
                 .HasForeignKey(p => p.CarId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            
-
-            base.OnModelCreating(modelBuilder);
         }
     }
+
 }

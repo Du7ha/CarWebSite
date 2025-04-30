@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 using CarWebSite.Data;
 using CarWebSite.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using CarWebSite.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CarWebSite.Controllers
 {
@@ -13,11 +13,22 @@ namespace CarWebSite.Controllers
     {
         private readonly CarWebSiteContext _context;
         private readonly ILogger<AccountController> _logger;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(CarWebSiteContext context, ILogger<AccountController> logger)
+        public AccountController(
+            CarWebSiteContext context,
+            ILogger<AccountController> logger,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -27,51 +38,26 @@ namespace CarWebSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn(string email, string password, string returnUrl = null)
+        public async Task<IActionResult> SignIn(SignInVM model, string? returnUrl = null)
         {
-            try
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-                if (user == null || !user.VerifyPassword(password))
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid email or password");
-                    return View();
-                }
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Role, user.Role)
-                };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal,
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = true // Remember me option
-                    });
-
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
-
-                return RedirectToAction("Index", "Home");
+                ModelState.AddModelError(string.Empty, "Invalid email or password");
+                return View(model);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during sign in");
-                ModelState.AddModelError(string.Empty, "An error occurred while processing your request");
-                return View();
-            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+            if (result.Succeeded)
+                return RedirectToLocal(returnUrl);
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt");
+            return View(model);
         }
+
 
         [HttpGet]
         public IActionResult SignUp()
@@ -80,46 +66,52 @@ namespace CarWebSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(User user, string confirmPassword)
+        public async Task<IActionResult> SignUp(SignUpVM model)
         {
-            try
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = new User
             {
-                user.Role = "User";
-                if (user.Password != confirmPassword)
-                {
-                    ModelState.AddModelError("ConfirmPassword", "Passwords do not match");
-                    return View(user);
-                }
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Location = model.Location,
+                CreatedAt = DateTime.UtcNow
+            };
 
-                if (await _context.Users.AnyAsync(u => u.Email == user.Email))
-                {
-                    ModelState.AddModelError("Email", "Email is already registered");
-                    return View(user);
-                }
-
-                user.HashPassword();
-                user.CreatedAt = DateTime.UtcNow;
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                // Automatically sign in the user after registration
-                await SignIn(user.Email, user.Password);
-
-                return RedirectToAction("Index", "Home");
-            }
-            catch (Exception ex)
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
             {
-                _logger.LogError(ex, "Error during sign up");
-                ModelState.AddModelError(string.Empty, "An error occurred while processing your request");
-                return View(user);
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View(model);
             }
+
+            var roleName = "Client";
+            if (!await _roleManager.RoleExistsAsync(roleName))
+                await _roleManager.CreateAsync(new IdentityRole(roleName));
+
+            await _userManager.AddToRoleAsync(user, roleName);
+
+            var client = new Client
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserID = user.Id,
+                IsSeller =true,
+            };
+            _context.Clients.Add(client);
+            await _context.SaveChangesAsync();
+
+            await _signInManager.SignInAsync(user, isPersistent: true);
+            return RedirectToAction("Index", "Home");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SignOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -127,43 +119,54 @@ namespace CarWebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProfile()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = await _context.Users.FindAsync(userId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null)
+            if (user == null) return NotFound();
+
+            var vm = new EditVM
             {
-                return NotFound();
-            }
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Location = user.Location
+            };
 
-            return View(user);
+            return View(vm);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> EditProfile(User updatedUser)
+        public async Task<IActionResult> EditProfile(EditVM updatedUser)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = await _context.Users.FindAsync(userId);
+            if (!ModelState.IsValid)
+                return View(updatedUser);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
 
-            if (ModelState.IsValid)
-            {
-                user.UserName = updatedUser.UserName;
-                user.PhoneNumber = updatedUser.PhoneNumber;
-                user.Location = updatedUser.Location;
+            if (user == null) return NotFound();
 
-                await _context.SaveChangesAsync();
+            user.UserName = updatedUser.UserName;
+            user.Email = updatedUser.Email;
+            user.PhoneNumber = updatedUser.PhoneNumber;
+            user.Location = updatedUser.Location;
 
-                return RedirectToAction("Profile");
-            }
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+                return RedirectToAction("index", "Home");
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
 
             return View(updatedUser);
         }
 
-
+        private IActionResult RedirectToLocal(string? returnUrl)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

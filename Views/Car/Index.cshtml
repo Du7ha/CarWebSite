@@ -102,8 +102,8 @@ ViewData["Title"] = "Car Listings";
                         <a href="@Url.Action("Details", new { id = car.CarId })" class="btn btn-sm btn-primary">View Details</a>
                         <button class="btn btn-sm btn-outline-danger favorite-btn"
                                 data-car-id="@car.CarId"
-                                data-is-favorite="@(car.SavedByUsers != null && car.SavedByUsers.Any(s => s.UserId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))">
-                            <i class="bi @(car.SavedByUsers != null && car.SavedByUsers.Any(s => s.UserId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value) ? "bi-heart-fill" : "bi-heart")"></i>
+                                data-is-favorite="@(car.SavedByUsers != null && car.SavedByUsers.Any(s => s.ClientId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value))">
+                                <i class="bi @(car.SavedByUsers != null && car.SavedByUsers.Any(s => s.ClientId.ToString() == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value) ? "bi-heart-fill" : "bi-heart")"></i>
                         </button>
                     </div>
                 </div>
