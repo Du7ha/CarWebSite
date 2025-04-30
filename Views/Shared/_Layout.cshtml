@@ -78,37 +78,45 @@
         </nav>
     </header>
 
-    <!-- Hidden Checkboxes for Sign-In and Menu Toggles -->
-    <input type="checkbox" id="signInToggle" class="frame-checkbox" />
-    <input type="checkbox" id="menuToggle" class="menu-checkbox" />
+   <!-- Hidden Checkboxes for Sign-In and Menu Toggles -->
+<input type="checkbox" id="signInToggle" class="frame-checkbox" />
+<input type="checkbox" id="menuToggle" class="menu-checkbox" />
 
-    <!-- Sign In Modal -->
-    <div id="signInFrame" class="floating-frame">
-        <h2>Sign In</h2>
-        <form asp-controller="Account" asp-action="SignIn" method="post">
-            <div class="mb-3">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required />
-            </div>
-            <div class="mb-3">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" class="form-control" required />
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" />
-                <label class="form-check-label" for="rememberMe">Remember me</label>
-            </div>
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Sign In</button>
-            </div>
-            <hr />
-            <div class="d-grid">
-                <button type="button" class="btn btn-danger">
-                    <i class="fab fa-google"></i> Sign in with Google
-                </button>
-            </div>
-        </form>
-    </div>
+<!-- Overlay for modal background -->
+<div class="overlay"></div>
+
+<!-- Sign In Modal -->
+<div id="signInFrame" class="floating-frame">
+    <h2>Sign In</h2>
+    <form asp-controller="Account" asp-action="SignIn" method="post" id="signInForm">
+        <div class="mb-3">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required />
+            <!-- Validation message will be inserted here by JavaScript -->
+        </div>
+        <div class="mb-3">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required />
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" />
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </div>
+        <hr />
+        <div class="text-center mt-3">
+            <p>Don't have an account? <a asp-controller="Account" asp-action="SignUp" class="text-decoration-none">Sign Up</a></p>
+        </div>
+        <div class="d-grid">
+            <button type="button" class="btn btn-danger">
+                <i class="fab fa-google"></i> Sign in with Google
+            </button>
+        </div>
+    </form>
+    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close" onclick="document.getElementById('signInToggle').checked = false;"></button>
+</div>
 
     <!-- Floating Menu -->
     <div id="floatingMenu" class="floating-menu">
@@ -125,11 +133,6 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - CarWebSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -156,5 +159,12 @@
             });
         });
     </script>
+
+    <footer class="border-top footer text-muted"></footer>
+        <div class="container">
+            &copy; 2025 - CarWebSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
 </body>
 </html>

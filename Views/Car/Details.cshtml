@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="contact-seller mt-4">
-                        <a asp-action="DeleteCar" asp-controller="Car" asp-route-id="@Model.CarId" class="btn btn-primary w-100 mb-2">Purchase</a>
+                        <button id="purchaseBtn" class="btn btn-primary w-100 mb-2">Purchase</button>
                     </div>
                 </div>
             </div>
@@ -152,9 +152,42 @@
     </div>
 </div>
 
+<!-- Purchase Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="contactModalLabel">Purchase Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <!-- Logo placeholder -->
+                    <div class="mb-3">
+                        <img src="/Images/Carlogol.png" alt="Website Logo" class="img-fluid" style="max-height: 140px;">
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Purchase request sent successfully!
+                    </div>
+                    
+                    <p>Thank you for your interest</p>
+                    <p>A representative will contact you shortly with more information.</p>
+                    <p><strong>Reference ID:</strong> XUV700-<span id="referenceId"></span></p>
+                </div>
+            </div>
+            <div class="contact-seller mt-4"></div>
+                <a asp-action="DeleteCar" asp-controller="Car" asp-route-id="@Model.CarId" class="btn btn-primary px-4" id="okButton">OK</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Favorites functionality
             $('#favoriteBtn').click(function () {
                 var btn = $(this);
                 var carId = btn.data('car-id');
@@ -194,6 +227,182 @@
             </text>
         }
             });
+
+            // Generate a random reference ID for the modal
+            const referenceId = Math.floor(100000 + Math.random() * 900000);
+            $('#referenceId').text(referenceId);
+            
+            // Purchase button click handler
+            $('#purchaseBtn').click(function() {
+                var contactModal = new bootstrap.Modal(document.getElementById('contactModal'));
+                contactModal.show();
+            });
+            
+            // OK button click handler
+            $('#okButton').click(function() {
+                // Hide the modal
+                var contactModal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+                contactModal.hide();
+                
+                // Add a slight delay before redirecting to home page
+                setTimeout(function() {
+                    window.location.href = '/';  // Redirect to home page
+                }, 300);
+            });
         });
     </script>
 }
+
+<style>
+/* Breadcrumb Navigation */
+.breadcrumb {
+    background: transparent;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Image Carousel */
+.carousel-inner img {
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Car Details Card */
+.card {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #FFF0EA;
+}
+
+/* Favorite Button */
+.favorite-btn {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    background-color: #6E4331;
+    gap: 5px;
+}
+
+.favorite-btn:hover {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    background-color: #994C2B;
+    gap: 5px;
+}
+
+/* Specifications Table */
+.table-sm {
+    width: 100%;
+    font-size: 14px;
+}
+
+.table-sm th {
+    text-align: left;
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+/* Seller Information */
+.seller-info i {
+    font-size: 18px;
+    color: #45322A;
+    margin-right: 8px;
+}
+
+/* Purchase Button */
+.btn-primary {
+    background-color: #6E4331;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #994C2B;
+}
+
+/* Description Card */
+.card-body p {
+    font-size: 16px;
+}
+
+/* Modal Container */
+.modal-dialog {
+    max-width: 600px;
+    border-radius: 20px;
+}
+
+/* Modal Content */
+.modal-content {
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Header */
+.modal-header {
+    background-color: #6E4331 !important;
+    color: white;
+    border-radius: 20px 20px 0 0;
+}
+
+/* Close Button */
+.btn-close {
+    color: white;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 2rem;
+    background-color: #FFF0EA;
+    text-align: center;
+}
+
+/* Logo */
+.modal-body img {
+    max-height: 140px;
+    width: auto;
+    margin-bottom: 1.5rem;
+}
+
+/* Success Message */
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-color: #badbcc;
+    font-weight: bold;
+}
+
+/* Reference ID */
+.modal-body strong {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Modal Footer */
+.modal-footer {
+    justify-content: center;
+    background-color: #FFF0EA;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+}
+
+/* OK Button */
+#okButton {
+    background-color: #6E4331;
+    border-color: #6E4331;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+#okButton:hover {
+    background-color: #994C2B;
+    border-color: #994C2B;
+}
+</style>
