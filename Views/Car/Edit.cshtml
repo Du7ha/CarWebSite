@@ -1,0 +1,49 @@
+﻿@model CarWebSite.Models.Car
+
+@{
+    ViewData["Title"] = "Edit Car";
+}
+
+<h2>Edit Car</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="CarId" />
+
+    <div class="mb-3">
+        <label asp-for="Brand" class="form-label"></label>
+        <select asp-for="Brand" class="form-select" asp-items="new SelectList(ViewBag.Brands)"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Model" class="form-label"></label>
+        <input asp-for="Model" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Mileage" class="form-label"></label>
+        <input asp-for="Mileage" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Color" class="form-label"></label>
+        <select asp-for="Color" class="form-select" asp-items="new SelectList(ViewBag.Colors)"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BodyType" class="form-label"></label>
+        <select asp-for="BodyType" class="form-select" asp-items="new SelectList(ViewBag.BodyTypes)"></select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a asp-action="MyListings" class="btn btn-secondary">Cancel</a>
+</form>

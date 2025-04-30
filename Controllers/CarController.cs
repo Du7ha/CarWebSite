@@ -193,8 +193,98 @@ namespace CarWebSite.Controllers
                 return Json(new { success = true, isFavorite = true, message = "Added to favorites" });
             }
         }
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return Forbid();
+            }
 
+            var car = await _context.Cars.FirstOrDefaultAsync(c => c.CarId == id && c.SellerId == client.Id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
+            ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
+            ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
+
+            return View(car);
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(Car updatedCar, IFormFile mainImage)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+            {
+                return Forbid();
+            }
+
+            var existingCar = await _context.Cars.FirstOrDefaultAsync(c => c.CarId == updatedCar.CarId && c.SellerId == client.Id);
+            if (existingCar == null)
+            {
+                return NotFound();
+            }
+
+            // تحديث القيم
+            existingCar.Brand = updatedCar.Brand;
+            existingCar.Model = updatedCar.Model;
+            existingCar.Year = updatedCar.Year;
+            existingCar.Price = updatedCar.Price;
+            existingCar.Color = updatedCar.Color;
+            existingCar.BodyType = updatedCar.BodyType;
+            existingCar.Mileage = updatedCar.Mileage;
+
+            // إذا كانت هناك صورة جديدة تم رفعها
+            if (mainImage != null)
+            {
+                // حذف الصورة القديمة من السيرفر
+                if (!string.IsNullOrEmpty(existingCar.ImagePath))
+                {
+                    var fullPath = Path.Combine(_webHostEnvironment.WebRootPath, existingCar.ImagePath.TrimStart('/'));
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                }
+
+                // حفظ الصورة الجديدة
+                string uniqueFileName = await SaveImage(mainImage);
+                existingCar.ImagePath = uniqueFileName;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("MyListings");
+        }
+        // دالة واحدة فقط لتحميل الصورة وحفظها
+        private async Task<string> SaveImage(IFormFile image)
+        {
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(fileStream);
+            }
+
+            return "/uploads/" + uniqueFileName;
+        }
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> RemoveFromFavorite(int carId)
@@ -288,37 +378,7 @@ namespace CarWebSite.Controllers
         }
 
 
-        private async Task<string> SaveImage(IFormFile image)
-        {
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await image.CopyToAsync(fileStream);
-            }
-
-            return "/uploads/" + uniqueFileName;
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> MyListings()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var listings = await _context.Cars
-                .Include(c => c.Photos)
-                .Where(c => c.SellerId == userId)
-                .ToListAsync();
-
-            return View(listings);
-        }
+  
 
         [Authorize]
         [HttpGet]
@@ -501,6 +561,23 @@ namespace CarWebSite.Controllers
             return RedirectToAction("index","Home");
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> MyListings()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get Client ID
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);
+            if (client == null)
+                return Forbid();
+
+            var listings = await _context.Cars
+                .Where(c => c.SellerId == client.Id)
+                .ToListAsync();
+
+            return View(listings);
+        }
 
 
 
