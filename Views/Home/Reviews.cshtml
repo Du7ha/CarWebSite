@@ -1,0 +1,325 @@
+@{
+    ViewData["Title"] = "Reviews";
+}
+
+<div class="review-container">
+    <div class="review-content">
+        <h1>Feedbacks and Reviews</h1>
+        
+        <!-- Review Submission Card -->
+        <div class="card review-card submission-card">
+            <div class="card-header">
+                <h3>Share Your Experience</h3>
+            </div>
+            <div class="card-body">
+                <form id="reviewForm" method="post" asp-controller="Reviews" asp-action="SubmitReview">
+                    <div class="mb-3">
+                        <label for="reviewTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="reviewTitle" name="ReviewTitle" placeholder="Enter a brief title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="Rating" value="5" /><label for="star5"></label>
+                            <input type="radio" id="star4" name="Rating" value="4" /><label for="star4"></label>
+                            <input type="radio" id="star3" name="Rating" value="3" /><label for="star3"></label>
+                            <input type="radio" id="star2" name="Rating" value="2" /><label for="star2"></label>
+                            <input type="radio" id="star1" name="Rating" value="1" /><label for="star1"></label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reviewContent" class="form-label">Your Review</label>
+                        <textarea class="form-control" id="reviewContent" name="ReviewContent" rows="4" placeholder="Share your experience with us..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary submit-btn">Submit Review</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Reviews List Card -->
+        <div class="card review-card reviews-list-card mt-4">
+            <div class="card-header">
+                <h3>Customer Reviews</h3>
+            </div>
+            <div class="card-body">
+                <div id="reviewsList">
+                    <!-- This section will be populated by backend -->
+                    @if (Model != null && Model.Reviews != null && Model.Reviews.Any())
+                    {
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <h4>@review.Title</h4>
+                                    <div class="review-rating">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="fas fa-star @(i <= review.Rating ? "filled" : "")"></i>
+                                        }
+                                    </div>
+                                    <div class="review-meta">
+                                        <span class="review-author">@review.Author</span>
+                                        <span class="review-date">@review.Date.ToShortDateString()</span>
+                                    </div>
+                                </div>
+                                <div class="review-content-text">
+                                    @review.Content
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <!-- Sample reviews for display purposes - to be replaced with actual data -->
+                        <div class="review-item">
+                            <div class="review-header">
+                                <h4>Excellent Service</h4>
+                                <div class="review-rating">
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                </div>
+                                <div class="review-meta">
+                                    <span class="review-author">John Smith</span>
+                                    <span class="review-date">April 20, 2025</span>
+                                </div>
+                            </div>
+                            <div class="review-content-text">
+                                I recently purchased a used Mercedes through this site and I couldn't be happier. The process was smooth, transparent, and the car was exactly as described!
+                            </div>
+                        </div>
+                        <div class="review-item">
+                            <div class="review-header">
+                                <h4>Good Experience Overall</h4>
+                                <div class="review-rating">
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="review-meta">
+                                    <span class="review-author">Emily Johnson</span>
+                                    <span class="review-date">April 15, 2025</span>
+                                </div>
+                            </div>
+                            <div class="review-content-text">
+                                The site was easy to navigate and I found several options within my budget. Customer service was responsive when I had questions. Taking one star off because the pickup process took longer than expected.
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <style>
+    .review-container {
+        padding: 20px 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .review-content {
+        background-color: #FFF0EA;
+        color: #45322a;
+        padding: 40px 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: none;
+    }
+
+    h1 {
+        color: #45322a;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .review-card {
+        margin-bottom: 20px;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease;
+    }
+
+    .review-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .card-header {
+        background-color: #6E4331;
+        color: white;
+        font-weight: 500;
+        padding: 15px 20px;
+        border-top-left-radius: 8px !important;
+        border-top-right-radius: 8px !important;
+    }
+
+    .card-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+    }
+
+    .card-body {
+        padding: 25px;
+        background-color: white;
+    }
+
+    .submit-btn {
+        background-color: #6E4331;
+        border: none;
+        padding: 10px 25px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background-color: #994C2B;
+        transform: translateY(-2px);
+    }
+
+    /* Star Rating Styles */
+    .star-rating {
+        direction: rtl;
+        display: inline-block;
+        padding: 10px 0;
+    }
+
+    .star-rating input {
+        display: none;
+    }
+
+    .star-rating label {
+        color: #ddd;
+        font-size: 24px;
+        padding: 0;
+        cursor: pointer;
+        width: 1.2em;
+    }
+
+    .star-rating label:before {
+        content: '\f005';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+    }
+
+    .star-rating input:checked ~ label,
+    .star-rating input:hover ~ label {
+        color: #ffbd3d;
+    }
+
+    /* Review List Styles */
+    .review-item {
+        border-bottom: 1px solid #eaeaea;
+        padding: 15px 0;
+        margin-bottom: 10px;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .review-header {
+        margin-bottom: 10px;
+    }
+
+    .review-header h4 {
+        margin: 0 0 10px 0;
+        color: #6E4331;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .review-rating {
+        margin-bottom: 8px;
+    }
+
+    .review-rating .fa-star {
+        color: #ddd;
+        margin-right: 2px;
+    }
+
+    .review-rating .fa-star.filled {
+        color: #ffbd3d;
+    }
+
+    .review-meta {
+        font-size: 0.85rem;
+        color: #6c757d;
+        display: flex;
+        gap: 15px;
+    }
+
+    .review-author {
+        font-weight: 500;
+    }
+
+    .review-content-text {
+        line-height: 1.6;
+        color: #333;
+    }
+    
+     .form-control{
+        border-radius: 10px;
+        border: 2px solid #6E4331 ;
+     }
+
+    #reviewForm .form-control:focus {
+        border-color: #6E4331;
+        box-shadow: 0 0 0 0.25rem rgba(62, 98, 138, 0.25);
+    }
+   </style>
+
+ <script>
+    // Client-side validation and star rating behavior
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle star rating hover effects
+        const ratingLabels = document.querySelectorAll('.star-rating label');
+        ratingLabels.forEach(label => {
+            label.addEventListener('mouseover', function() {
+                // Add 'hover' class to this label and all previous labels
+                let siblings = [];
+                let currentLabel = this;
+                
+                while (currentLabel) {
+                    if (currentLabel.nodeName === 'LABEL') {
+                        siblings.push(currentLabel);
+                    }
+                    currentLabel = currentLabel.nextElementSibling;
+                }
+                
+                siblings.forEach(sibling => {
+                    sibling.classList.add('hover');
+                });
+            });
+            
+            label.addEventListener('mouseout', function() {
+                // Remove 'hover' class from all labels
+                document.querySelectorAll('.star-rating label').forEach(l => {
+                    l.classList.remove('hover');
+                });
+            });
+        });
+        
+        // Form submission handler
+        const reviewForm = document.getElementById('reviewForm');
+        reviewForm.addEventListener('submit', function(e) {
+            const rating = document.querySelector('input[name="Rating"]:checked');
+            
+            // Check if rating is selected
+            if (!rating) {
+                e.preventDefault();
+                alert('Please select a rating for your review.');
+                return;
+            }
+            
+            // Additional client-side validation can be added here
+        });
+    });
+</script>
