@@ -64,6 +64,7 @@ nav a {
     color: #45322a !important;
     font-size: 1.5rem;
     padding: 0.5rem 0.8rem;
+    cursor: pointer;
 }
 
     .navbar-nav .icon-link:hover {
@@ -78,23 +79,16 @@ nav a {
 /* Floating Menu Styling */
 .floating-menu {
     position: absolute;
-    top: 50px; /* Adjust below navbar */
+    top: 60px; /* Adjust below navbar */
     right: 10px; /* Align to the right */
     background-color: #fff;
     border-radius: 10px;
     border: 1px solid #ddd;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 200px;
-    height: 250px;
+    height: auto;
     padding: 10px;
     display: none; /* Hidden by default */
     z-index: 1000;
-}
-
-/* Show menu when the checkbox is checked */
-.menu-checkbox:checked + #floatingMenu {
-    display: block;
-    animation: slide-down 0.3s ease-out;
 }
 
 /* Slide down animation */
@@ -112,6 +106,7 @@ nav a {
 
 /* Menu Items Styling */
 .floating-menu ul {
+    display: flex;
     flex-direction: column;
     list-style: none;
     padding: 10px;
@@ -125,10 +120,15 @@ nav a {
         .floating-menu ul li a {
             text-decoration: none;
             color: #45322a;
+            font-size: 1.1rem;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 5px;
         }
 
             .floating-menu ul li a:hover {
                 color: #994c2b;
+                background-color: #f8f9fa;
             }
 
 /* Hidden checkbox for toggling visibility */
@@ -136,15 +136,15 @@ nav a {
     display: none;
 }
 
-/* Background Overlay Styling */
-.background-overlay {
-    position: absolute;
+/* Overlay Styling */
+.overlay {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black color */
-    backdrop-filter: blur(10px); /* Adds blur effect */
+    backdrop-filter: blur(5px); /* Adds blur effect */
     display: none; /* Hidden by default */
     z-index: 999; /* Behind the floating frame */
     cursor: pointer;
@@ -166,13 +166,13 @@ nav a {
     z-index: 1000; /* Above the overlay */
 }
 
-/* Show frame and overlay when checkbox is checked */
-.frame-checkbox:checked ~ .background-overlay {
-    display: block; /* Show the background blur overlay */
+/* Show sign-in frame when toggled */
+#signInToggle:checked ~ #signInFrame {
+    display: block;
 }
-
-.frame-checkbox:checked ~ .frame-wrapper {
-    display: block; /* Makes overlay and frame visible */
+ /* Show overlay only when sign-in is active */
+ #signInToggle:checked ~ .overlay {
+    display: block;
 }
 
 .floating-frame h2 {
@@ -226,12 +226,6 @@ nav a {
         background-color: #c33d2e;
     }
 
-/* Show frame when checkbox is checked */
-.frame-checkbox:checked ~ #signInFrame {
-    display: block;
-}
-
-
 .navbar-brand img {
     height: 40px;
     width: auto;
@@ -239,4 +233,23 @@ nav a {
     object-fit: contain;
     vertical-align: middle;
     display: block;
+}
+
+/* Custom styling for the close button (X symbol) in sign-in frame */
+.btn-close {
+    background-color: transparent;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    background-color: rgba(153, 76, 43, 0.1);
+    border-radius: 50%;
+}
+
+/* Additional specific styling for the sign-in frame close button */
+#signInFrame .btn-close {
+    padding: 0.5rem;
+    font-size: 1.2rem;
 }
