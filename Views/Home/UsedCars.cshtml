@@ -6,14 +6,13 @@
 
 <div class="container-fluid p-0">
     <div class="position-relative">
-        <div class="bg-light" style="background-color: #f5e6d8 !important; min-height: 200px;"></div>
 
-        <div class="container position-relative" style="margin-top: -100px;">
+        <div class="container position-relative">
             <div class="row justify-content-center mb-5">
                 <div class="col-md-8 text-center">
                     <div class="card border-light shadow-sm">
                         <div class="card-body">
-                            <h2 class="card-title text-center mb-4" style="color: #8B4513; font-weight: bold;">Choose your car</h2>
+                            <h2 class="card-title text-center mb-4" style="color: #8B4513; font-weight: bold; font-size: 50px;">Choose your car</h2>
 
                             <!-- Filter Form -->
                             <div id="filterForm" class="d-flex justify-content-center gap-3 flex-wrap">
@@ -347,37 +346,140 @@
             }
         });
     </script>
-    <style>
-        .hover-shadow:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-            transition: all 0.2s ease-in-out;
+ <style>
+        /* --------------------------- Overall Containers --------------------------- */
+        .container-fluid.p-0 {
+            padding: 0;
+        }
+        /* Top banner background */
+        .position-relative > .bg-light {
+            background-color: #f5e6d8 !important;
+            min-height: 200px;
         }
 
-        .dropdown-item.active {
-            background-color: #8B4513;
-            color: white;
+        /* --------------------------- Filter Card & Form --------------------------- */
+        .card.border-light.shadow-sm {
+            margin-top: 50px;
+            border: 1px solid #e0d6cc;
+            border-radius: 8px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            color: #8B4513;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        /* Filter Form Layout */
+        #filterForm {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        /* Dropdown Button Styling */
+        .dropdown .btn {
+            background-color: #ffffff;
+            border-color: #6E4331;
+            color: #6E4331;
+            transition: background-color 0.3s ease;
+        }
+        .dropdown .btn:hover {
+            background-color: #6E4331;
+            color: #fff;
+        }
+        /* Dropdown Menu and Items */
+        .dropdown-menu {
+            min-width: 150px;
+        }
+        .dropdown-menu .dropdown-item {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #f5e6d8;
+        }
+        /* Reset Filters Button */
+        #resetFilters {
+            background-color: #ffffff;
+            border: 1px solid #7c0713;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        #resetFilters:hover {
+            background-color: #dc3545;
+            color: #fff;
         }
 
-        .deal-rating {
-            color: #28a745;
-            font-weight: 500;
+        /* --------------------------- Car Listings --------------------------- */
+        #carListingsContainer {
+            margin-top: 30px;
         }
-
-        .filter-badge {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 20px;
+        /* Each Car Item Link */
+        a.car-item {
+            text-decoration: none;
+            color: inherit;
+        }
+        /* Car Card Styling */
+        .card.mb-4.shadow-sm.hover-shadow {
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+        .card.mb-4.shadow-sm.hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        /* Car Image */
+        .card .img-fluid {
+            width: 100%;
+            object-fit: cover;
+        }
+        /* New Car Badge */
+        .position-absolute.top-0.start-0.m-2 .badge.bg-success {
+            font-size: 0.85rem;
             padding: 5px 10px;
-            margin-right: 5px;
-            display: inline-block;
-            font-size: 0.875rem;
+        }
+        /* Favorite Button positioned on card */
+        .favorite-btn {
+            background-color: transparent;
+            color: #dc3545;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .favorite-btn:hover {
+            color: #bd2130;
+        }
+        /* Card Text & Titles */
+        .card-body .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .card-text {
+            margin-bottom: 5px;
+        }
+        /* Deal Rating styling (if applicable) */
+        .deal-rating {
+            color: #ff9800;
+            font-weight: bold;
         }
 
-            .filter-badge .close {
-                margin-left: 5px;
-                font-size: 0.875rem;
-                cursor: pointer;
-            }
+        /* --------------------------- Alert & No Results --------------------------- */
+        .alert.alert-info {
+            margin-top: 20px;
+        }
+        #noResultsTemplate .alert {
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: normal;
+        }
     </style>
 }

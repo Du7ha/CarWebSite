@@ -47,3 +47,81 @@
     <button type="submit" class="btn btn-success">Save Changes</button>
     <a asp-action="MyListings" class="btn btn-secondary">Cancel</a>
 </form>
+
+
+<style>
+        /* Form Container */
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #FFF0EA;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Heading */
+        h2 {
+            color: #45322a;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Form Group Margin */
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Form Labels */
+        .form-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #45322a;
+        }
+
+        /* Form Controls & Selects */
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #6E4331;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #6E4331;
+            outline: none;
+        }
+
+        /* Buttons Base */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        /* Success Button */
+        .btn-success {
+            background-color: #6E4331;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background-color: #994c2b;
+            color: #fff;
+        }
+
+        /* Secondary Button */
+        .btn-secondary {
+            background-color: #6c757d;
+            border: 1px solid #6c757d;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: #fff;
+        }
+    </style>

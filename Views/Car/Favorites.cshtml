@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">My Favorite Cars</h2>
 
-    @if (Model.Any())
+    @if (Model != null && Model.Any())
     {
         <div class="row row-cols-1 row-cols-md-3 g-4">
             @foreach (var savedCar in Model)
@@ -18,15 +18,15 @@
                     <div class="card h-100 car-card">
                         @if (!string.IsNullOrEmpty(car.ImagePath))
                         {
-                            <img src="@car.ImagePath" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                            <img src="@Url.Content(car.ImagePath)" class="card-img-top" alt="@car.Brand @car.Model">
                         }
                         else if (car.Photos != null && car.Photos.Any())
                         {
-                            <img src="@car.Photos.First().Url" class="card-img-top" alt="@car.Brand @car.Model" style="height: 200px; object-fit: cover;">
+                            <img src="@Url.Content(car.Photos.First().Url)" class="card-img-top" alt="@car.Brand @car.Model">
                         }
                         else
                         {
-                            <img src="/images/car-placeholder.jpg" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+                            <img src="@Url.Content("~/images/car-placeholder.jpg")" class="card-img-top" alt="No image available">
                         }
                         <div class="card-body">
                             <h5 class="card-title">@car.Year @car.Brand @car.Model</h5>
@@ -47,17 +47,25 @@
                             <div class="d-flex justify-content-between">
                                 <a href="@Url.Action("Details", "Car", new { id = car.CarId })" class="btn btn-sm btn-primary">View Details</a>
                                 <button class="btn btn-sm btn-outline-danger unfavorite-btn" data-car-id="@car.CarId">
-                                    <i class="bi bi-heart-fill"></i>
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <small class="text-muted">Listed on @car.ListingDate?.ToString("MMM dd, yyyy")</small>
+                            <small class="text-muted">Listed on @(car.ListingDate.HasValue ? car.ListingDate.Value.ToString("MMM dd, yyyy") : "N/A")</small>
                         </div>
                     </div>
                 </div>
             }
         </div>
+        
+        <!-- Empty state check after looping through favorites -->
+        @if (!Model.Any(m => m.Car != null))
+        {
+            <div class="alert alert-info mt-4">
+                Your favorite cars are no longer available. Try adding some new ones!
+            </div>
+        }
     }
     else
     {
@@ -80,14 +88,36 @@
                     data: { carId: carId },
                     success: function (response) {
                         if (response.success) {
-                            toastr.info('Removed from favorites');
-                            btn.closest('.col').fadeOut(500, function() { $(this).remove(); });
+                            // Check if toastr is available
+                            if (typeof toastr !== 'undefined') {
+                                toastr.info('Removed from favorites');
+                            } else {
+                                alert('Removed from favorites');
+                            }
+                            
+                            // Remove the card
+                            btn.closest('.col').fadeOut(500, function() { 
+                                $(this).remove(); 
+                                
+                                // Check if any cards remain
+                                if ($('.car-card').length === 0) {
+                                    $('.row').after('<div class="alert alert-info mt-4">You have no favorite cars left. Start adding some!</div>');
+                                }
+                            });
                         } else {
-                            toastr.error('Error removing from favorites');
+                            if (typeof toastr !== 'undefined') {
+                                toastr.error('Error removing from favorites');
+                            } else {
+                                alert('Error removing from favorites');
+                            }
                         }
                     },
                     error: function () {
-                        toastr.error('Error removing from favorites');
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error('Error removing from favorites');
+                        } else {
+                            alert('Error removing from favorites');
+                        }
                     }
                 });
             });
@@ -96,17 +126,77 @@
 }
 
 <style>
+    .container.mt-4 {
+        max-width: 1200px;
+    }
+
+    .btn-primary {
+        background-color: #6E4331;
+        border-color: #6E4331;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #994c2b;
+        border-color: #994c2b;
+        color: #fff;
+    }
+
+    /* Card Styling */
     .car-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        overflow: hidden;
     }
 
     .car-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
+    /* Image Styling */
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    /* Card Body, Title and Subtitle */
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .card-subtitle {
+        font-size: 1rem;
+        color: #888;
+        margin-bottom: 10px;
+    }
+
+    /* Card Text */
+    .card-text {
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    /* Card Footer Styling */
+    .card-footer {
+        border-top: 1px solid #e5e5e5;
+        background-color: #fafafa;
+        padding: 10px 15px;
+    }
+
+    /* Unfavorite Button */
     .unfavorite-btn {
         border-radius: 50%;
+        color: #994c2b;
         width: 38px;
         height: 38px;
         padding: 0;
@@ -117,5 +207,11 @@
 
     .unfavorite-btn i {
         font-size: 1.2rem;
+    }
+
+    /* Optional: Adjust badge styles if further customization is needed */
+    .badge {
+        font-size: 0.8rem;
+        margin-right: 5px;
     }
 </style>
