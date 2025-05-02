@@ -1,5 +1,7 @@
 html {
     font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,100 +10,107 @@ html {
     }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus {
     box-shadow: 0 0 0 0.1rem #f0f0f0, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-    position: relative;
-    min-height: 100%;
-}
-
 body {
-    background-image: url('/Images/background.jpg'); /* Path to your image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    background-size: cover; /* Make the image cover the entire page */
-    background-position: center; /* Center the image */
+    background-image: url('/Images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     margin-bottom: 0;
 }
 
 header nav.navbar {
     width: 100%;
-    color: #45322a !important; /* Text color */
+    color: #45322a !important;
     font-weight: bold;
     background-color: #FFF0EA !important;
 }
 
 nav ul {
-    list-style: none; /* Remove bullet points */
-    display: flex; /* Align items horizontally */
-    justify-content: center; /* Space items evenly */
+    list-style: none;
+    display: flex;
+    justify-content: center;
 }
 
 nav li {
-    margin: 0 20px; /* Space between items */
+    margin: 0 20px;
 }
 
 nav a {
-    color: #45322a; /* Link color */
-    text-decoration: none; /* Remove underline */
+    color: #45322a;
+    text-decoration: none;
     font-size: 1.3rem;
 }
 
-    nav a:hover {
-        color: #45322a; /* Change link color on hover */
-        text-decoration: underline; /* Add underline on hover */
-        text-decoration-color: #994c2b;
-    }
-/*the part of logo design*/
+nav a:hover {
+    color: #45322a;
+    text-decoration: underline;
+    text-decoration-color: #994c2b;
+}
+
 .navbar-brand {
     padding: 0;
     margin-right: 2rem;
 }
 
-/* the part of right side on the bar (profile and setting) */
-.navbar-nav .icon-link {
-    color: #45322a !important;
-    font-size: 1.5rem;
-    padding: 0.5rem 0.8rem;
+.navbar-brand img {
+    height: 40px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    vertical-align: middle;
+    display: block;
+}
+
+.nav-item label {
+    margin-top: 7px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
     cursor: pointer;
 }
 
-    .navbar-nav .icon-link:hover {
-        color: #994c2b !important;
-    }
+.nav-item label i {
+    font-size: 25px;
+}
 
-/* Hidden checkbox */
-.menu-checkbox {
+.nav-item :hover {
+    color: #994c2b !important;
+}
+
+.navbar-nav .icon-link {
+    color: #45322a !important;
+    font-size: 1.7rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.navbar-nav .icon-link:hover {
+    color: #994c2b !important;
+}
+
+/* Hidden checkboxes */
+.menu-checkbox, .frame-checkbox {
     display: none;
 }
 
 /* Floating Menu Styling */
 .floating-menu {
     position: absolute;
-    top: 60px; /* Adjust below navbar */
-    right: 10px; /* Align to the right */
+    top: 60px;
+    right: 10px;
     background-color: #fff;
     border-radius: 10px;
     border: 1px solid #ddd;
     width: 200px;
     height: auto;
     padding: 10px;
-    display: none; /* Hidden by default */
+    display: none;
     z-index: 1000;
-}
-
-/* Slide down animation */
-@keyframes slide-down {
-    from {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 /* Menu Items Styling */
@@ -113,27 +122,22 @@ nav a {
     margin: 0;
 }
 
-    .floating-menu ul li {
-        margin-bottom: 20px;
-    }
+.floating-menu ul li {
+    margin-bottom: 20px;
+}
 
-        .floating-menu ul li a {
-            text-decoration: none;
-            color: #45322a;
-            font-size: 1.1rem;
-            display: block;
-            padding: 8px 12px;
-            border-radius: 5px;
-        }
+.floating-menu ul li a {
+    text-decoration: none;
+    color: #45322a;
+    font-size: 1.1rem;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
 
-            .floating-menu ul li a:hover {
-                color: #994c2b;
-                background-color: #f8f9fa;
-            }
-
-/* Hidden checkbox for toggling visibility */
-.frame-checkbox {
-    display: none;
+.floating-menu ul li a:hover {
+    color: #994c2b;
+    background-color: #f8f9fa;
 }
 
 /* Overlay Styling */
@@ -143,10 +147,10 @@ nav a {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black color */
-    backdrop-filter: blur(5px); /* Adds blur effect */
-    display: none; /* Hidden by default */
-    z-index: 999; /* Behind the floating frame */
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    z-index: 999;
     cursor: pointer;
 }
 
@@ -162,16 +166,16 @@ nav a {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     width: 300px;
-    display: none; /* Hidden by default */
-    z-index: 1000; /* Above the overlay */
+    display: none;
+    z-index: 1000;
 }
 
-/* Show sign-in frame when toggled */
+/* Show sign-in frame and overlay when toggled */
 #signInToggle:checked ~ #signInFrame {
     display: block;
 }
- /* Show overlay only when sign-in is active */
- #signInToggle:checked ~ .overlay {
+
+#signInToggle:checked ~ .overlay {
     display: block;
 }
 
@@ -197,59 +201,97 @@ nav a {
     border-radius: 15px;
 }
 
-.floating-frame button {
+/* Sign In Button Styling - UPDATED */
+.btn-primary {
+    background-color: #6E4331 !important;
+    border-color: #6E4331 !important;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 15px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #994c2b !important;
+    border-color: #994c2b !important;
+}
+
+/* Sign In With Google Button - UPDATED */
+.btn-danger {
+    background-color: #6E4331;
+    border-color: #6E4331;
+    margin-top: 10px;
     width: 100%;
     padding: 10px;
-    background-color: #994c2b;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
+    
+.btn-danger:hover {
+    background-color: #994c2b;
+    border-color: #994c2b;
+}
 
-    .floating-frame button:hover {
-        background-color: #6E4331;
-    }
-
-.google-signin {
-    background-color: #db4437;
-    color: #fff;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+/* Improved Checkbox Styling - UPDATED */
+.form-check-input {
+    width: 12px;
+    height: 12px;
+    margin-top: 0;
+    border: 1px solid #45322a;
+    border-radius: 3px !important;
     cursor: pointer;
 }
 
-    .google-signin:hover {
-        background-color: #c33d2e;
-    }
-
-.navbar-brand img {
-    height: 40px;
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    vertical-align: middle;
-    display: block;
+.form-check-input:checked {
+    background-color: #6E4331;
+    border-color: #6E4331;
 }
 
-/* Custom styling for the close button (X symbol) in sign-in frame */
+.form-check-input:focus {
+    border-color: #994c2b;
+    box-shadow: 0 0 0 0.25rem rgba(153, 76, 43, 0.25);
+}
+
+/* Remember me label styling - UPDATED */
+.form-check-label {
+    color: #45322a;
+    font-size: 14px;
+    width: 100px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+/* Fix checkbox alignment - UPDATED */
+.mb-3.form-check {
+    display: flex;
+    align-items: center;
+    gap: 130px;
+    width: 20px;
+    height: 20px;
+}
+
+/* Custom styling for close button */
 .btn-close {
-    background-color: transparent;
-    opacity: 0.7;
+    width: 5px;
+    height: 5px;
+    opacity: 1;
     transition: opacity 0.2s;
+    border-radius: 20px;
 }
 
 .btn-close:hover {
-    opacity: 1;
+    background-color: transparent;
+    opacity: 0.7;
     background-color: rgba(153, 76, 43, 0.1);
-    border-radius: 50%;
+    border-radius: 20px;
 }
 
-/* Additional specific styling for the sign-in frame close button */
 #signInFrame .btn-close {
     padding: 0.5rem;
-    font-size: 1.2rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 20px;
 }

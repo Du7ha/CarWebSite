@@ -4,6 +4,8 @@
     ViewData["Title"] = "New Cars";
 }
 
+
+
 <div class="container-fluid p-0">
     <div class="position-relative">
         <div class="container position-relative">
@@ -161,6 +163,28 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+
+            // Add this to the beginning of your $(document).ready function in NewCars.cshtml
+
+        // Check if there are stored filters from the home page
+        const storedFilter = sessionStorage.getItem('selectedFilter');
+        const storedValue = sessionStorage.getItem('selectedValue');
+
+        if (storedFilter && storedValue) {
+        // Apply the stored filter
+        $(`#${storedFilter}Input`).val(storedValue);
+    
+        // Update the dropdown button text
+        const buttonText = storedValue;
+        $(`.dropdown:has([data-filter="${storedFilter}"])`).find('.filter-text').text(buttonText);
+    
+        // Apply filters
+        applyFilters();
+    
+        // Clear the stored filters after applying them
+        sessionStorage.removeItem('selectedFilter');
+        sessionStorage.removeItem('selectedValue');
+}
             // Remove any existing "no cars found" message when starting to filter
             function removeNoCarMessage() {
                 $('#noCarsMessage').remove();

@@ -39,16 +39,11 @@
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <!-- User is signed in -->
+                            <!-- User is signed in - removed Sign Out button from here -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="EditProfile">
                                     <i class="fas fa-user me-1"></i>@User.Identity.Name
                                 </a>
-                            </li>
-                            <li class="nav-item">
-                                <form asp-controller="Account" asp-action="SignOut" method="post">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Sign Out</button>
-                                </form>
                             </li>
                         }
                         else
@@ -59,11 +54,11 @@
                                     <i class="fas fa-sign-in-alt me-1"></i>Sign In
                                 </label>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="SignUp">
                                     <i class="fas fa-user-plus me-1"></i>Sign Up
                                 </a>
-                            </li>
+                            </li> *@
                         }
                         <!-- Menu Toggle -->
                         <li class="nav-item">
@@ -98,8 +93,8 @@
                 <input type="password" id="password" name="password" class="form-control" required />
             </div>
             <div class="mb-3 form-check">
+                <label class="form-check-label" for="rememberMe">Remember</label>
                 <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" />
-                <label class="form-check-label" for="rememberMe">Remember me</label>
             </div>
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary">Sign In</button>
@@ -117,14 +112,26 @@
         <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close" onclick="document.getElementById('signInToggle').checked = false;"></button>
     </div>
 
-    <!-- Floating Menu - FIXED STRUCTURE -->
+    <!-- Floating Menu - UPDATED WITH SIGN OUT -->
     <div id="floatingMenu" class="floating-menu">
         <ul>
             <li><a asp-controller="Car" asp-action="MyListings">My Dashboard</a></li>
-             <li><a asp-controller="Car" asp-action="Favorites">My Favorite</a></li>
+            <li><a asp-controller="Car" asp-action="Favorites">My Favorite</a></li>
             <li><a asp-controller="Home" asp-action="Reviews">Reviews</a></li>
             <li><a asp-controller="Home" asp-action="About">About</a></li>
             <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+            
+            @if (User.Identity.IsAuthenticated)
+            {
+                <!-- Added Sign Out button here with a divider and red color -->
+                <li style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
+                    <form asp-controller="Account" asp-action="SignOut" method="post">
+                        <button type="submit" class="nav-link btn btn-link text-danger w-100 text-start">
+                            <i class="fas fa-sign-out-alt me-1"></i>Sign Out
+                        </button>
+                    </form>
+                </li>
+            }
         </ul>
     </div>
 
