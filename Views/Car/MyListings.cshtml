@@ -43,7 +43,7 @@ else
                         <form asp-action="DeleteCar" asp-controller="Car" method="post" style="display:inline;"
                               onsubmit="return confirm('Are you sure you want to delete this car?');">
                             <input type="hidden" name="id" value="@car.CarId" />
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-sm btn-danger1">Delete</button>
                         </form>
                     </td>
                 </tr>
@@ -92,7 +92,6 @@ else
         /* Button Styling */
         .btn {
             transition: background-color 0.3s ease, border-color 0.3s ease;
-            display: inline;
         }
 
         /* Details Button (Info) */
@@ -111,11 +110,15 @@ else
     
 
         /* Delete Button (Danger) */
-        .btn-danger {
+        .btn-danger1 {
             background-color: #6d0000 !important;
             border-color: #6d0000 !important;
             color: #fff;
-            margin-bottom: 10px ;
+        }
+        /* Inline Form Styling for the Delete Button */
+        form[asp-action="DeleteCar"] {
+            display: inline;
+            margin: 0;
         }
 
         /* Alert Styling (if needed) */
