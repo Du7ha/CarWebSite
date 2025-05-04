@@ -1,3 +1,4 @@
+@model CarWebSite.Models.ReviewsViewModel
 @{
     ViewData["Title"] = "Reviews";
 }
@@ -5,37 +6,65 @@
 <div class="review-container">
     <div class="review-content">
         <h1>Feedbacks and Reviews</h1>
-        
+
         <!-- Review Submission Card -->
-        <div class="card review-card submission-card">
-            <div class="card-header">
-                <h3>Share Your Experience</h3>
-            </div>
-            <div class="card-body">
-                <form id="reviewForm" method="post" asp-controller="Reviews" asp-action="SubmitReview">
-                    <div class="mb-3">
-                        <label for="reviewTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="reviewTitle" name="ReviewTitle" placeholder="Enter a brief title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rating" class="form-label">Rating</label>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="Rating" value="5" /><label for="star5"></label>
-                            <input type="radio" id="star4" name="Rating" value="4" /><label for="star4"></label>
-                            <input type="radio" id="star3" name="Rating" value="3" /><label for="star3"></label>
-                            <input type="radio" id="star2" name="Rating" value="2" /><label for="star2"></label>
-                            <input type="radio" id="star1" name="Rating" value="1" /><label for="star1"></label>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="card review-card submission-card">
+                <div class="card-header">
+                    <h3>Share Your Experience</h3>
+                </div>
+                <div class="card-body">
+                    <form id="reviewForm" method="post" asp-controller="Reviews" asp-action="SubmitReview">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label for="Title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="Title" name="Title"
+                                   placeholder="Enter a brief title" required
+                                   value="@Model.ReviewForm.Title">
+                            <span class="text-danger field-validation-error" data-valmsg-for="Title" data-valmsg-replace="true"></span>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="reviewContent" class="form-label">Your Review</label>
-                        <textarea class="form-control" id="reviewContent" name="ReviewContent" rows="4" placeholder="Share your experience with us..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary submit-btn">Submit Review</button>
-                </form>
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="Rating" value="5" /><label for="star5"></label>
+                                <input type="radio" id="star4" name="Rating" value="4" /><label for="star4"></label>
+                                <input type="radio" id="star3" name="Rating" value="3" /><label for="star3"></label>
+                                <input type="radio" id="star2" name="Rating" value="2" /><label for="star2"></label>
+                                <input type="radio" id="star1" name="Rating" value="1" /><label for="star1"></label>
+                            </div>
+                            <span class="text-danger field-validation-error" data-valmsg-for="Rating" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ReviewContent" class="form-label">Your Review</label>
+                            <textarea class="form-control" id="ReviewContent" name="ReviewContent"
+                                      rows="4" placeholder="Share your experience with us..." required>@Model.ReviewForm.ReviewContent</textarea>
+                            <span class="text-danger field-validation-error" data-valmsg-for="ReviewContent" data-valmsg-replace="true"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Submit Review</button>
+                    </form>
+                </div>
             </div>
-        </div>
-        
+        }
+        else
+        {
+            <div class="card review-card submission-card">
+                <div class="card-header">
+                    <h3>Share Your Experience</h3>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-3">You need to be signed in to submit a review.</p>
+                    <label for="signInToggle" class="btn btn-primary submit-btn" style="cursor: pointer;">
+                        <i class="fas fa-sign-in-alt me-1"></i>Sign In to Review
+                    </label>
+                </div>
+            </div>
+        }
+
         <!-- Reviews List Card -->
         <div class="card review-card reviews-list-card mt-4">
             <div class="card-header">
@@ -43,7 +72,6 @@
             </div>
             <div class="card-body">
                 <div id="reviewsList">
-                    <!-- This section will be populated by backend -->
                     @if (Model != null && Model.Reviews != null && Model.Reviews.Any())
                     {
                         @foreach (var review in Model.Reviews)
@@ -58,12 +86,12 @@
                                         }
                                     </div>
                                     <div class="review-meta">
-                                        <span class="review-author">@review.Author</span>
+                                        <span class="review-author">@review.Client.User.UserName</span>
                                         <span class="review-date">@review.Date.ToShortDateString()</span>
                                     </div>
                                 </div>
                                 <div class="review-content-text">
-                                    @review.Content
+                                    @review.ReviewContent
                                 </div>
                             </div>
                         }
@@ -116,7 +144,7 @@
     </div>
 </div>
 
- <style>
+<style>
     .review-container {
         padding: 20px 0;
         display: flex;
@@ -147,9 +175,9 @@
         transition: transform 0.3s ease;
     }
 
-    .review-card:hover {
-        transform: translateY(-3px);
-    }
+        .review-card:hover {
+            transform: translateY(-3px);
+        }
 
     .card-header {
         background-color: #6E4331;
@@ -160,10 +188,10 @@
         border-top-right-radius: 8px !important;
     }
 
-    .card-header h3 {
-        margin: 0;
-        font-size: 1.3rem;
-    }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
 
     .card-body {
         padding: 25px;
@@ -178,10 +206,10 @@
         transition: all 0.3s ease;
     }
 
-    .submit-btn:hover {
-        background-color: #994C2B;
-        transform: translateY(-2px);
-    }
+        .submit-btn:hover {
+            background-color: #994C2B;
+            transform: translateY(-2px);
+        }
 
     /* Star Rating Styles */
     .star-rating {
@@ -190,28 +218,28 @@
         padding: 10px 0;
     }
 
-    .star-rating input {
-        display: none;
-    }
+        .star-rating input {
+            display: none;
+        }
 
-    .star-rating label {
-        color: #ddd;
-        font-size: 24px;
-        padding: 0;
-        cursor: pointer;
-        width: 1.2em;
-    }
+        .star-rating label {
+            color: #ddd;
+            font-size: 24px;
+            padding: 0;
+            cursor: pointer;
+            width: 1.2em;
+        }
 
-    .star-rating label:before {
-        content: '\f005';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-    }
+            .star-rating label:before {
+                content: '\f005';
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+            }
 
-    .star-rating input:checked ~ label,
-    .star-rating input:hover ~ label {
-        color: #ffbd3d;
-    }
+        .star-rating input:checked ~ label,
+        .star-rating input:hover ~ label {
+            color: #ffbd3d;
+        }
 
     /* Review List Styles */
     .review-item {
@@ -220,34 +248,34 @@
         margin-bottom: 10px;
     }
 
-    .review-item:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-    }
+        .review-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
 
     .review-header {
         margin-bottom: 10px;
     }
 
-    .review-header h4 {
-        margin: 0 0 10px 0;
-        color: #6E4331;
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
+        .review-header h4 {
+            margin: 0 0 10px 0;
+            color: #6E4331;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
 
     .review-rating {
         margin-bottom: 8px;
     }
 
-    .review-rating .fa-star {
-        color: #ddd;
-        margin-right: 2px;
-    }
+        .review-rating .fa-star {
+            color: #ddd;
+            margin-right: 2px;
+        }
 
-    .review-rating .fa-star.filled {
-        color: #ffbd3d;
-    }
+            .review-rating .fa-star.filled {
+                color: #ffbd3d;
+            }
 
     .review-meta {
         font-size: 0.85rem;
@@ -264,19 +292,26 @@
         line-height: 1.6;
         color: #333;
     }
-    
-     .form-control{
+
+    .form-control {
         border-radius: 10px;
-        border: 2px solid #6E4331 ;
-     }
+        border: 2px solid #6E4331;
+    }
 
     #reviewForm .form-control:focus {
         border-color: #6E4331;
         box-shadow: 0 0 0 0.25rem rgba(62, 98, 138, 0.25);
     }
-   </style>
 
- <script>
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+</style>
+
+<script>
     // Client-side validation and star rating behavior
     document.addEventListener('DOMContentLoaded', function() {
         // Handle star rating hover effects
@@ -286,19 +321,19 @@
                 // Add 'hover' class to this label and all previous labels
                 let siblings = [];
                 let currentLabel = this;
-                
+
                 while (currentLabel) {
                     if (currentLabel.nodeName === 'LABEL') {
                         siblings.push(currentLabel);
                     }
                     currentLabel = currentLabel.nextElementSibling;
                 }
-                
+
                 siblings.forEach(sibling => {
                     sibling.classList.add('hover');
                 });
             });
-            
+
             label.addEventListener('mouseout', function() {
                 // Remove 'hover' class from all labels
                 document.querySelectorAll('.star-rating label').forEach(l => {
@@ -306,20 +341,59 @@
                 });
             });
         });
-        
-        // Form submission handler
+
+        // Form submission handler with enhanced validation
         const reviewForm = document.getElementById('reviewForm');
-        reviewForm.addEventListener('submit', function(e) {
-            const rating = document.querySelector('input[name="Rating"]:checked');
-            
-            // Check if rating is selected
-            if (!rating) {
-                e.preventDefault();
-                alert('Please select a rating for your review.');
-                return;
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', function(e) {
+                let isValid = true;
+                const errorMessages = {};
+
+                // Validate Title
+                const title = document.getElementById('Title').value.trim();
+                if (!title) {
+                    isValid = false;
+                    errorMessages['Title'] = 'Please enter a title for your review.';
+                    document.querySelector('[data-valmsg-for="Title"]').textContent = errorMessages['Title'];
+                } else {
+                    document.querySelector('[data-valmsg-for="Title"]').textContent = '';
+                }
+
+                // Validate Rating
+                const rating = document.querySelector('input[name="Rating"]:checked');
+                if (!rating) {
+                    isValid = false;
+                    errorMessages['Rating'] = 'Please select a rating for your review.';
+                    document.querySelector('[data-valmsg-for="Rating"]').textContent = errorMessages['Rating'];
+                } else {
+                    document.querySelector('[data-valmsg-for="Rating"]').textContent = '';
+                }
+
+                // Validate ReviewContent
+                const content = document.getElementById('ReviewContent').value.trim();
+                if (!content) {
+                    isValid = false;
+                    errorMessages['ReviewContent'] = 'Please enter content for your review.';
+                    document.querySelector('[data-valmsg-for="ReviewContent"]').textContent = errorMessages['ReviewContent'];
+                } else {
+                    document.querySelector('[data-valmsg-for="ReviewContent"]').textContent = '';
+                }
+
+                // Prevent form submission if validation fails
+                if (!isValid) {
+                    e.preventDefault();
+                    console.log('Form validation failed:', errorMessages);
+                }
+            });
+        }
+
+        // Check if there's a previously selected rating (for form resubmission)
+        const submittedRating = '@Model.ReviewForm.Rating';
+        if (submittedRating && submittedRating !== '0') {
+            const ratingInput = document.querySelector(`input[name="Rating"][value="${submittedRating}"]`);
+            if (ratingInput) {
+                ratingInput.checked = true;
             }
-            
-            // Additional client-side validation can be added here
-        });
+        }
     });
 </script>

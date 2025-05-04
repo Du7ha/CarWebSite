@@ -109,8 +109,11 @@ namespace CarWebSite.Controllers
         }
         public IActionResult Reviews()
         {
-            return View();
+
+            // Redirect to the Reviews controller's Index action
+            return RedirectToAction("Index", "Reviews");
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

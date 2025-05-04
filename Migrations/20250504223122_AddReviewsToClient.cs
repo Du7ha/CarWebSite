@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarWebSite.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class AddReviewsToClient : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -209,6 +209,37 @@ namespace CarWebSite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    ReviewContent = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Author = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -389,6 +420,16 @@ namespace CarWebSite.Migrations
                 column: "CarId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ClientId",
+                table: "Reviews",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserId",
+                table: "Reviews",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SavedCars_CarId",
                 table: "SavedCars",
                 column: "CarId");
@@ -417,6 +458,9 @@ namespace CarWebSite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Photos");
+
+            migrationBuilder.DropTable(
+                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "SavedCars");

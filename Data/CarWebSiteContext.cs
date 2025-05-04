@@ -1,4 +1,4 @@
-using CarWebSite.Models;
+﻿using CarWebSite.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +15,7 @@ namespace CarWebSite.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Review> Reviews { get; set; } // Add Reviews DbSet
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +74,48 @@ namespace CarWebSite.Data
                 .WithMany(c => c.Photos)
                 .HasForeignKey(p => p.CarId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Review>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Title)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.ReviewContent)
+                      .IsRequired()
+                      .HasMaxLength(1000);
+
+                entity.Property(e => e.Rating)
+                      .IsRequired();
+
+                entity.Property(e => e.Date)
+                      .IsRequired()
+                      .HasDefaultValueSql("GETUTCDATE()");  // Add default value
+
+                entity.Property(e => e.Author)
+                      .IsRequired()
+                      .HasMaxLength(256);  // Add max length
+
+                entity.Property(e => e.UserId)
+                      .IsRequired();  // Ensure it's required in DB
+
+                entity.Property(e => e.ClientId)
+                      .IsRequired();  // Ensure it's required in DB
+
+                // Relationship with Client
+                entity.HasOne(e => e.Client)
+                      .WithMany(c => c.Reviews)
+                      .HasForeignKey(e => e.ClientId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Relationship with User
+                entity.HasOne(e => e.User)
+                      .WithMany()  // If User doesn't have a navigation property for Reviews
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            }); // تعديل حسب احتياجك
         }
     }
 

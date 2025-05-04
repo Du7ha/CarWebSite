@@ -428,6 +428,54 @@ namespace CarWebSite.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewContent")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("CarWebSite.Models.Car", b =>
                 {
                     b.HasOne("CarWebSite.Models.Client", "Seller")
@@ -568,6 +616,25 @@ namespace CarWebSite.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Review", b =>
+                {
+                    b.HasOne("CarWebSite.Models.Client", "Client")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CarWebSite.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CarWebSite.Models.Car", b =>
                 {
                     b.Navigation("Orders");
@@ -584,6 +651,8 @@ namespace CarWebSite.Migrations
                     b.Navigation("OrdersAsBuyer");
 
                     b.Navigation("OrdersAsSeller");
+
+                    b.Navigation("Reviews");
 
                     b.Navigation("SavedCars");
                 });

@@ -18,5 +18,7 @@ namespace CarWebSite.Models
         public virtual ICollection<Order>? OrdersAsBuyer { get; set; }
         public virtual ICollection<Order>? OrdersAsSeller { get; set; }
         public virtual ICollection<SavedCar>? SavedCars { get; set; }
+        // إضافة هذه الخاصية لتمثيل العلاقة مع الـ Review
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }
