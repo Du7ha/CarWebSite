@@ -315,10 +315,16 @@ namespace CarWebSite.Controllers
 
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public IActionResult Offer()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                // Redirect to SignUp page if not signed in
+                return RedirectToAction("Index", "Home", new { showSignIn = true });
+            }
+
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };

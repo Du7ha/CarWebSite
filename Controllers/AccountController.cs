@@ -46,8 +46,8 @@ namespace CarWebSite.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password");
-                return View(model);
+                //ModelState.AddModelError(string.Empty, "Invalid email or password");
+                return View("SignUp");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);

@@ -154,6 +154,12 @@
             const signInToggle = document.getElementById('signInToggle');
             const menuToggle = document.getElementById('menuToggle');
             const floatingMenu = document.getElementById('floatingMenu');
+            const signInForm = document.getElementById('signInForm');
+
+            const showSignIn = @(ViewBag.ShowSignIn != null && ViewBag.ShowSignIn ? "true" : "false");
+        if (showSignIn && signInToggle) {
+            signInToggle.checked = true;
+        }
 
             // Close modals when clicking outside
             if (overlay) {
@@ -177,6 +183,18 @@
                     }
                 });
             }
+
+            if (signInForm) {
+            signInForm.addEventListener('submit', function(e) {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    e.preventDefault();
+                    alert('Please enter both email and password');
+                }
+            });
+        }
         });
     </script>
 

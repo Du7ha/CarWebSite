@@ -114,6 +114,7 @@
                         {
                             <p><i class="bi bi-person-circle me-2"></i>@Model.Seller.User.UserName</p>
                             <p><i class="bi bi-geo-alt me-2"></i>@(Model.Seller.User.Location ?? "Location not specified")</p>
+                            <p><i class="bi bi-geo-alt me-2"></i>@(Model.Seller.User.PhoneNumber ?? "PhoneNumber not specified")</p>
                             <p><i class="bi bi-calendar3 me-2"></i>Listed on @Model.ListingDate?.ToString("MMMM dd, yyyy")</p>
                         }
                         else

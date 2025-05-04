@@ -19,7 +19,7 @@ namespace CarWebSite.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(bool showSignIn = false)
         {
             var photos = new List<Photo>
             {
@@ -40,6 +40,8 @@ namespace CarWebSite.Controllers
             {
                 Photos = photos,
             };
+
+            ViewBag.ShowSignIn = showSignIn;
 
             return View(viewModel);
         }
