@@ -115,8 +115,12 @@
     <!-- Floating Menu - UPDATED WITH SIGN OUT -->
     <div id="floatingMenu" class="floating-menu">
         <ul>
-            <li><a asp-controller="Car" asp-action="MyListings">My Dashboard</a></li>
-            <li><a asp-controller="Car" asp-action="Favorites">My Favorite</a></li>
+            <li>
+                <a href="#" class="auth-required" data-target="Car/MyListings">My Dashboard</a>
+            </li>
+            <li>
+                <a href="#" class="auth-required" data-target="Car/Favorites">My Favorite</a>
+            </li>
             <li><a asp-controller="Home" asp-action="Reviews">Reviews</a></li>
             <li><a asp-controller="Home" asp-action="About">About</a></li>
             <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
@@ -157,9 +161,9 @@
             const signInForm = document.getElementById('signInForm');
 
             const showSignIn = @(ViewBag.ShowSignIn != null && ViewBag.ShowSignIn ? "true" : "false");
-        if (showSignIn && signInToggle) {
-            signInToggle.checked = true;
-        }
+            if (showSignIn && signInToggle) {
+                signInToggle.checked = true;
+            }
 
             // Close modals when clicking outside
             if (overlay) {
@@ -185,16 +189,38 @@
             }
 
             if (signInForm) {
-            signInForm.addEventListener('submit', function(e) {
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
+                signInForm.addEventListener('submit', function(e) {
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
 
-                if (!email || !password) {
+                    if (!email || !password) {
+                        e.preventDefault();
+                        alert('Please enter both email and password');
+                    }
+                });
+            }
+
+            // Handle authentication-required links
+            const authRequiredLinks = document.querySelectorAll('a.auth-required');
+            authRequiredLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    alert('Please enter both email and password');
-                }
+                    
+                    // Check if user is authenticated
+                    const isAuthenticated = @(User.Identity.IsAuthenticated ? "true" : "false");
+                    
+                    if (isAuthenticated) {
+                        // If authenticated, navigate to the target URL
+                        const targetUrl = this.getAttribute('data-target');
+                        window.location.href = '/' + targetUrl;
+                    } else {
+                        // If not authenticated, show sign-in frame and close menu
+                        signInToggle.checked = true;
+                        menuToggle.checked = false;
+                        floatingMenu.style.display = 'none';
+                    }
+                });
             });
-        }
         });
     </script>
 

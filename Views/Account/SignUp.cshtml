@@ -56,10 +56,29 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Custom email validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.querySelector('input[type="email"]');
+            
+            emailInput.addEventListener('input', validateEmail);
+            emailInput.addEventListener('blur', validateEmail);
+            
+            function validateEmail() {
+                const email = emailInput.value;
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                
+                if (email && !emailRegex.test(email)) {
+                    emailInput.setCustomValidity('Please enter a valid email in the format: name@@domain.extension');
+                } else {
+                    emailInput.setCustomValidity('');
+                }
+            }
+        });
+    </script>
 }
 
 <style>
-
 /* Page Title */
 h2.text-center {
     font-size: 35px;
@@ -141,5 +160,4 @@ h2.text-center {
 .btn-primary:hover {
     background-color: #994C2B;
 }
-
 </style>
