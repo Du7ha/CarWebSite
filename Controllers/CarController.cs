@@ -109,6 +109,11 @@ namespace CarWebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                // Redirect to SignUp page if not signed in
+                return RedirectToAction("Index", "Home", new { showSignIn = true });
+            }
             var car = await _context.Cars
                 .Include(c => c.Photos)
                 .Include(c => c.Seller)
@@ -390,6 +395,7 @@ namespace CarWebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> Favorites()
         {
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Fetch the client for the current user
@@ -571,7 +577,9 @@ namespace CarWebSite.Controllers
         [HttpGet]
         public async Task<IActionResult> MyListings()
         {
+            
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
 
             // Get Client ID
             var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserID == userId);

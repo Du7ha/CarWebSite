@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarWebSite.Migrations
 {
     [DbContext(typeof(CarWebSiteContext))]
-    [Migration("20250504223122_AddReviewsToClient")]
-    partial class AddReviewsToClient
+    [Migration("20250505112754_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

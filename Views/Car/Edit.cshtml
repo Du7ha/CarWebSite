@@ -29,10 +29,29 @@
         <input asp-for="Price" class="form-control" />
     </div>
 
-    <div class="mb-3">
+    @* <div class="mb-3">
         <label asp-for="Mileage" class="form-label"></label>
         <input asp-for="Mileage" class="form-control" />
-    </div>
+    </div> *@
+
+    <div class="mb-3">
+        <label asp-for="Mileage" class="form-label"></label>
+        @if (User.IsInRole("Admin"))
+        {
+            <input asp-for="Mileage" class="form-control" value="0" readonly />
+            <small class="text-muted">As an admin, mileage is automatically set to 0.</small>
+        }
+        else if (User.IsInRole("Client"))
+        {
+            <input asp-for="Mileage" class="form-control" required min="5000" />
+            <small class="text-muted">As a client, mileage must be 5000 or less.</small>
+        }
+        else
+        {
+            <input asp-for="Mileage" class="form-control" required min="0" />
+        }
+        <span asp-validation-for="Mileage" class="text-danger"></span>
+        </div>
 
     <div class="mb-3">
         <label asp-for="Color" class="form-label"></label>

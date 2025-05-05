@@ -64,6 +64,7 @@ namespace CarWebSite.Controllers
 
         public IActionResult UsedCars()
         {
+            
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             ViewBag.Colors = new List<string> { "Black", "White", "Silver", "Red", "Blue", "Green", "Yellow", "Gray" };
@@ -73,6 +74,8 @@ namespace CarWebSite.Controllers
         
         public IActionResult CarDetails()
         {
+            
+
             ViewBag.BodyTypes = Enum.GetNames(typeof(BodyType));
             ViewBag.Brands = new List<string> { "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Audi", "Chevrolet", "Nissan", "Porsche", "Rolls-Royce", "Mahindra" };
             return View();
@@ -110,8 +113,8 @@ namespace CarWebSite.Controllers
         public IActionResult Reviews()
         {
 
-            // Redirect to the Reviews controller's Index action
             return RedirectToAction("Index", "Reviews");
+            // Redirect to the Reviews controller's Index action
         }
 
 

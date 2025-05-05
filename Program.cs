@@ -78,38 +78,6 @@ namespace CarWebSite
                         await roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
-
-                // Create admin account if it doesn't exist
-                string adminEmail = "admin@example.com";
-                var adminUser = await userManager.FindByEmailAsync(adminEmail);
-                if (adminUser == null)
-                {
-                    adminUser = new User
-                    {
-                        UserName = "CEO",
-                        Email = adminEmail,
-                        PhoneNumber = "01012149832",
-                        Location = "Cairo",
-                    };
-
-                    var result = await userManager.CreateAsync(adminUser, "Ali@20042025");
-                    if (result.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(adminUser, "Admin");
-                        await userManager.AddToRoleAsync(adminUser, "Client"); // Optional: also assign "Client" role
-
-                        // Create a Client record
-                        var client = new Client
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            UserID = adminUser.Id,
-                            IsSeller = true // or false depending on what you want
-                        };
-
-                        dbContext.Clients.Add(client);
-                        await dbContext.SaveChangesAsync();
-                    }
-                }
             }
 
             app.Run();
